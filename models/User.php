@@ -72,5 +72,35 @@ class User {
             return false;
         }
     }
+    // Lấy danh sách tất cả người dùng (dành cho Admin)
+    public function getAllUsers() {
+        $query = "SELECT id, username, email, fullname, role, created_at FROM " . $this->table_name . " ORDER BY created_at DESC";
+        
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Trả về mảng tất cả người dùng
+        } catch (PDOException $e) {
+            // Xử lý lỗi
+            return [];
+        }
+    }
+
+    // Cập nhật vai trò (role) của người dùng
+    public function updateRole($user_id, $new_role) {
+        $query = "UPDATE " . $this->table_name . " SET role = :role WHERE id = :id";
+        
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':role', $new_role, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            // Xử lý lỗi
+            return false;
+        }
+    }
+}
+?>
 }
 ?>
