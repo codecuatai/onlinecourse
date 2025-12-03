@@ -1,106 +1,116 @@
 <?php
-// models/User.php
 
-// Đường dẫn tương đối từ models/ ra config/
-require_once '../config/Database.php'; 
+// Đảm bảo file Database.php được load để có kết nối CSDL
+require_once __DIR__ . '/../config/Database.php';
 
 class User {
     private $conn;
-    private $table_name = "users";
+    private $table = 'users';
 
-    public function __construct($db) {
-        $this->conn = $db; // $db lúc này là đối tượng PDO
+    public function __construct() {
+        // Lấy đối tượng kết nối PDO đã được cấu hình
+        $database = new Database();
+        $this->conn = $database->getConnection();
     }
 
-    // [Chức năng Đăng ký] - Kiểm tra tồn tại bằng PDO
+    /**
+     * Tìm kiếm người dùng dựa trên username hoặc email.
+     * Phương thức này được dùng cho cả đăng nhập và validation.
+     * @param string $identifier Tên đăng nhập hoặc email.
+     * @return array|false Thông tin người dùng dưới dạng mảng kết hợp hoặc false nếu không tìm thấy.
+     */
+    public function findUserByIdentifier($identifier) {
+        $query = "SELECT id, username, email, password, fullname, role 
+                  FROM " . $this->table . " 
+                  WHERE username = :identifier OR email = :identifier 
+                  LIMIT 0,1";
+
+        $stmt = $this->conn->prepare($query);
+        
+        // Làm sạch dữ liệu trước khi ràng buộc tham số
+        $identifier = htmlspecialchars(strip_tags($identifier));
+        
+        $stmt->bindParam(':identifier', $identifier);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Kiểm tra xem username hoặc email đã tồn tại trong CSDL chưa (dùng cho validation đăng ký).
+     * @param string $username Tên đăng nhập.
+     * @param string $email Địa chỉ email.
+     * @return bool True nếu đã tồn tại, False nếu chưa.
+     */
     public function isExist($username, $email) {
-        $query = "SELECT id FROM " . $this->table_name . " WHERE username = :username OR email = :email LIMIT 1";
+        $query = "SELECT id FROM " . $this->table . " 
+                  WHERE username = :username OR email = :email 
+                  LIMIT 1";
         
-        try {
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':username', $username);
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
-            
-            // Trả về true nếu có dòng dữ liệu (người dùng đã tồn tại)
-            return $stmt->rowCount() > 0;
-        } catch (PDOException $e) {
-            // Xử lý hoặc ghi log lỗi CSDL
-            return false;
-        }
+        $stmt = $this->conn->prepare($query);
+        
+        $username = htmlspecialchars(strip_tags($username));
+        $email = htmlspecialchars(strip_tags($email));
+        
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        
+        return $stmt->rowCount() > 0;
     }
 
-    // [Chức năng Đăng ký] - Tạo người dùng mới bằng PDO
-    public function create($username, $email, $password, $fullname) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $query = "INSERT INTO " . $this->table_name . " 
-                  (username, email, password, fullname, role) 
-                  VALUES (:username, :email, :password, :fullname, :role)";
+    /**
+     * Tạo người dùng mới (chức năng đăng ký).
+     * @param array $data Dữ liệu người dùng (bao gồm username, email, password, fullname, role).
+     * @return bool True nếu tạo thành công, False nếu thất bại.
+     */
+    public function createUser(array $data) {
+        // Lấy và băm mật khẩu
+        $hashed_password = password_hash($data['password'], PASSWORD_BCRYPT);
         
-        $role = 0; // Mặc định là Học viên
+        $query = "INSERT INTO " . $this->table . " (username, email, password, fullname, role, created_at) 
+                  VALUES (:username, :email, :password, :fullname, :role, NOW())";
 
-        try {
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':username', $username);
-            $stmt->bindParam(':email', $email);
-            $stmt->bindParam(':password', $hashed_password); // Đã hash
-            $stmt->bindParam(':fullname', $fullname);
-            $stmt->bindParam(':role', $role, PDO::PARAM_INT);
-            
+        $stmt = $this->conn->prepare($query);
+
+        // Chuẩn bị và làm sạch dữ liệu
+        $username = htmlspecialchars(strip_tags($data['username']));
+        $email = htmlspecialchars(strip_tags($data['email']));
+        $fullname = htmlspecialchars(strip_tags($data['fullname']));
+        $role = (int)$data['role']; // Chuyển role sang số nguyên
+
+        // Ràng buộc tham số (Binding Parameters)
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $hashed_password); 
+        $stmt->bindParam(':fullname', $fullname);
+        $stmt->bindParam(':role', $role, PDO::PARAM_INT); // Ràng buộc kiểu dữ liệu số nguyên
+
+        // Thực thi truy vấn
+    try {
             return $stmt->execute();
         } catch (PDOException $e) {
-            // Xử lý lỗi CSDL (ví dụ: ghi log)
-            return false;
+            // *******************************
+            // * 2. SỬA ĐỔI ĐỂ HIỂN THỊ LỖI *
+            // *******************************
+            echo "<h2>LỖI NGHIÊM TRỌNG KHI GHI VÀO CSDL</h2>";
+            echo "Chi tiết lỗi PDO: " . $e->getMessage();
+            exit; // Dừng lại để xem lỗi SQL
+            // return false; // Giữ lại lệnh này nếu không muốn hiển thị lỗi
         }
     }
 
-    // [Chức năng Đăng nhập] - Tìm người dùng bằng username/email bằng PDO
-    public function findByUsername($username) {
-        $query = "SELECT id, username, password, fullname, role FROM " . $this->table_name . " WHERE username = :username OR email = :username LIMIT 1";
-        
-        try {
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':username', $username);
-            $stmt->execute();
-            
-            // Thiết lập chế độ fetch là trả về mảng kết hợp
-            $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            
-            return $stmt->fetch(); // Trả về mảng dữ liệu người dùng hoặc false
-        } catch (PDOException $e) {
-            // Xử lý lỗi CSDL
-            return false;
-        }
+    /**
+     * Xác thực mật khẩu sử dụng hàm băm.
+     * @param string $inputPassword Mật khẩu người dùng nhập vào.
+     * @param string $hashedPassword Mật khẩu đã hash được lưu trong CSDL.
+     * @return bool True nếu mật khẩu khớp, False nếu không.
+     */
+    public static function verifyPassword($inputPassword, $hashedPassword) {
+        return password_verify($inputPassword, $hashedPassword);
     }
-    // Lấy danh sách tất cả người dùng (dành cho Admin)
-    public function getAllUsers() {
-        $query = "SELECT id, username, email, fullname, role, created_at FROM " . $this->table_name . " ORDER BY created_at DESC";
-        
-        try {
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Trả về mảng tất cả người dùng
-        } catch (PDOException $e) {
-            // Xử lý lỗi
-            return [];
-        }
-    }
+    
+    // Thêm các phương thức CRUD khác tại đây (updateUser, deleteUser, getAllUsers...)
+}
 
-    // Cập nhật vai trò (role) của người dùng
-    public function updateRole($user_id, $new_role) {
-        $query = "UPDATE " . $this->table_name . " SET role = :role WHERE id = :id";
-        
-        try {
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':role', $new_role, PDO::PARAM_INT);
-            $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
-            return $stmt->execute();
-        } catch (PDOException $e) {
-            // Xử lý lỗi
-            return false;
-        }
-    }
-}
-?>
-}
 ?>

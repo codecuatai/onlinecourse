@@ -1,5 +1,18 @@
 <?php
-require_once '../layouts/header-auth.php'
+require_once __DIR__ . '/../layouts/header-auth.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// 2. Lấy dữ liệu và lỗi từ Session
+$errors = $_SESSION['register_errors'] ?? [];
+$old_input = $_SESSION['old_input'] ?? [];
+$success_message = $_SESSION['success_message'] ?? ''; // Lấy thông báo thành công
+
+// 3. Xóa Session sau khi lấy ra
+unset($_SESSION['register_errors']);
+unset($_SESSION['old_input']);
+unset($_SESSION['success_message']);
 ?>
 
 <body>
@@ -38,8 +51,12 @@ require_once '../layouts/header-auth.php'
             <span>hoặc đăng ký bằng email</span>
         </div>
 
-
-        <form action="#" method="post">
+        <?php if (!empty($success_message)): ?>
+            <div style="color: green; padding: 10px; margin-bottom: 15px; border: 1px solid green; background-color: #e6ffe6; border-radius: 4px;">
+                <?= htmlspecialchars($success_message) ?>
+            </div>
+        <?php endif; ?>
+        <form action="index.php?controller=auth&action=register" method="POST">
             <div class="form-group">
                 <label for="fullname">Tên Tài Khoản <span class="required">*</span></label>
                 <div class="input-wrapper">
@@ -48,15 +65,14 @@ require_once '../layouts/header-auth.php'
                         <circle cx="12" cy="7" r="4" />
                     </svg>
 
-                    <input type="text" id="username" placeholder="user1">
+                    <input type="text" id="username" name="username" placeholder="user1" value="<?= htmlspecialchars($old_input['username'] ?? '') ?>">
                 </div>
-                <div class="error-message" id="fullname-error" style="display: none;">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="10" />
-                        <path fill="white" d="M12 8v4m0 4h.01" />
-                    </svg>
-                    <span></span>
-                </div>
+                <?php if (isset($errors['username'])): ?>
+                    <div class="error-message" style="display: block; color: red; margin-top: 5px;"> 
+                        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><path fill="white" d="M12 8v4m0 4h.01" /></svg>
+                        <span><?= htmlspecialchars($errors['username']) ?></span>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="form-group">
@@ -67,15 +83,15 @@ require_once '../layouts/header-auth.php'
                         <circle cx="12" cy="7" r="4" />
                     </svg>
 
-                    <input type="text" id="fullname" placeholder="Nguyễn Văn A">
+                    <input type="text" id="fullname" name="fullname" placeholder="Nguyễn Văn A" **value="<?= htmlspecialchars($old_input['fullname'] ?? '') ?>"**>
+                    
                 </div>
-                <div class="error-message" id="fullname-error" style="display: none;">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="10" />
-                        <path fill="white" d="M12 8v4m0 4h.01" />
-                    </svg>
-                    <span></span>
-                </div>
+                <?php if (isset($errors['fullname'])): ?>
+                    <div class="error-message" style="display: block; color: red; margin-top: 5px;">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><path fill="white" d="M12 8v4m0 4h.01" /></svg>
+                        <span><?= htmlspecialchars($errors['fullname']) ?></span>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="form-group">
@@ -85,15 +101,14 @@ require_once '../layouts/header-auth.php'
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                         <path d="M22 6l-10 7L2 6" />
                     </svg>
-                    <input type="email" id="email" placeholder="email@example.com">
+                    <input type="email" id="email" name="email" placeholder="email@example.com" **value="<?= htmlspecialchars($old_input['email'] ?? '') ?>"**>
                 </div>
-                <div class="error-message" id="email-error" style="display: none;">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="10" />
-                        <path fill="white" d="M12 8v4m0 4h.01" />
-                    </svg>
-                    <span></span>
-                </div>
+                <?php if (isset($errors['email'])): ?>
+                    <div class="error-message" style="display: block; color: red; margin-top: 5px;">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><path fill="white" d="M12 8v4m0 4h.01" /></svg>
+                        <span><?= htmlspecialchars($errors['email']) ?></span>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="form-group">
@@ -119,8 +134,7 @@ require_once '../layouts/header-auth.php'
                         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
 
-                    <input type="password" id="password" placeholder="Ít nhất 6 ký tự">
-
+                    <input type="password" id="password" name="password" placeholder="Ít nhất 6 ký tự">
                     <button type="button" class="toggle-password" onclick="togglePassword('password')">
                         <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -134,13 +148,12 @@ require_once '../layouts/header-auth.php'
                     </div>
                     <div class="strength-text" id="strength-text"></div>
                 </div>
-                <div class="error-message" id="password-error" style="display: none;">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="10" />
-                        <path fill="white" d="M12 8v4m0 4h.01" />
-                    </svg>
-                    <span></span>
-                </div>
+                <?php if (isset($errors['password'])): ?>
+                    <div class="error-message" style="display: block; color: red; margin-top: 5px;">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><path fill="white" d="M12 8v4m0 4h.01" /></svg>
+                        <span><?= htmlspecialchars($errors['password']) ?></span>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="form-group">
@@ -151,7 +164,7 @@ require_once '../layouts/header-auth.php'
                         <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
 
-                    <input type="password" id="confirm-password" placeholder="Nhập lại mật khẩu">
+                    <input type="password" id="confirm-password" name="confirm_password" placeholder="Nhập lại mật khẩu">
 
                     <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')">
                         <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -160,19 +173,15 @@ require_once '../layouts/header-auth.php'
                         </svg>
                     </button>
                 </div>
-                <div class="error-message" id="confirm-password-error" style="display: none;">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="12" r="10" />
-                        <path fill="white" d="M12 8v4m0 4h.01" />
-                    </svg>
-                    <span></span>
-                </div>
+                <?php if (isset($errors['confirm_password'])): ?>
+                    <div class="error-message" style="display: block; color: red; margin-top: 5px;">
+                        <span><?= htmlspecialchars($errors['confirm_password']) ?></span>
+                    </div>
+                <?php endif; ?>
             </div>
-        </form>
-
-        <div class="terms-group">
+            <div class="terms-group">
             <div class="checkbox-wrapper">
-                <input type="checkbox" id="terms">
+                <input type="checkbox" id="terms" name="terms_agreed" required>
                 <label for="terms">
                     Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a>
                 </label>
@@ -186,15 +195,16 @@ require_once '../layouts/header-auth.php'
             </div>
         </div>
 
-        <button class="submit-btn" type='submit'>Đăng ký</button>
+        <button class="submit-btn" type='submit'>Đăng ký</button>        
+        </form>
 
         <div class="login-link">
-            Đã có tài khoản? <a href="./login.php">Đăng nhập ngay</a>
+            Đã có tài khoản? <a href="index.php?controller=auth&action=login">Đăng nhập ngay</a>
         </div>
     </div>
-
+    
 </body>
 
 <?php
-require_once '../layouts/footer-auth.php'
+require_once __DIR__ . '/../layouts/footer.php'; // (2) SỬ DỤNG footer.php
 ?>
