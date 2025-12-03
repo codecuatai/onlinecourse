@@ -9,7 +9,7 @@ $role = 2;
     <ul class="sidebar-menu">
         <!-- Menu chung -->
         <li>
-            <a href="dashboard.php" class="active">
+            <a href="<?php echo _HOST_URL . '/views/dashboard.php'; ?>" class="active">
                 <span class="icon">📊</span>
                 <span>Dashboard</span>
             </a>
@@ -86,7 +86,7 @@ $role = 2;
         <!-- Quản trị viên -->
         <?php if ($role == 2): ?>
             <li>
-                <a href="users/manage.php">
+                <a href="<?php echo _HOST_URL . '/views/users/manage.php'; ?>">
                     <span class="icon">👥</span>
                     <span>Quản lý người dùng</span>
                 </a>
