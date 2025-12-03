@@ -186,22 +186,14 @@ require_once '../layouts/header-auth.php'
             </div>
         </div>
 
-        <button class="submit-btn" type='submit' onclick="handleSubmit()">Đăng ký</button>
+        <button class="submit-btn" type='submit'>Đăng ký</button>
 
         <div class="login-link">
             Đã có tài khoản? <a href="./login.php">Đăng nhập ngay</a>
         </div>
     </div>
 
-    <div class="success-message" id="success-message">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-            <polyline points="22 4 12 14.01 9 11.01" />
-        </svg>
-        <span>Đăng ký thành công!</span>
-    </div>
 </body>
-
 
 <?php
 require_once '../layouts/footer-auth.php'

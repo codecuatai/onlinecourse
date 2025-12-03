@@ -20,7 +20,6 @@ require_once '../layouts/header-auth.php'
             <p id="page-description">Hãy nhập mật khẩu mới của bạn</p>
         </div>
 
-
         <div class="form-content">
             <!-- Step 1: Enter Email -->
             <div class="step-content active" id="content-1">
