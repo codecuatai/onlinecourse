@@ -60,20 +60,7 @@ require_once '../layouts/header-auth.php';
                     <p id="form-subtitle">Chào mừng bạn trở lại!</p>
                 </div>
 
-                <form action="">
-                    <!-- Full Name - Hidden for Login -->
-                    <div class="form-group hidden" id="fullname-group">
-                        <label for="fullname">Họ và tên</label>
-                        <div class="input-wrapper">
-                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                            <input type="text" id="fullname" placeholder="Nguyễn Văn A">
-                        </div>
-                        <div class="error-message hidden" id="fullname-error"></div>
-                    </div>
-
+                <form action="" method="post">
                     <!-- Email -->
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -106,36 +93,22 @@ require_once '../layouts/header-auth.php';
                         <div class="error-message hidden" id="password-error"></div>
                     </div>
 
-                    <!-- Confirm Password - Hidden for Login -->
-                    <div class="form-group hidden" id="confirm-password-group">
-                        <label for="confirm-password">Xác nhận mật khẩu</label>
-                        <div class="input-wrapper">
-                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                            </svg>
-                            <input type="password" id="confirm-password" placeholder="••••••••">
-                        </div>
-                        <div class="error-message hidden" id="confirm-password-error"></div>
-                    </div>
-
                     <!-- Remember & Forgot - Only for Login -->
                     <div class="remember-forgot" id="remember-forgot">
                         <label>
                             <input type="checkbox">
                             <span>Ghi nhớ đăng nhập</span>
                         </label>
-                        <a href="#">Quên mật khẩu?</a>
+                        <a href="./forgot.php">Quên mật khẩu?</a>
                     </div>
 
                     <!-- Submit Button -->
-                    <button class="submit-btn" onclick="handleSubmit()">Đăng nhập</button>
+                    <button class="submit-btn" type="submit">Đăng nhập</button>
                 </form>
 
                 <!-- Switch Mode -->
-                <div class="switch-mode">
-                    <span id="switch-text">Chưa có tài khoản? </span>
-                    <button onclick="switchMode()">Đăng ký ngay</button>
+                <div class=" login-link">
+                    Đã chưa có tài khoản? <a href="./register.php">Đăng kí ngay</a>
                 </div>
 
                 <!-- Divider -->

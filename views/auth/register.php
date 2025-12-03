@@ -33,109 +33,142 @@ require_once '../layouts/header-auth.php'
             </button>
         </div>
 
+
         <div class="divider">
             <span>hoặc đăng ký bằng email</span>
         </div>
 
-        <div class="form-group">
-            <label for="fullname">Họ và tên <span class="required">*</span></label>
-            <div class="input-wrapper">
-                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                </svg>
-                <input type="text" id="fullname" placeholder="Nguyễn Văn A">
-            </div>
-            <div class="error-message" id="fullname-error" style="display: none;">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="10" />
-                    <path fill="white" d="M12 8v4m0 4h.01" />
-                </svg>
-                <span></span>
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label for="email">Email <span class="required">*</span></label>
-            <div class="input-wrapper">
-                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <path d="M22 6l-10 7L2 6" />
-                </svg>
-                <input type="email" id="email" placeholder="email@example.com">
-            </div>
-            <div class="error-message" id="email-error" style="display: none;">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="10" />
-                    <path fill="white" d="M12 8v4m0 4h.01" />
-                </svg>
-                <span></span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="phone">Số điện thoại</label>
-            <div class="input-wrapper">
-                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                </svg>
-                <input type="tel" id="phone" placeholder="0912345678">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="password">Mật khẩu <span class="required">*</span></label>
-            <div class="input-wrapper">
-                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                <input type="password" id="password" placeholder="Ít nhất 6 ký tự">
-                <button type="button" class="toggle-password" onclick="togglePassword('password')">
-                    <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                        <circle cx="12" cy="12" r="3" />
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="fullname">Tên Tài Khoản <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
                     </svg>
-                </button>
-            </div>
-            <div class="password-strength" id="password-strength" style="display: none;">
-                <div class="strength-bar">
-                    <div class="strength-bar-fill" id="strength-bar"></div>
+
+                    <input type="text" id="username" placeholder="user1">
                 </div>
-                <div class="strength-text" id="strength-text"></div>
-            </div>
-            <div class="error-message" id="password-error" style="display: none;">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="10" />
-                    <path fill="white" d="M12 8v4m0 4h.01" />
-                </svg>
-                <span></span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="confirm-password">Xác nhận mật khẩu <span class="required">*</span></label>
-            <div class="input-wrapper">
-                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                <input type="password" id="confirm-password" placeholder="Nhập lại mật khẩu">
-                <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')">
-                    <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                        <circle cx="12" cy="12" r="3" />
+                <div class="error-message" id="fullname-error" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10" />
+                        <path fill="white" d="M12 8v4m0 4h.01" />
                     </svg>
-                </button>
+                    <span></span>
+                </div>
             </div>
-            <div class="error-message" id="confirm-password-error" style="display: none;">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="10" />
-                    <path fill="white" d="M12 8v4m0 4h.01" />
-                </svg>
-                <span></span>
+
+            <div class="form-group">
+                <label for="fullname">Họ và tên <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+
+                    <input type="text" id="fullname" placeholder="Nguyễn Văn A">
+                </div>
+                <div class="error-message" id="fullname-error" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10" />
+                        <path fill="white" d="M12 8v4m0 4h.01" />
+                    </svg>
+                    <span></span>
+                </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                <label for="email">Email <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <path d="M22 6l-10 7L2 6" />
+                    </svg>
+                    <input type="email" id="email" placeholder="email@example.com">
+                </div>
+                <div class="error-message" id="email-error" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10" />
+                        <path fill="white" d="M12 8v4m0 4h.01" />
+                    </svg>
+                    <span></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Bạn là <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <select name="role" required>
+                        <option value="-1" disabled selected hiddens>--Vui lòng lựa chọn loại người dùng--</option>
+                        <option value="0">Sinh Viên</option>
+                        <option value="2">Giảng Viên</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mật khẩu <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+
+                    <input type="password" id="password" placeholder="Ít nhất 6 ký tự">
+
+                    <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="password-strength" id="password-strength" style="display: none;">
+                    <div class="strength-bar">
+                        <div class="strength-bar-fill" id="strength-bar"></div>
+                    </div>
+                    <div class="strength-text" id="strength-text"></div>
+                </div>
+                <div class="error-message" id="password-error" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10" />
+                        <path fill="white" d="M12 8v4m0 4h.01" />
+                    </svg>
+                    <span></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm-password">Xác nhận mật khẩu <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+
+                    <input type="password" id="confirm-password" placeholder="Nhập lại mật khẩu">
+
+                    <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="error-message" id="confirm-password-error" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10" />
+                        <path fill="white" d="M12 8v4m0 4h.01" />
+                    </svg>
+                    <span></span>
+                </div>
+            </div>
+        </form>
 
         <div class="terms-group">
             <div class="checkbox-wrapper">
@@ -153,10 +186,10 @@ require_once '../layouts/header-auth.php'
             </div>
         </div>
 
-        <button class="submit-btn" onclick="handleSubmit()">Đăng ký</button>
+        <button class="submit-btn" type='submit' onclick="handleSubmit()">Đăng ký</button>
 
         <div class="login-link">
-            Đã có tài khoản? <a href="#">Đăng nhập ngay</a>
+            Đã có tài khoản? <a href="./login.php">Đăng nhập ngay</a>
         </div>
     </div>
 
