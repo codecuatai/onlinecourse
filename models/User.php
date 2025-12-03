@@ -2,26 +2,29 @@
 // models/User.php
 
 // Đường dẫn tương đối từ models/ ra config/
-require_once '../config/Database.php'; 
+require_once '../config/Database.php';
 
-class User {
+class User
+{
     private $conn;
     private $table_name = "users";
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db; // $db lúc này là đối tượng PDO
     }
 
     // [Chức năng Đăng ký] - Kiểm tra tồn tại bằng PDO
-    public function isExist($username, $email) {
+    public function isExist($username, $email)
+    {
         $query = "SELECT id FROM " . $this->table_name . " WHERE username = :username OR email = :email LIMIT 1";
-        
+
         try {
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
-            
+
             // Trả về true nếu có dòng dữ liệu (người dùng đã tồn tại)
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
@@ -31,12 +34,13 @@ class User {
     }
 
     // [Chức năng Đăng ký] - Tạo người dùng mới bằng PDO
-    public function create($username, $email, $password, $fullname) {
+    public function create($username, $email, $password, $fullname)
+    {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $query = "INSERT INTO " . $this->table_name . " 
                   (username, email, password, fullname, role) 
                   VALUES (:username, :email, :password, :fullname, :role)";
-        
+
         $role = 0; // Mặc định là Học viên
 
         try {
@@ -46,7 +50,7 @@ class User {
             $stmt->bindParam(':password', $hashed_password); // Đã hash
             $stmt->bindParam(':fullname', $fullname);
             $stmt->bindParam(':role', $role, PDO::PARAM_INT);
-            
+
             return $stmt->execute();
         } catch (PDOException $e) {
             // Xử lý lỗi CSDL (ví dụ: ghi log)
@@ -55,17 +59,18 @@ class User {
     }
 
     // [Chức năng Đăng nhập] - Tìm người dùng bằng username/email bằng PDO
-    public function findByUsername($username) {
+    public function findByUsername($username)
+    {
         $query = "SELECT id, username, password, fullname, role FROM " . $this->table_name . " WHERE username = :username OR email = :username LIMIT 1";
-        
+
         try {
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':username', $username);
             $stmt->execute();
-            
+
             // Thiết lập chế độ fetch là trả về mảng kết hợp
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            
+
             return $stmt->fetch(); // Trả về mảng dữ liệu người dùng hoặc false
         } catch (PDOException $e) {
             // Xử lý lỗi CSDL
@@ -73,9 +78,10 @@ class User {
         }
     }
     // Lấy danh sách tất cả người dùng (dành cho Admin)
-    public function getAllUsers() {
+    public function getAllUsers()
+    {
         $query = "SELECT id, username, email, fullname, role, created_at FROM " . $this->table_name . " ORDER BY created_at DESC";
-        
+
         try {
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
@@ -87,9 +93,10 @@ class User {
     }
 
     // Cập nhật vai trò (role) của người dùng
-    public function updateRole($user_id, $new_role) {
+    public function updateRole($user_id, $new_role)
+    {
         $query = "UPDATE " . $this->table_name . " SET role = :role WHERE id = :id";
-        
+
         try {
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':role', $new_role, PDO::PARAM_INT);

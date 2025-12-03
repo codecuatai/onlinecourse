@@ -9,11 +9,6 @@ class Material
         $this->conn = $db;
     }
 
-    /**
-     * Thêm tài liệu mới
-     * @param array $data ['lesson_id', 'filename', 'file_path', 'file_type']
-     * @return bool
-     */
     public function create($data)
     {
         $sql = "INSERT INTO {$this->table} 
@@ -27,11 +22,7 @@ class Material
         return $stmt->execute();
     }
 
-    /**
-     * Lấy tất cả tài liệu theo lesson_id
-     * @param int $lesson_id
-     * @return array
-     */
+
     public function getByLesson($lesson_id)
     {
         $sql = "SELECT * FROM {$this->table} WHERE lesson_id = :lesson_id ORDER BY uploaded_at DESC";
@@ -41,11 +32,7 @@ class Material
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Lấy 1 tài liệu theo ID
-     * @param int $id
-     * @return array|false
-     */
+
     public function getById($id)
     {
         $sql = "SELECT * FROM {$this->table} WHERE id = :id";
@@ -55,12 +42,7 @@ class Material
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Cập nhật thông tin tài liệu
-     * @param int $id
-     * @param array $data ['filename', 'file_path', 'file_type']
-     * @return bool
-     */
+
     public function update($id, $data)
     {
         $sql = "UPDATE {$this->table} SET 
@@ -76,11 +58,7 @@ class Material
         return $stmt->execute();
     }
 
-    /**
-     * Xóa tài liệu
-     * @param int $id
-     * @return bool
-     */
+
     public function delete($id)
     {
         $sql = "DELETE FROM {$this->table} WHERE id = :id";
@@ -89,11 +67,6 @@ class Material
         return $stmt->execute();
     }
 
-    /**
-     * Kiểm tra loại file hợp lệ
-     * @param string $file_type
-     * @return bool
-     */
     public static function isValidFileType($file_type)
     {
         $allowed = ['pdf', 'doc', 'docx', 'ppt', 'pptx'];
