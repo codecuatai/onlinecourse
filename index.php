@@ -1,4 +1,5 @@
 <?php
+require_once './config/config.php';
 // Bật chế độ báo cáo lỗi trong quá trình phát triển
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -24,7 +25,7 @@ spl_autoload_register(function ($class_name) {
         require_once $model_path;
         return;
     }
-    
+
     // 3. (TÙY CHỌN) Cho các file config/ (nếu cần)
     if ($class_name === 'Database' && file_exists('config/Database.php')) {
         require_once 'config/Database.php';
@@ -69,17 +70,16 @@ $controller_file = 'controllers/' . $controller_name . '.php';
 if (file_exists($controller_file)) {
     // Nạp Controller file
     require_once $controller_file;
-    
+
     if (class_exists($controller_name)) {
         $controller = new $controller_name();
-        
+
         // Cần đảm bảo rằng segments có đủ phần tử để slice
         $params = array_slice($segments, 2);
 
         if (method_exists($controller, $method_name)) {
             // Gọi phương thức (ví dụ: $authController->register())
             call_user_func_array([$controller, $method_name], $params);
-            
         } else {
             // Lỗi 404: Phương thức không tìm thấy
             header("HTTP/1.0 404 Not Found");
@@ -96,4 +96,3 @@ if (file_exists($controller_file)) {
     echo "404 Not Found: Controller **" . $controller_name . "** không tồn tại.";
 }
 // KHÔNG CÓ DẤU PHẨY (,) Ở ĐÂY
-?>
