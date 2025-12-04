@@ -24,6 +24,7 @@ require_once __DIR__ . '/../layouts/header-auth.php';
         <div class="form-content">
             <!-- Step 1: Enter Email -->
             <div class="step-content active" id="content-1">
+
                 <form action="" method="post">
                     <div class="form-group">
                         <label for="email">Email của bạn</label>
