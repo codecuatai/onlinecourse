@@ -1,6 +1,9 @@
 <?php
 // Bắt buộc phải có file config, nếu không có, ứng dụng sẽ không chạy đúng
-require_once './config/config.php'; 
+require_once "./config/config.php";
+require_once "./models/mailer/Exception.php";
+require_once "./models/mailer/PHPMailer.php";
+require_once "./models/mailer/SMTP.php";
 
 // ------------------------------------------------------------
 // CẤU HÌNH LỖI (CHỈ DÙNG TRONG MÔI TRƯỜNG PHÁT TRIỂN)
@@ -24,8 +27,8 @@ define('ROOT', __DIR__);
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
 $host = $_SERVER['HTTP_HOST'];
 // CẦN THAY ĐỔI: Đảm bảo tên thư mục dự án KHỚP VỚI THỰC TẾ
-$project_folder = '/onlinecourse'; 
-define('BASE_URL', $protocol . '://' . $host . $project_folder); 
+$project_folder = '/onlinecourse';
+define('BASE_URL', $protocol . '://' . $host . $project_folder);
 
 // ------------------------------------------------------------
 // 3. NẠP TẤT CẢ CÁC FILE CẦN THIẾT (Sử dụng require_once thủ công)
@@ -42,8 +45,8 @@ require_once ROOT . '/controllers/CourseController.php';
 
 // Lấy Controller và Action từ URL (Sử dụng $_GET)
 // Ví dụ: http://localhost:8080/onlinecourse/index.php?controller=auth&action=login
-$controller_segment = $_GET['controller'] ?? 'home'; 
-$method_segment = $_GET['action'] ?? 'index'; 
+$controller_segment = $_GET['controller'] ?? 'home';
+$method_segment = $_GET['action'] ?? 'index';
 
 // Chuẩn hóa tên Controller (e.g., 'auth' -> 'AuthController')
 $controller_name = ucfirst(strtolower($controller_segment)) . 'Controller';
@@ -63,9 +66,9 @@ $controller_class = $controller_name;
 
 // Kiểm tra xem Class (Controller) đã được nạp hay chưa
 if (class_exists($controller_class)) {
-    
+
     $controller = new $controller_class();
-    
+
     if (method_exists($controller, $method_name)) {
         // Gọi phương thức (Action)
         $controller->$method_name();
