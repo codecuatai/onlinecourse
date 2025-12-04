@@ -3,10 +3,12 @@
 // Yêu cầu các Model cần thiết
 require_once __DIR__ . '/../models/User.php';
 
-class AuthController {
+class AuthController
+{
     private $userModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         // Khởi tạo User Model để tương tác với CSDL
         $this->userModel = new User();
     }
@@ -14,7 +16,8 @@ class AuthController {
     /**
      * Hiển thị trang đăng nhập.
      */
-    public function login() {
+    public function login()
+    {
         // Hiển thị view đăng nhập
         // LƯU Ý: Nếu có thông báo lỗi từ session, cần truyền vào view
         include_once __DIR__ . '/../views/auth/login.php';
@@ -23,7 +26,8 @@ class AuthController {
     /**
      * Xử lý logic đăng nhập (POST request).
      */
-    public function processLogin() {
+    public function processLogin()
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             // Chỉ chấp nhận phương thức POST
             header('Location: index.php?controller=auth&action=login');
@@ -63,7 +67,6 @@ class AuthController {
                     header('Location: index.php?controller=student&action=dashboard');
                 }
                 exit;
-
             } else {
                 $errors[] = "Tên đăng nhập/Mật khẩu không chính xác.";
             }
@@ -80,7 +83,8 @@ class AuthController {
     /**
      * Hiển thị trang đăng ký.
      */
-    public function register() {
+    public function register()
+    {
         // Hiển thị view đăng ký
         include_once __DIR__ . '/../views/auth/register.php';
     }
@@ -88,7 +92,8 @@ class AuthController {
     /**
      * Xử lý logic đăng ký (POST request).
      */
-    public function processRegister() {
+    public function processRegister()
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?controller=auth&action=register');
             exit;
@@ -103,14 +108,14 @@ class AuthController {
             'confirm_password' => $_POST['confirm_password'] ?? '',
             'role' => (int)($_POST['role'] ?? 0), // Nhận giá trị 0 hoặc 1/2 từ form
         ];
-        
+
         $errors = [];
 
         // 1. Validation chi tiết
         if (empty($data['username'])) $errors['username'] = "Tên tài khoản không được để trống.";
         if (empty($data['fullname'])) $errors['fullname'] = "Họ và tên không được để trống.";
         if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-             $errors['email'] = "Email không hợp lệ.";
+            $errors['email'] = "Email không hợp lệ.";
         }
         if (strlen($data['password']) < 6) $errors[] = "Mật khẩu phải có ít nhất 6 ký tự.";
         if ($data['password'] !== $data['confirm_password']) $errors['confirm_password'] = "Xác nhận mật khẩu không khớp.";
@@ -142,16 +147,18 @@ class AuthController {
         header('Location: index.php?controller=auth&action=register');
         exit;
     }
-        // Trong AuthController.php
-        public function forgotPassword() {
-            // Logic hiển thị form quên mật khẩu
-            include_once ROOT . '/views/auth/forgot.php'; 
-        }
+    // Trong AuthController.php
+    public function forgotPassword()
+    {
+        // Logic hiển thị form quên mật khẩu
+        include_once ROOT . '/views/auth/forgot.php';
+    }
 
     /**
      * Xử lý đăng xuất.
      */
-    public function logout() {
+    public function logout()
+    {
         session_start();
         // Hủy bỏ tất cả các biến session
         $_SESSION = [];
