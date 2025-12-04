@@ -68,8 +68,11 @@ unset($_SESSION['success_message']);
                     <input type="text" id="username" name="username" placeholder="user1" value="<?= htmlspecialchars($old_input['username'] ?? '') ?>">
                 </div>
                 <?php if (isset($errors['username'])): ?>
-                    <div class="error-message" style="display: block; color: red; margin-top: 5px;"> 
-                        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><path fill="white" d="M12 8v4m0 4h.01" /></svg>
+                    <div class="error-message" style="display: block; color: red; margin-top: 5px;">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <path fill="white" d="M12 8v4m0 4h.01" />
+                        </svg>
                         <span><?= htmlspecialchars($errors['username']) ?></span>
                     </div>
                 <?php endif; ?>
@@ -83,12 +86,15 @@ unset($_SESSION['success_message']);
                         <circle cx="12" cy="7" r="4" />
                     </svg>
 
-                    <input type="text" id="fullname" name="fullname" placeholder="Nguyễn Văn A" **value="<?= htmlspecialchars($old_input['fullname'] ?? '') ?>"**>
-                    
+                    <input type="text" id="fullname" name="fullname" placeholder="Nguyễn Văn A" **value="<?= htmlspecialchars($old_input['fullname'] ?? '') ?>" **>
+
                 </div>
                 <?php if (isset($errors['fullname'])): ?>
                     <div class="error-message" style="display: block; color: red; margin-top: 5px;">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><path fill="white" d="M12 8v4m0 4h.01" /></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <path fill="white" d="M12 8v4m0 4h.01" />
+                        </svg>
                         <span><?= htmlspecialchars($errors['fullname']) ?></span>
                     </div>
                 <?php endif; ?>
@@ -101,11 +107,14 @@ unset($_SESSION['success_message']);
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                         <path d="M22 6l-10 7L2 6" />
                     </svg>
-                    <input type="email" id="email" name="email" placeholder="email@example.com" **value="<?= htmlspecialchars($old_input['email'] ?? '') ?>"**>
+                    <input type="email" id="email" name="email" placeholder="email@example.com" **value="<?= htmlspecialchars($old_input['email'] ?? '') ?>" **>
                 </div>
                 <?php if (isset($errors['email'])): ?>
                     <div class="error-message" style="display: block; color: red; margin-top: 5px;">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><path fill="white" d="M12 8v4m0 4h.01" /></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <path fill="white" d="M12 8v4m0 4h.01" />
+                        </svg>
                         <span><?= htmlspecialchars($errors['email']) ?></span>
                     </div>
                 <?php endif; ?>
@@ -150,7 +159,10 @@ unset($_SESSION['success_message']);
                 </div>
                 <?php if (isset($errors['password'])): ?>
                     <div class="error-message" style="display: block; color: red; margin-top: 5px;">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><path fill="white" d="M12 8v4m0 4h.01" /></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <path fill="white" d="M12 8v4m0 4h.01" />
+                        </svg>
                         <span><?= htmlspecialchars($errors['password']) ?></span>
                     </div>
                 <?php endif; ?>
@@ -180,31 +192,31 @@ unset($_SESSION['success_message']);
                 <?php endif; ?>
             </div>
             <div class="terms-group">
-            <div class="checkbox-wrapper">
-                <input type="checkbox" id="terms" name="terms_agreed" required>
-                <label for="terms">
-                    Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a>
-                </label>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="terms" name="terms_agreed" required>
+                    <label for="terms">
+                        Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a>
+                    </label>
+                </div>
+                <div class="error-message" id="terms-error" style="display: none; margin-top: 6px;">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="12" r="10" />
+                        <path fill="white" d="M12 8v4m0 4h.01" />
+                    </svg>
+                    <span></span>
+                </div>
             </div>
-            <div class="error-message" id="terms-error" style="display: none; margin-top: 6px;">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="10" />
-                    <path fill="white" d="M12 8v4m0 4h.01" />
-                </svg>
-                <span></span>
-            </div>
-        </div>
 
-        <button class="submit-btn" type='submit'>Đăng ký</button>        
+            <button class="submit-btn" type='submit'>Đăng ký</button>
         </form>
 
         <div class="login-link">
             Đã có tài khoản? <a href="index.php?controller=auth&action=login">Đăng nhập ngay</a>
         </div>
     </div>
-    
+
 </body>
 
 <?php
-require_once __DIR__ . '/../layouts/footer.php'; // (2) SỬ DỤNG footer.php
+require_once __DIR__ . '/../layouts/footer-auth.php';
 ?>
