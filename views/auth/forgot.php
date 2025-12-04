@@ -1,5 +1,5 @@
 <?php
-require_once '../layouts/header-auth.php'
+require_once __DIR__ . '/../layouts/header-auth.php';
 ?>
 
 <body>

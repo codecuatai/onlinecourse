@@ -1,98 +1,83 @@
 <?php
-require_once './config/config.php';
-// Bật chế độ báo cáo lỗi trong quá trình phát triển
+// Bắt buộc phải có file config, nếu không có, ứng dụng sẽ không chạy đúng
+require_once './config/config.php'; 
+
+// ------------------------------------------------------------
+// CẤU HÌNH LỖI (CHỈ DÙNG TRONG MÔI TRƯỜNG PHÁT TRIỂN)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Bắt đầu Session (cần thiết cho Đăng nhập/Đăng ký của Nhóm 1)
-session_start();
-
 // ------------------------------------------------------------
-// 1. AUTOLOAD (Tự động nạp các lớp/class)
-// Hàm spl_autoload_register() là cách hiện đại và được khuyến nghị để tự động nạp class
-spl_autoload_register(function ($class_name) {
-    // 1. Kiểm tra Controllers
-    $controller_path = 'controllers/' . $class_name . '.php';
-    if (file_exists($controller_path)) {
-        require_once $controller_path;
-        return;
-    }
-
-    // 2. Kiểm tra Models
-    $model_path = 'models/' . $class_name . '.php';
-    if (file_exists($model_path)) {
-        require_once $model_path;
-        return;
-    }
-
-    // 3. (TÙY CHỌN) Cho các file config/ (nếu cần)
-    if ($class_name === 'Database' && file_exists('config/Database.php')) {
-        require_once 'config/Database.php';
-        return;
-    }
-});
-
-// ------------------------------------------------------------
-// 2. ROUTING (Xử lý URL)
-
-// Định nghĩa thư mục gốc của dự án (BASE_URL)
-// Ví dụ: Nếu bạn truy cập http://localhost/onlinecourse/ => BASE_URL là '/onlinecourse'
-// Nếu bạn truy cập http://localhost/ => BASE_URL là ''
-$base_url = str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
-
-// Lấy toàn bộ URL yêu cầu
-$full_uri = $_SERVER['REQUEST_URI'];
-
-// Loại bỏ base URL và loại bỏ các tham số query (nếu có)
-$request_uri = str_replace($base_url, '', $full_uri);
-$request_uri = strtok($request_uri, '?');
-$request_uri = trim($request_uri, '/');
-
-$segments = explode('/', $request_uri);
-
-// Router cơ bản: Controller là segment đầu tiên, Method là segment thứ hai
-$controller_name = !empty($segments[0]) ? ucfirst($segments[0]) . 'Controller' : 'HomeController';
-$method_name = !empty($segments[1]) ? $segments[1] : 'index';
-
-// Trường hợp đặc biệt: Nếu segments[0] rỗng (tức là trang chủ)
-if (empty($segments[0])) {
-    $controller_name = 'HomeController';
-    $method_name = 'index';
+// 1. KHỞI ĐỘNG SESSION
+// Session cần thiết cho việc duy trì trạng thái đăng nhập/giỏ hàng
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
+// ------------------------------------------------------------
+// 2. ĐỊNH NGHĨA HẰNG SỐ ROOT VÀ BASE_URL
+// Định nghĩa ROOT (Đường dẫn File tuyệt đối đến thư mục gốc)
+define('ROOT', __DIR__);
+
+// Định nghĩa BASE_URL (Đường dẫn HTTP tuyệt đối cho Assets)
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+$host = $_SERVER['HTTP_HOST'];
+// CẦN THAY ĐỔI: Đảm bảo tên thư mục dự án KHỚP VỚI THỰC TẾ
+$project_folder = '/onlinecourse'; 
+define('BASE_URL', $protocol . '://' . $host . $project_folder); 
 
 // ------------------------------------------------------------
-// 3. THỰC THI (Dispatching)
+// 3. NẠP TẤT CẢ CÁC FILE CẦN THIẾT (Sử dụng require_once thủ công)
+// Nếu bạn sử dụng phương pháp này, bạn phải đảm bảo rằng TẤT CẢ Controllers 
+// và Database/Config file đều được thêm vào đây.
+require_once ROOT . '/config/Database.php';
+require_once ROOT . '/controllers/AuthController.php';
+require_once ROOT . '/controllers/HomeController.php';
+require_once ROOT . '/controllers/CourseController.php';
+// Lưu ý: Nếu có Models, bạn cũng cần require chúng ở đây.
 
-$controller_file = 'controllers/' . $controller_name . '.php';
+// ------------------------------------------------------------
+// 4. ROUTING (Xử lý URL Dựa trên Tham số GET) - Phương pháp cũ hơn
 
-if (file_exists($controller_file)) {
-    // Nạp Controller file
-    require_once $controller_file;
+// Lấy Controller và Action từ URL (Sử dụng $_GET)
+// Ví dụ: http://localhost:8080/onlinecourse/index.php?controller=auth&action=login
+$controller_segment = $_GET['controller'] ?? 'home'; 
+$method_segment = $_GET['action'] ?? 'index'; 
 
-    if (class_exists($controller_name)) {
-        $controller = new $controller_name();
+// Chuẩn hóa tên Controller (e.g., 'auth' -> 'AuthController')
+$controller_name = ucfirst(strtolower($controller_segment)) . 'Controller';
+$method_name = strtolower($method_segment);
 
-        // Cần đảm bảo rằng segments có đủ phần tử để slice
-        $params = array_slice($segments, 2);
+// Xử lý các action liên quan đến POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ví dụ: action=login (POST) -> processLogin
+    $method_name = 'process' . ucfirst($method_name);
+}
 
-        if (method_exists($controller, $method_name)) {
-            // Gọi phương thức (ví dụ: $authController->register())
-            call_user_func_array([$controller, $method_name], $params);
-        } else {
-            // Lỗi 404: Phương thức không tìm thấy
-            header("HTTP/1.0 404 Not Found");
-            echo "404 Not Found: Phương thức **" . $method_name . "** không tồn tại trong Controller **" . $controller_name . "**";
-        }
+// KHÔNG cần kiểm tra $controller_file vì chúng ta đã require_once ở trên
+$controller_class = $controller_name;
+
+// ------------------------------------------------------------
+// 5. THỰC THI CONTROLLER/ACTION
+
+// Kiểm tra xem Class (Controller) đã được nạp hay chưa
+if (class_exists($controller_class)) {
+    
+    $controller = new $controller_class();
+    
+    if (method_exists($controller, $method_name)) {
+        // Gọi phương thức (Action)
+        $controller->$method_name();
     } else {
-        // Lỗi: Lớp Controller không tìm thấy (hiếm gặp)
+        // Xử lý lỗi: Action không tồn tại
         header("HTTP/1.0 404 Not Found");
-        echo "404 Not Found: Lớp Controller **" . $controller_name . "** không tồn tại.";
+        echo "<h1>404 Not Found</h1>";
+        echo "<p>Action '{$method_name}' không tồn tại trong Controller '{$controller_class}'.</p>";
     }
 } else {
-    // Lỗi 404: Controller file không tìm thấy
+    // Xử lý lỗi: Controller không tồn tại (Lỗi này hiếm xảy ra nếu đã require ở bước 3)
     header("HTTP/1.0 404 Not Found");
-    echo "404 Not Found: Controller **" . $controller_name . "** không tồn tại.";
+    echo "<h1>404 Not Found</h1>";
+    echo "<p>Controller '{$controller_class}' không tồn tại. Đảm bảo tên Class đã đúng.</p>";
 }
-// KHÔNG CÓ DẤU PHẨY (,) Ở ĐÂY

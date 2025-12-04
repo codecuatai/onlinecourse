@@ -1,5 +1,18 @@
 <?php
-require_once '../layouts/header-auth.php';
+require_once __DIR__ . '/../layouts/header-auth.php';
+// Khởi tạo session để lấy dữ liệu/thông báo lỗi từ Controller (cần thiết cho MVC)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$errors = $_SESSION['login_errors'] ?? [];
+$success_message = $_SESSION['success_message'] ?? '';
+$old_input = $_SESSION['old_input'] ?? [];
+
+// Xóa thông báo lỗi và dữ liệu cũ sau khi lấy ra để không hiển thị lại
+unset($_SESSION['login_errors']);
+unset($_SESSION['success_message']);
+unset($_SESSION['old_input']);
 ?>
 
 <body>
@@ -60,7 +73,7 @@ require_once '../layouts/header-auth.php';
                     <p id="form-subtitle">Chào mừng bạn trở lại!</p>
                 </div>
 
-                <form action="" method="post">
+                <form action="index.php?controller=auth&action=login" method="post">
                     <!-- Email -->
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -69,7 +82,7 @@ require_once '../layouts/header-auth.php';
                                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                                 <path d="M22 6l-10 7L2 6" />
                             </svg>
-                            <input type="email" id="email" placeholder="email@example.com">
+                            <input type="email" id="email" name="username" placeholder="email@example.com">
                         </div>
                         <div class="error-message hidden" id="email-error"></div>
                     </div>
@@ -82,7 +95,7 @@ require_once '../layouts/header-auth.php';
                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                             </svg>
-                            <input type="password" id="password" placeholder="••••••••">
+                            <input type="password" id="password" name="password" placeholder="••••••••">
                             <button type="button" class="toggle-password" onclick="togglePassword('password')">
                                 <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -99,7 +112,7 @@ require_once '../layouts/header-auth.php';
                             <input type="checkbox">
                             <span>Ghi nhớ đăng nhập</span>
                         </label>
-                        <a href="./forgot.php">Quên mật khẩu?</a>
+                        <a href="index.php?controller=auth&action=forgotPassword">Quên mật khẩu?</a>
                     </div>
 
                     <!-- Submit Button -->
@@ -108,7 +121,7 @@ require_once '../layouts/header-auth.php';
 
                 <!-- Switch Mode -->
                 <div class=" login-link">
-                    Đã chưa có tài khoản? <a href="./register.php">Đăng kí ngay</a>
+                    Đã chưa có tài khoản? <a href="index.php?controller=auth&action=register">Đăng kí ngay</a>
                 </div>
 
                 <!-- Divider -->
@@ -140,4 +153,4 @@ require_once '../layouts/header-auth.php';
 </body>
 
 <?php
-require_once '../layouts/footer-auth.php';
+require_once __DIR__ . '/../layouts/footer-auth.php';
