@@ -130,7 +130,7 @@ unset($_SESSION['success_message']);
                     <select name="role" required>
                         <option value="-1" disabled selected hiddens>--Vui lòng lựa chọn loại người dùng--</option>
                         <option value="0">Sinh Viên</option>
-                        <option value="2">Giảng Viên</option>
+                        <option value="1">Giảng Viên</option>
                     </select>
                 </div>
             </div>
