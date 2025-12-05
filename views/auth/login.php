@@ -16,6 +16,8 @@ unset($_SESSION['old_input']);
 ?>
 
 <body>
+
+    <form action="index.php?controller=auth&action=processLogin" method="POST">
     <div class="container">
         <!-- Left Side - Branding -->
         <div class="branding">
@@ -82,9 +84,13 @@ unset($_SESSION['old_input']);
                                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                                 <path d="M22 6l-10 7L2 6" />
                             </svg>
-                            <input type="email" id="email" name="username" placeholder="email@example.com">
+                            <input type="email" id="email" name="username" placeholder="email@example.com" value="<?= htmlspecialchars($old_input['username'] ?? '') ?>">
+                            <?php if (isset($errors['username'])): ?>
+                                <div class="error-message" style="display: block; color: red; margin-top: 5px;">
+                                    <span><?= htmlspecialchars($errors['username']) ?></span>
+                                </div>
+                            <?php endif; ?>
                         </div>
-                        <div class="error-message hidden" id="email-error"></div>
                     </div>
 
                     <!-- Password -->
@@ -103,7 +109,11 @@ unset($_SESSION['old_input']);
                                 </svg>
                             </button>
                         </div>
-                        <div class="error-message hidden" id="password-error"></div>
+                        <?php if (isset($errors['password'])): ?>
+                            <div class="error-message" style="display: block; color: red; margin-top: 5px;">
+                                <span><?= htmlspecialchars($errors['password']) ?></span>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Remember & Forgot - Only for Login -->

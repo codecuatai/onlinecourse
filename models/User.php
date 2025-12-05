@@ -42,7 +42,7 @@ class User
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
+    
     /**
      * Kiểm tra xem username hoặc email đã tồn tại trong CSDL chưa (dùng cho validation đăng ký).
      * @param string $username Tên đăng nhập.
@@ -70,8 +70,8 @@ class User
             // Trả về true nếu có dòng dữ liệu (người dùng đã tồn tại)
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
-            // Xử lý lỗi CSDL nếu cần thiết
-            return false;
+             // Xử lý lỗi CSDL nếu cần thiết
+             return false;
         }
     }
 
@@ -84,7 +84,7 @@ class User
     {
         // Lấy và băm mật khẩu (Giữ lại PASSWORD_BCRYPT/PASSWORD_DEFAULT là an toàn)
         $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
-
+        
         // Giữ lại query của nhánh Duong, thêm created_at
         $query = "INSERT INTO " . $this->table . " (username, email, password, fullname, role, created_at) 
                   VALUES (:username, :email, :password, :fullname, :role, NOW())";
@@ -96,12 +96,12 @@ class User
         $email = htmlspecialchars(strip_tags($data['email']));
         $fullname = htmlspecialchars(strip_tags($data['fullname']));
         // Đặt role mặc định nếu không được truyền vào, hoặc lấy từ data nếu có
-        $role = (int)($data['role'] ?? 0);
+        $role = (int)($data['role'] ?? 0); 
 
         // Ràng buộc tham số (Binding Parameters)
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hashed_password);
+        $stmt->bindParam(':password', $hashed_password); 
         $stmt->bindParam(':fullname', $fullname);
         $stmt->bindParam(':role', $role, PDO::PARAM_INT); // Ràng buộc kiểu dữ liệu số nguyên
 
@@ -112,7 +112,7 @@ class User
             // Hiển thị lỗi nghiêm trọng (chỉ trong môi trường phát triển)
             echo "<h2>LỖI NGHIÊM TRỌNG KHI GHI VÀO CSDL</h2>";
             echo "Chi tiết lỗi PDO: " . $e->getMessage();
-            exit;
+            exit; 
         }
     }
 
@@ -126,7 +126,7 @@ class User
     {
         return password_verify($inputPassword, $hashedPassword);
     }
-
+    
     // Lấy danh sách tất cả người dùng (dành cho Admin)
     public function getAllUsers()
     {
@@ -136,7 +136,7 @@ class User
         try {
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); 
         } catch (PDOException $e) {
             return [];
         }
@@ -160,3 +160,4 @@ class User
 
     // Thêm các phương thức CRUD khác tại đây (updateUser, deleteUser...)
 }
+?>
