@@ -1,6 +1,6 @@
 <?php
 
-$role = 2; // 0 = học viên, 1 = giảng viên, 2 = admin
+$role = 1; // 0 = học viên, 1 = giảng viên, 2 = admin
 
 ?>
 <aside class="sidebar">

@@ -1,3 +1,27 @@
+<?php
+// Load Database và Course Model
+require_once __DIR__ . '/../../config/Database.php';
+require_once __DIR__ . '/../../models/Course.php';
+
+try {
+    // Kết nối database
+    $database = new Database();
+    $db = $database->getConnection();
+
+    // Tạo object Course
+    $courseModel = new Course($db);
+
+    // Lấy khóa học
+    $result = $courseModel->getCoursesByInstructor(1);
+    $courses = $result->fetchAll(PDO::FETCH_ASSOC);
+    
+} catch (Exception $e) {
+    echo "<div class='alert alert-danger'>Lỗi: " . htmlspecialchars($e->getMessage()) . "</div>";
+    $courses = [];
+}
+?>
+
+
 <!-- Courses Grid -->
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-5">
     <!-- Course 1 -->
@@ -232,7 +256,7 @@
     </div>
 
     <!-- Course 8 -->
-    <div class="col">
+    <!-- <div class="col">
         <div class="card course-card h-100">
             <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400" class="course-img" alt="Course">
             <div class="card-body d-flex flex-column">
@@ -263,4 +287,52 @@
             </div>
         </div>
     </div>
+</div> -->
+
+ <!-- DATABASE COURSES (Dữ liệu từ database) -->
+    <?php if (!empty($courses)): ?>
+        <?php foreach ($courses as $c): 
+            $img = !empty($c['image']) ? htmlspecialchars($c['image']) : 'https://via.placeholder.com/400x240?text=No+Image';
+            $title = htmlspecialchars($c['title'] ?? 'Không có tên');
+            $desc = htmlspecialchars($c['description'] ?? 'Mô tả khóa học');
+            $price = number_format((float)($c['price'] ?? 0), 0, ',', '.');
+            $level = htmlspecialchars($c['level'] ?? 'Beginner');
+            $duration = (int)($c['duration_weeks'] ?? 0);
+            $id = (int)($c['id'] ?? 0);
+            $instructor_id = (int)($c['instructor_id'] ?? 1);
+            $rating = 4.8;
+            $students = 234;
+            $instructor_name = 'Giảng viên';
+        ?>
+        <!-- Course from Database -->
+        <div class="col">
+            <div class="card course-card h-100">
+                <img src="<?php echo $img; ?>" class="card-img-top" alt="<?php echo $title; ?>" style="height: 180px; object-fit: cover;">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-primary"><?php echo $level; ?></span>
+                        <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> <?php echo $rating; ?></span>
+                    </div>
+                    <h5 class="card-title mb-2"><?php echo $title; ?></h5>
+                    <p class="card-text text-muted small mb-3"><?php echo $desc; ?></p>
+                    <div class="mt-auto">
+                        <div class="d-flex align-items-center mb-2 small text-muted">
+                            <i class="fas fa-user me-1"></i><?php echo $students; ?> học viên
+                            <span class="mx-2">•</span>
+                            <i class="fas fa-clock me-1"></i><?php echo $duration; ?> tuần
+                        </div>
+                        <div class="d-flex align-items-center text-muted small mb-3">
+                            <img src="https://i.pravatar.cc/30?img=<?php echo $instructor_id; ?>" class="rounded-circle me-2" width="24" height="24" alt="Instructor">
+                            <span><?php echo $instructor_name; ?></span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-danger" style="font-size: 18px;"><?php echo $price; ?>₫</span>
+                            <button class="btn btn-primary btn-sm">Xem chi tiết</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </div>
