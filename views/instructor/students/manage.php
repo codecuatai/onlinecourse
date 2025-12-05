@@ -4,13 +4,21 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 ?>
 
 <div class="container-fluid mt-4">
-    <h4 class="mb-4">Danh sách sinh viên - Khóa học: Python cho Người Mới</h4>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">Danh sách sinh viên - Khóa học: Python cho Người Mới</h4>
+
+        <!-- Nút quay lại -->
+        <a href="../course/manage.php" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
 
     <!-- Nút thêm sinh viên mới -->
     <div class="mb-3">
-        <button class="btn btn-success">
+        <a href="./create.php" class="btn btn-success">
             <i class="fas fa-plus"></i> Thêm sinh viên mới
-        </button>
+        </a>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -29,6 +37,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         </tr>
                     </thead>
                     <tbody>
+
                         <tr class="text-center">
                             <td>1</td>
                             <td class="text-start">Nguyễn Văn A</td>
@@ -40,9 +49,9 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             <td>75%</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-sm btn-warning">
+                                    <a href="./edit.php" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Sửa
-                                    </button>
+                                    </a>
                                     <button class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash"></i> Xóa
                                     </button>
@@ -71,18 +80,13 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             </td>
                         </tr>
 
-                        <!-- Khi chưa có sinh viên -->
-                        <!--
-                        <tr>
-                            <td colspan="7" class="text-center text-muted">Chưa có sinh viên nào đăng ký.</td>
-                        </tr>
-                        -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
 
 
 

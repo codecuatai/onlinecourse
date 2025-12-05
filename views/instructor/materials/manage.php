@@ -4,13 +4,21 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 ?>
 
 <div class="container-fluid mt-4">
-    <h4 class="mb-4">Quản lý tài liệu - Khóa học: Python cho Người Mới</h4>
+
+    <!-- Header + nút quay lại -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">Quản lý tài liệu - Khóa học: Python cho Người Mới</h4>
+
+        <a href="javascript:history.back()" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
 
     <!-- Nút tải tài liệu mới -->
     <div class="mb-3">
-        <button class="btn btn-success">
+        <a class="btn btn-success" href="./create.php">
             <i class="fas fa-plus"></i> Tải tài liệu mới
-        </button>
+        </a>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -40,9 +48,9 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-sm btn-warning">
+                                    <a href="./edit.php" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Sửa
-                                    </button>
+                                    </a>
                                     <button class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash"></i> Xóa
                                     </button>
@@ -62,9 +70,9 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-sm btn-warning">
+                                    <a href="./edit.php" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Sửa
-                                    </button>
+                                    </a>
                                     <button class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash"></i> Xóa
                                     </button>
@@ -85,8 +93,6 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
     </div>
 </div>
 
-
-
-
 <?php
 require_once _PATH_URL . '/../views/layouts/footer.php';
+?>

@@ -4,13 +4,21 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 ?>
 
 <div class="container-fluid mt-4">
-    <h4 class="mb-4">Danh sách bài học - Khóa học: Python cho Người Mới</h4>
+
+    <!-- Header + nút quay lại -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">Quản lý bài học - Python cho Người Mới</h4>
+
+        <a href="javascript:history.back()" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
 
     <!-- Nút tạo bài học mới -->
     <div class="mb-3">
-        <button class="btn btn-success">
+        <a class="btn btn-success" href="./create.php">
             <i class="fas fa-plus"></i> Tạo bài học mới
-        </button>
+        </a>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -19,7 +27,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                 <table class="table table-striped table-hover align-middle mb-0">
                     <thead class="table-dark text-center">
                         <tr>
-                            <th>Thứ tự</th>
+                            <th>#</th>
                             <th>Tên bài học</th>
                             <th>Video</th>
                             <th>Tài liệu</th>
@@ -27,26 +35,28 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             <th>Hành động</th>
                         </tr>
                     </thead>
+
                     <tbody>
+                        <!-- Bài học 1 -->
                         <tr class="text-center">
-                            <td>1</td>
+                            <th>1</th>
                             <td class="text-start">Giới thiệu Python</td>
                             <td>
-                                <a href="https://example.com/video1.mp4" target="_blank" class="btn btn-sm btn-primary">
+                                <a href="video1.mp4" target="_blank" class="btn btn-sm btn-primary">
                                     <i class="fas fa-video"></i> Xem video
                                 </a>
                             </td>
                             <td>
-                                <a href="https://example.com/doc1.pdf" target="_blank" class="btn btn-sm btn-secondary">
+                                <a href="doc1.pdf" target="_blank" class="btn btn-sm btn-secondary">
                                     <i class="fas fa-file-pdf"></i> Tài liệu
                                 </a>
                             </td>
                             <td>01/12/2025</td>
                             <td>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-sm btn-warning">
+                                <div class="d-flex justify-content-center flex-wrap gap-1">
+                                    <a href="./edit.php" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Sửa
-                                    </button>
+                                    </a>
                                     <button class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash"></i> Xóa
                                     </button>
@@ -54,25 +64,26 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             </td>
                         </tr>
 
+                        <!-- Bài học 2 -->
                         <tr class="text-center">
-                            <td>2</td>
+                            <th>2</th>
                             <td class="text-start">Biến và kiểu dữ liệu</td>
                             <td>
-                                <a href="https://example.com/video2.mp4" target="_blank" class="btn btn-sm btn-primary">
+                                <a href="video2.mp4" target="_blank" class="btn btn-sm btn-primary">
                                     <i class="fas fa-video"></i> Xem video
                                 </a>
                             </td>
                             <td>
-                                <a href="https://example.com/doc2.pdf" target="_blank" class="btn btn-sm btn-secondary">
+                                <a href="doc2.pdf" target="_blank" class="btn btn-sm btn-secondary">
                                     <i class="fas fa-file-pdf"></i> Tài liệu
                                 </a>
                             </td>
                             <td>02/12/2025</td>
                             <td>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-sm btn-warning">
+                                <div class="d-flex justify-content-center flex-wrap gap-1">
+                                    <a href="./edit.php" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Sửa
-                                    </button>
+                                    </a>
                                     <button class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash"></i> Xóa
                                     </button>
@@ -80,12 +91,15 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             </td>
                         </tr>
 
-                        <!-- Khi chưa có bài học -->
-                        <!--
+                        <!-- Nếu chưa có dữ liệu -->
+                        <!-- 
                         <tr>
-                            <td colspan="6" class="text-center text-muted">Chưa có bài học nào.</td>
+                            <td colspan="6" class="text-center text-muted py-3">
+                                Chưa có bài học nào.
+                            </td>
                         </tr>
                         -->
+
                     </tbody>
                 </table>
             </div>

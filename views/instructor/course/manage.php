@@ -8,9 +8,9 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
     <!-- Nút tạo khóa học mới -->
     <div class="mb-3">
-        <button class="btn btn-success">
+        <a class="btn btn-success" href="./create.php">
             <i class="fas fa-plus"></i> Tạo khóa học mới
-        </button>
+        </a>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -41,9 +41,9 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             <td><span class="badge bg-warning text-dark">Chờ duyệt</span></td>
                             <td>
                                 <div class="d-flex justify-content-center flex-wrap gap-1">
-                                    <button class="btn btn-sm btn-warning">
+                                    <a href="./edit.php" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Sửa
-                                    </button>
+                                    </a>
                                     <a href="../students/manage.php" class="btn btn-sm btn-info">
                                         <i class="fas fa-book"></i> Sinh viên
                                     </a>
@@ -58,13 +58,6 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             </td>
                         </tr>
 
-
-                        <!-- Khi không có khóa học -->
-                        <!--
-                        <tr>
-                            <td colspan="8" class="text-center text-muted">Chưa có khóa học nào.</td>
-                        </tr>
-                        -->
                     </tbody>
                 </table>
             </div>
