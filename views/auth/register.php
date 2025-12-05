@@ -51,11 +51,17 @@ unset($_SESSION['success_message']);
             <span>hoặc đăng ký bằng email</span>
         </div>
 
-        <?php if (!empty($success_message)): ?>
-            <div style="color: green; padding: 10px; margin-bottom: 15px; border: 1px solid green; background-color: #e6ffe6; border-radius: 4px;">
-                <?= htmlspecialchars($success_message) ?>
+        <?php if (isset($errors['exist'])): ?>
+            <div style="color: red; padding: 10px; margin-bottom: 15px; border: 1px solid red; background-color: #ffe6e6; border-radius: 4px;">
+                <p style="margin: 0; display: flex; align-items: center;">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" style="margin-right: 8px;">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    <span><?= htmlspecialchars($errors['exist']) ?></span>
+                </p>
             </div>
         <?php endif; ?>
+        
         <form action="index.php?controller=auth&action=register" method="POST">
             <div class="form-group">
                 <label for="fullname">Tên Tài Khoản <span class="required">*</span></label>
@@ -86,7 +92,7 @@ unset($_SESSION['success_message']);
                         <circle cx="12" cy="7" r="4" />
                     </svg>
 
-                    <input type="text" id="fullname" name="fullname" placeholder="Nguyễn Văn A" **value="<?= htmlspecialchars($old_input['fullname'] ?? '') ?>" **>
+                    <input type="text" id="fullname" name="fullname" placeholder="Nguyễn Văn A" ** value="<?= htmlspecialchars($old_input['fullname'] ?? '') ?>" **>
 
                 </div>
                 <?php if (isset($errors['fullname'])): ?>
@@ -107,7 +113,7 @@ unset($_SESSION['success_message']);
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                         <path d="M22 6l-10 7L2 6" />
                     </svg>
-                    <input type="email" id="email" name="email" placeholder="email@example.com" **value="<?= htmlspecialchars($old_input['email'] ?? '') ?>" **>
+                    <input type="email" id="email" name="email" placeholder="email@example.com" ** value="<?= htmlspecialchars($old_input['email'] ?? '') ?>" **>
                 </div>
                 <?php if (isset($errors['email'])): ?>
                     <div class="error-message" style="display: block; color: red; margin-top: 5px;">
@@ -122,13 +128,22 @@ unset($_SESSION['success_message']);
 
             <div class="form-group">
                 <label for="role">Bạn là <span class="required">*</span></label>
+                <?php if (isset($errors['role'])): ?>
+                    <div class="error-message" style="display: block; color: red; margin-top: 5px;">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <path fill="white" d="M12 8v4m0 4h.01" />
+                        </svg>
+                        <span><?= htmlspecialchars($errors['role']) ?></span>
+                    </div>
+                <?php endif; ?>
                 <div class="input-wrapper">
                     <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                         <circle cx="12" cy="7" r="4" />
                     </svg>
                     <select name="role" required>
-                        <option value="-1" disabled selected hiddens>--Vui lòng lựa chọn loại người dùng--</option>
+                        <option value="" disabled selected hiddens>--Vui lòng lựa chọn loại người dùng--</option>
                         <option value="0">Sinh Viên</option>
                         <option value="1">Giảng Viên</option>
                     </select>
@@ -137,6 +152,15 @@ unset($_SESSION['success_message']);
 
             <div class="form-group">
                 <label for="password">Mật khẩu <span class="required">*</span></label>
+                <?php if (isset($errors['password'])): ?>
+                    <div class="error-message" style="display: block; color: red; margin-top: 5px;">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <path fill="white" d="M12 8v4m0 4h.01" />
+                        </svg>
+                        <span><?= htmlspecialchars($errors['password']) ?></span>
+                    </div>
+                <?php endif; ?>
                 <div class="input-wrapper">
                     <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -157,15 +181,6 @@ unset($_SESSION['success_message']);
                     </div>
                     <div class="strength-text" id="strength-text"></div>
                 </div>
-                <?php if (isset($errors['password'])): ?>
-                    <div class="error-message" style="display: block; color: red; margin-top: 5px;">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <circle cx="12" cy="12" r="10" />
-                            <path fill="white" d="M12 8v4m0 4h.01" />
-                        </svg>
-                        <span><?= htmlspecialchars($errors['password']) ?></span>
-                    </div>
-                <?php endif; ?>
             </div>
 
             <div class="form-group">
