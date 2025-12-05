@@ -64,6 +64,3 @@ class Course
         return $stmt->execute();
     }
 }
-$db = new Database();
-$x = new Course($db->getConnection());
-print_r($x->getCourseById(1));

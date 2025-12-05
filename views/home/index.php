@@ -12,9 +12,8 @@ try {
     $courseModel = new Course($db);
 
     // Lấy khóa học
-    $result = $courseModel->getCoursesByInstructor(1);
+    $result = $courseModel->getCoursesByInstructor(2);
     $courses = $result->fetchAll(PDO::FETCH_ASSOC);
-    
 } catch (Exception $e) {
     echo "<div class='alert alert-danger'>Lỗi: " . htmlspecialchars($e->getMessage()) . "</div>";
     $courses = [];
@@ -289,9 +288,9 @@ try {
     </div>
 </div> -->
 
- <!-- DATABASE COURSES (Dữ liệu từ database) -->
+    <!-- DATABASE COURSES (Dữ liệu từ database) -->
     <?php if (!empty($courses)): ?>
-        <?php foreach ($courses as $c): 
+        <?php foreach ($courses as $c):
             $img = !empty($c['image']) ? htmlspecialchars($c['image']) : 'https://via.placeholder.com/400x240?text=No+Image';
             $title = htmlspecialchars($c['title'] ?? 'Không có tên');
             $desc = htmlspecialchars($c['description'] ?? 'Mô tả khóa học');
@@ -304,35 +303,35 @@ try {
             $students = 234;
             $instructor_name = 'Giảng viên';
         ?>
-        <!-- Course from Database -->
-        <div class="col">
-            <div class="card course-card h-100">
-                <img src="<?php echo $img; ?>" class="card-img-top" alt="<?php echo $title; ?>" style="height: 180px; object-fit: cover;">
-                <div class="card-body d-flex flex-column">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="badge bg-primary"><?php echo $level; ?></span>
-                        <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> <?php echo $rating; ?></span>
-                    </div>
-                    <h5 class="card-title mb-2"><?php echo $title; ?></h5>
-                    <p class="card-text text-muted small mb-3"><?php echo $desc; ?></p>
-                    <div class="mt-auto">
-                        <div class="d-flex align-items-center mb-2 small text-muted">
-                            <i class="fas fa-user me-1"></i><?php echo $students; ?> học viên
-                            <span class="mx-2">•</span>
-                            <i class="fas fa-clock me-1"></i><?php echo $duration; ?> tuần
+            <!-- Course from Database -->
+            <div class="col">
+                <div class="card course-card h-100">
+                    <img src="<?php echo $img; ?>" class="card-img-top" alt="<?php echo $title; ?>" style="height: 180px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="badge bg-primary"><?php echo $level; ?></span>
+                            <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> <?php echo $rating; ?></span>
                         </div>
-                        <div class="d-flex align-items-center text-muted small mb-3">
-                            <img src="https://i.pravatar.cc/30?img=<?php echo $instructor_id; ?>" class="rounded-circle me-2" width="24" height="24" alt="Instructor">
-                            <span><?php echo $instructor_name; ?></span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-danger" style="font-size: 18px;"><?php echo $price; ?>₫</span>
-                            <button class="btn btn-primary btn-sm">Xem chi tiết</button>
+                        <h5 class="card-title mb-2"><?php echo $title; ?></h5>
+                        <p class="card-text text-muted small mb-3"><?php echo $desc; ?></p>
+                        <div class="mt-auto">
+                            <div class="d-flex align-items-center mb-2 small text-muted">
+                                <i class="fas fa-user me-1"></i><?php echo $students; ?> học viên
+                                <span class="mx-2">•</span>
+                                <i class="fas fa-clock me-1"></i><?php echo $duration; ?> tuần
+                            </div>
+                            <div class="d-flex align-items-center text-muted small mb-3">
+                                <img src="https://i.pravatar.cc/30?img=<?php echo $instructor_id; ?>" class="rounded-circle me-2" width="24" height="24" alt="Instructor">
+                                <span><?php echo $instructor_name; ?></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-danger" style="font-size: 18px;"><?php echo $price; ?>₫</span>
+                                <button class="btn btn-primary btn-sm">Xem chi tiết</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
