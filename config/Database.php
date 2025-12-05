@@ -1,12 +1,7 @@
 <?php
-<<<<<<< HEAD
-const _HOST = "localhost";
-=======
-// config/Database.php
 
-// Thông tin kết nối của bạn
-const _HOST = "localhost:3307";
->>>>>>> main
+const _HOST = "localhost";
+
 const _DB = "onlinecourse";
 const _USER = "root";
 const _PASS = "";
