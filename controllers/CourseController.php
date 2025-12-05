@@ -1,4 +1,4 @@
-// Trong controllers/CourseController.php
+<!-- // Trong controllers/CourseController.php
 
 class CourseController {
     private $courseModel;
@@ -87,4 +87,4 @@ public function edit($course_id) {
     
     // Tải View form chỉnh sửa khóa học với dữ liệu $course
     include 'views/instructor/course/edit.php';
-}
+} -->
