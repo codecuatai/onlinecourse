@@ -4,7 +4,7 @@
     RewriteEngine On
     
     # 🚨 THÊM DÒNG NÀY (Đổi tên thư mục nếu cần)
-    RewriteBase /onlinecourse/   
+    RewriteBase /trainning/onlinecourse/   
     
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f

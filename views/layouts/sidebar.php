@@ -1,114 +1,41 @@
 <?php
-$role = 2;
+$role = 1; // 0 = học viên, 1 = giảng viên, 2 = admin
 ?>
 
 <aside class="sidebar">
     <div class="sidebar-logo">
         📚 OnlineCourse
     </div>
-    <ul class="sidebar-menu">
-        <!-- Menu chung -->
+    <ul class="sidebar-menu list-unstyled">
+
+        <!-- Dashboard chung -->
         <li>
-            <a href="<?php echo _HOST_URL . '/views/dashboard.php'; ?>" class="active">
-                <span class="icon">📊</span>
+            <a href="<?php echo _HOST_URL . '/views/dashboard.php'; ?>" class="d-flex align-items-center">
+                <span class="icon me-2">📊</span>
                 <span>Dashboard</span>
             </a>
         </li>
 
         <!-- Học viên -->
         <?php if ($role == 0): ?>
-            <li>
-                <a href="courses.php">
-                    <span class="icon">📚</span>
-                    <span>Danh sách khóa học</span>
-                </a>
-            </li>
-            <li>
-                <a href="my_courses.php">
-                    <span class="icon">🎓</span>
-                    <span>Khóa học đã đăng ký</span>
-                </a>
-            </li>
-            <li>
-                <a href="progress.php">
-                    <span class="icon">📈</span>
-                    <span>Tiến độ học tập</span>
-                </a>
-            </li>
-            <li>
-                <a href="lessons.php">
-                    <span class="icon">📝</span>
-                    <span>Bài học</span>
-                </a>
-            </li>
-            <li>
-                <a href="materials.php">
-                    <span class="icon">📄</span>
-                    <span>Tài liệu</span>
-                </a>
-            </li>
+            <li><a href="<?php echo _HOST_URL . '/views/student/my_courses.php'; ?>" class="d-flex align-items-center"><span class="icon me-2">🎓</span> Khóa học đã đăng ký</a></li>
         <?php endif; ?>
 
         <!-- Giảng viên -->
         <?php if ($role == 1): ?>
-            <li>
-                <a href="courses_manage.php">
-                    <span class="icon">📚</span>
-                    <span>Quản lý khóa học</span>
-                </a>
-            </li>
-            <li>
-                <a href="lessons_manage.php">
-                    <span class="icon">📝</span>
-                    <span>Quản lý bài học</span>
-                </a>
-            </li>
-            <li>
-                <a href="materials_upload.php">
-                    <span class="icon">📄</span>
-                    <span>Đăng tải tài liệu</span>
-                </a>
-            </li>
-            <li>
-                <a href="students_list.php">
-                    <span class="icon">👥</span>
-                    <span>Học viên đăng ký</span>
-                </a>
-            </li>
-            <li>
-                <a href="progress_students.php">
-                    <span class="icon">📈</span>
-                    <span>Tiến độ học viên</span>
-                </a>
-            </li>
+            <li><a href="<?php echo _HOST_URL . '/views/instructor/course/manage.php'; ?>" class="d-flex align-items-center"><span class="icon me-2">📝</span> Các khóa học của bạn</a></li>
+
         <?php endif; ?>
 
         <!-- Quản trị viên -->
         <?php if ($role == 2): ?>
-            <li>
-                <a href="<?php echo _HOST_URL . '/views/users/manage.php'; ?>">
-                    <span class="icon">👥</span>
-                    <span>Quản lý người dùng</span>
-                </a>
-            </li>
-            <li>
-                <a href="categories.php">
-                    <span class="icon">📁</span>
-                    <span>Quản lý danh mục</span>
-                </a>
-            </li>
-            <li>
-                <a href="reports.php">
-                    <span class="icon">📊</span>
-                    <span>Thống kê hệ thống</span>
-                </a>
-            </li>
-            <li>
-                <a href="course_approval.php">
-                    <span class="icon">✅</span>
-                    <span>Duyệt khóa học</span>
-                </a>
-            </li>
+            <li><a href="<?php echo _HOST_URL . '/views/users/manage.php'; ?>" class="d-flex align-items-center"><span class="icon me-2">👥</span> Quản lý người dùng</a></li>
+            <li><a href="<?php echo _HOST_URL . '/views/categories/list.php'; ?>" class="d-flex align-items-center"><span class="icon me-2">📁</span> Quản lý danh mục</a></li>
+            <li><a href="<?php echo _HOST_URL . '/views/reports/index.php'; ?>" class="d-flex align-items-center"><span class="icon me-2">📊</span> Thống kê hệ thống</a></li>
+            <li><a href="<?php echo _HOST_URL . '/views/admin/browseCourses.php'; ?>" class="d-flex align-items-center"><span class="icon me-2">✅</span> Duyệt khóa học</a></li>
         <?php endif; ?>
     </ul>
 </aside>
+
+<!-- Bootstrap JS (để collapse hoạt động) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

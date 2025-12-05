@@ -1,9 +1,7 @@
-<?php require_once '../config/config.php'; ?>
-<?php require_once './layouts/header.php'; ?>
-<?php require_once './layouts/sidebar.php'; ?>
+<?php require_once __DIR__ . '/../config/config.php';
+require_once _PATH_URL . '/../views/layouts/header.php';
+require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
+require_once _PATH_URL . '/../views/home/index.php';
 
-<?php require_once './home/index.php' ?>
-
-
-<?php require_once './layouts/footer.php' ?>
+require_once _PATH_URL . '/../views/layouts/footer.php';

@@ -1,4 +1,3 @@
-<!-- Footer -->
 <footer class="footer">
     <div>© 2025 OnlineCourse. All rights reserved.</div>
     <div>
@@ -10,7 +9,7 @@
 </footer>
 </div>
 
-<script src="../assets/js/main.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/main.js"></script> 
 </body>
 
 </html>
