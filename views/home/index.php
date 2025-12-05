@@ -1,3 +1,27 @@
+<?php
+// Mảng chứa thông tin 3 khóa học
+$courses = [
+    [
+        "title" => "Web Fullstack",
+        "description" => "Xây dựng website từ Frontend đến Backend.",
+        "image" => "https://picsum.photos/600/400?random=1",
+        "link" => "#"
+    ],
+    [
+        "title" => "ReactJS Mastery",
+        "description" => "Hiểu sâu và xây dựng dự án thực tế.",
+        "image" => "https://picsum.photos/600/400?random=2",
+        "link" => "#"
+    ],
+    [
+        "title" => "Python Cơ Bản",
+        "description" => "Lập trình Python cho người mới bắt đầu.",
+        "image" => "https://picsum.photos/600/400?random=3",
+        "link" => "#"
+    ],
+];
+?>
+
 <div class="container py-5">
 
     <!-- Introduction -->
@@ -41,41 +65,21 @@
 
     <div class="row g-4">
 
-        <!-- Course 1 -->
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <img src="https://picsum.photos/600/400?random=1" class="card-img-top" alt="Course">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">Web Fullstack</h5>
-                    <p class="text-muted small mb-4">Xây dựng website từ Frontend đến Backend.</p>
-                    <a href="#" class="btn btn-primary w-100">Xem chi tiết</a>
+        <div class="row g-4">
+            <?php foreach ($courses as $course): ?>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <img src="<?= $course['image'] ?>" class="card-img-top" alt="Course">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold"><?= $course['title'] ?></h5>
+                            <p class="text-muted small mb-4"><?= $course['description'] ?></p>
+                            <a href="<?= $course['link'] ?>" class="btn btn-primary w-100">Xem chi tiết</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            <?php endforeach; ?>
         </div>
 
-        <!-- Course 2 -->
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <img src="https://picsum.photos/600/400?random=2" class="card-img-top" alt="Course">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">ReactJS Mastery</h5>
-                    <p class="text-muted small mb-4">Hiểu sâu và xây dựng dự án thực tế.</p>
-                    <a href="#" class="btn btn-primary w-100">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Course 3 -->
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <img src="https://picsum.photos/600/400?random=3" class="card-img-top" alt="Course">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">Python Cơ Bản</h5>
-                    <p class="text-muted small mb-4">Lập trình Python cho người mới bắt đầu.</p>
-                    <a href="#" class="btn btn-primary w-100">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
 
     </div>
 

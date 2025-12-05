@@ -1,6 +1,36 @@
-<?php require_once __DIR__ . '/../../../config/config.php';
+<?php
+require_once __DIR__ . '/../../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
+
+// Mảng chứa khóa học của giảng viên
+$courses = [
+    [
+        "title" => "Python cho Người Mới",
+        "created_at" => "01/12/2025",
+        "category" => "Lập trình",
+        "level" => "Beginner",
+        "price" => "499.000₫",
+        "status" => "Chờ duyệt",
+        "students_link" => "../students/manage.php",
+        "lessons_link" => "../lessons/manage.php",
+        "materials_link" => "../materials/manage.php",
+        "edit_link" => "./edit.php"
+    ],
+    [
+        "title" => "ReactJS Mastery",
+        "created_at" => "15/11/2025",
+        "category" => "Lập trình",
+        "level" => "Intermediate",
+        "price" => "599.000₫",
+        "status" => "Đang duyệt",
+        "students_link" => "../students/manage.php",
+        "lessons_link" => "../lessons/manage.php",
+        "materials_link" => "../materials/manage.php",
+        "edit_link" => "./edit.php"
+    ],
+    // Bạn có thể thêm nhiều khóa học khác vào đây
+];
 ?>
 
 <div class="container-fluid mt-4">
@@ -30,34 +60,37 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Khóa học 1 -->
-                        <tr class="text-center">
-                            <th scope="row">1</th>
-                            <td class="text-start">Python cho Người Mới</td>
-                            <td>01/12/2025</td>
-                            <td>Lập trình</td>
-                            <td>Beginner</td>
-                            <td>499.000₫</td>
-                            <td><span class="badge bg-warning text-dark">Chờ duyệt</span></td>
-                            <td>
-                                <div class="d-flex justify-content-center flex-wrap gap-1">
-                                    <a href="./edit.php" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i> Sửa
-                                    </a>
-                                    <a href="../students/manage.php" class="btn btn-sm btn-info">
-                                        <i class="fas fa-book"></i> Sinh viên
-                                    </a>
-                                    <a href="../lessons/manage.php" class="btn btn-sm btn-info">
-                                        <i class="fas fa-book"></i> Bài học
-                                    </a>
-
-                                    <a href="../materials/manage.php" class="btn btn-sm btn-secondary">
-                                        <i class="fas fa-book"></i> Tài liệu
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-
+                        <?php foreach ($courses as $index => $course): ?>
+                            <tr class="text-center">
+                                <th scope="row"><?= $index + 1 ?></th>
+                                <td class="text-start"><?= $course['title'] ?></td>
+                                <td><?= $course['created_at'] ?></td>
+                                <td><?= $course['category'] ?></td>
+                                <td><?= $course['level'] ?></td>
+                                <td><?= $course['price'] ?></td>
+                                <td>
+                                    <span class="badge <?= $course['status'] == 'Chờ duyệt' ? 'bg-warning text-dark' : 'bg-success' ?>">
+                                        <?= $course['status'] ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center flex-wrap gap-1">
+                                        <a href="<?= $course['edit_link'] ?>" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i> Sửa
+                                        </a>
+                                        <a href="<?= $course['students_link'] ?>" class="btn btn-sm btn-info">
+                                            <i class="fas fa-book"></i> Sinh viên
+                                        </a>
+                                        <a href="<?= $course['lessons_link'] ?>" class="btn btn-sm btn-info">
+                                            <i class="fas fa-book"></i> Bài học
+                                        </a>
+                                        <a href="<?= $course['materials_link'] ?>" class="btn btn-sm btn-secondary">
+                                            <i class="fas fa-book"></i> Tài liệu
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -65,6 +98,6 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
     </div>
 </div>
 
-
 <?php
 require_once _PATH_URL . '/../views/layouts/footer.php';
+?>

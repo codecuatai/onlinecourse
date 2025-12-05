@@ -1,6 +1,28 @@
-<?php require_once __DIR__ . '/../../../config/config.php';
+<?php
+require_once __DIR__ . '/../../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
+
+// Mảng danh sách sinh viên của khóa học
+$students = [
+    [
+        "name" => "Nguyễn Văn A",
+        "email" => "nguyenvana@example.com",
+        "registered_at" => "01/12/2025",
+        "status" => "Active",
+        "progress" => 75,
+        "edit_link" => "./edit.php"
+    ],
+    [
+        "name" => "Trần Thị B",
+        "email" => "tranthib@example.com",
+        "registered_at" => "02/12/2025",
+        "status" => "Dropped",
+        "progress" => 40,
+        "edit_link" => "./edit.php"
+    ],
+    // Thêm sinh viên khác nếu cần
+];
 ?>
 
 <div class="container-fluid mt-4">
@@ -37,49 +59,40 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         </tr>
                     </thead>
                     <tbody>
-
-                        <tr class="text-center">
-                            <td>1</td>
-                            <td class="text-start">Nguyễn Văn A</td>
-                            <td>nguyenvana@example.com</td>
-                            <td>01/12/2025</td>
-                            <td>
-                                <span class="badge bg-success">Active</span>
-                            </td>
-                            <td>75%</td>
-                            <td>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="./edit.php" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i> Sửa
-                                    </a>
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i> Xóa
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="text-center">
-                            <td>2</td>
-                            <td class="text-start">Trần Thị B</td>
-                            <td>tranthib@example.com</td>
-                            <td>02/12/2025</td>
-                            <td>
-                                <span class="badge bg-warning text-dark">Dropped</span>
-                            </td>
-                            <td>40%</td>
-                            <td>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <button class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i> Sửa
-                                    </button>
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i> Xóa
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
+                        <?php if (empty($students)): ?>
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-3">
+                                    Chưa có sinh viên nào.
+                                </td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($students as $index => $student): ?>
+                                <tr class="text-center">
+                                    <td><?= $index + 1 ?></td>
+                                    <td class="text-start"><?= $student['name'] ?></td>
+                                    <td><?= $student['email'] ?></td>
+                                    <td><?= $student['registered_at'] ?></td>
+                                    <td>
+                                        <?php if ($student['status'] === "Active"): ?>
+                                            <span class="badge bg-success">Active</span>
+                                        <?php else: ?>
+                                            <span class="badge bg-warning text-dark"><?= $student['status'] ?></span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?= $student['progress'] ?>%</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="<?= $student['edit_link'] ?>" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i> Sửa
+                                            </a>
+                                            <button class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i> Xóa
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -87,8 +100,6 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
     </div>
 </div>
 
-
-
-
 <?php
 require_once _PATH_URL . '/../views/layouts/footer.php';
+?>

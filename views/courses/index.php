@@ -21,7 +21,92 @@ try {
     echo "<div class='alert alert-danger'>Lỗi: " . htmlspecialchars($e->getMessage()) . "</div>";
     $courses = [];
 }
+
+
+// Mảng chứa danh sách khóa học
+$courses = [
+    [
+        "title" => "Python cho Người Mới Bắt Đầu",
+        "category" => "Lập trình",
+        "rating" => 4.8,
+        "students" => 234,
+        "duration" => "12 giờ",
+        "description" => "Học Python từ cơ bản đến nâng cao với dự án thực tế",
+        "instructor_name" => "Nguyễn Văn A",
+        "instructor_avatar" => "https://i.pravatar.cc/30?img=1",
+        "price" => "499.000₫",
+        "image" => "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+        "link" => "./detail.php"
+    ],
+    [
+        "title" => "ReactJS Mastery",
+        "category" => "Lập trình",
+        "rating" => 4.8,
+        "students" => 198,
+        "duration" => "10 giờ",
+        "description" => "Hiểu sâu và xây dựng dự án thực tế với ReactJS",
+        "instructor_name" => "Trần Thị B",
+        "instructor_avatar" => "https://i.pravatar.cc/30?img=2",
+        "price" => "599.000₫",
+        "image" => "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+        "link" => "./detail.php"
+    ],
+    [
+        "title" => "Web Fullstack",
+        "category" => "Lập trình",
+        "rating" => 4.7,
+        "students" => 320,
+        "duration" => "15 giờ",
+        "description" => "Xây dựng website từ Frontend đến Backend.",
+        "instructor_name" => "Nguyễn Văn C",
+        "instructor_avatar" => "https://i.pravatar.cc/30?img=3",
+        "price" => "699.000₫",
+        "image" => "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+        "link" => "./detail.php"
+    ],
+    [
+        "title" => "Web Fullstack",
+        "category" => "Lập trình",
+        "rating" => 4.7,
+        "students" => 320,
+        "duration" => "15 giờ",
+        "description" => "Xây dựng website từ Frontend đến Backend.",
+        "instructor_name" => "Nguyễn Văn C",
+        "instructor_avatar" => "https://i.pravatar.cc/30?img=3",
+        "price" => "699.000₫",
+        "image" => "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+        "link" => "./detail.php"
+    ],
+    [
+        "title" => "Web Fullstack",
+        "category" => "Lập trình",
+        "rating" => 4.7,
+        "students" => 320,
+        "duration" => "15 giờ",
+        "description" => "Xây dựng website từ Frontend đến Backend.",
+        "instructor_name" => "Nguyễn Văn C",
+        "instructor_avatar" => "https://i.pravatar.cc/30?img=3",
+        "price" => "699.000₫",
+        "image" => "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+        "link" => "./detail.php"
+    ],
+    [
+        "title" => "Web Fullstack",
+        "category" => "Lập trình",
+        "rating" => 4.7,
+        "students" => 320,
+        "duration" => "15 giờ",
+        "description" => "Xây dựng website từ Frontend đến Backend.",
+        "instructor_name" => "Nguyễn Văn C",
+        "instructor_avatar" => "https://i.pravatar.cc/30?img=3",
+        "price" => "699.000₫",
+        "image" => "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400",
+        "link" => "./detail.php"
+    ]
+    // Bạn có thể thêm nhiều khóa học khác vào đây
+];
 ?>
+
 
 <div class="container my-4">
 
@@ -60,281 +145,49 @@ try {
     </form>
 
 
-    <!-- Courses Grid -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+        <?php foreach ($courses as $course): ?>
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="<?= $course['image'] ?>" class="card-img-top" alt="Course">
 
-        <!-- Course Card -->
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"
-                    class="card-img-top" alt="Course">
+                    <div class="card-body d-flex flex-column">
 
-                <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="badge bg-primary"><?= $course['category'] ?></span>
+                            <span class="badge bg-warning text-dark">
+                                <i class="fa fa-star"></i> <?= $course['rating'] ?>
+                            </span>
+                        </div>
 
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="badge bg-primary">Lập trình</span>
-                        <span class="badge bg-warning text-dark">
-                            <i class="fa fa-star"></i> 4.8
-                        </span>
+                        <h6 class="card-title fw-semibold mb-2"><?= $course['title'] ?></h6>
+
+                        <p class="card-text text-muted small mb-3"><?= $course['description'] ?></p>
+
+                        <div class="mt-auto">
+                            <div class="d-flex align-items-center mb-2 small text-muted">
+                                <i class="fa fa-user me-1"></i><?= $course['students'] ?> học viên
+                                <span class="mx-2">•</span>
+                                <i class="fa fa-clock me-1"></i><?= $course['duration'] ?>
+                            </div>
+
+                            <div class="d-flex align-items-center text-muted small mb-3">
+                                <img src="<?= $course['instructor_avatar'] ?>" class="rounded-circle me-2" width="24" height="24">
+                                <span><?= $course['instructor_name'] ?></span>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-primary"><?= $course['price'] ?></span>
+                                <a class="btn btn-primary btn-sm" href="<?= $course['link'] ?>">Xem chi tiết</a>
+                            </div>
+                        </div>
+
                     </div>
-
-                    <h6 class="card-title fw-semibold mb-2">Python cho Người Mới Bắt Đầu</h6>
-
-                    <p class="card-text text-muted small mb-3">
-                        Học Python từ cơ bản đến nâng cao với dự án thực tế
-                    </p>
-
-                    <!-- Info -->
-                    <div class="mt-auto">
-                        <div class="d-flex align-items-center mb-2 small text-muted">
-                            <i class="fa fa-user me-1"></i>234 học viên
-                            <span class="mx-2">•</span>
-                            <i class="fa fa-clock me-1"></i>12 giờ
-                        </div>
-
-                        <div class="d-flex align-items-center text-muted small mb-3">
-                            <img src="https://i.pravatar.cc/30?img=1" class="rounded-circle me-2" width="24" height="24">
-                            <span>Nguyễn Văn A</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-primary">499.000₫</span>
-                            <a class="btn btn-primary btn-sm" href="./detail.php">Xem chi tiết</a>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-        </div>
-
-        <!--Course2  -->
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"
-                    class="card-img-top" alt="Course">
-
-                <div class="card-body d-flex flex-column">
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="badge bg-primary">Lập trình</span>
-                        <span class="badge bg-warning text-dark">
-                            <i class="fa fa-star"></i> 4.8
-                        </span>
-                    </div>
-
-                    <h6 class="card-title fw-semibold mb-2">Python cho Người Mới Bắt Đầu</h6>
-
-                    <p class="card-text text-muted small mb-3">
-                        Học Python từ cơ bản đến nâng cao với dự án thực tế
-                    </p>
-
-                    <!-- Info -->
-                    <div class="mt-auto">
-                        <div class="d-flex align-items-center mb-2 small text-muted">
-                            <i class="fa fa-user me-1"></i>234 học viên
-                            <span class="mx-2">•</span>
-                            <i class="fa fa-clock me-1"></i>12 giờ
-                        </div>
-
-                        <div class="d-flex align-items-center text-muted small mb-3">
-                            <img src="https://i.pravatar.cc/30?img=1" class="rounded-circle me-2" width="24" height="24">
-                            <span>Nguyễn Văn A</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-primary">499.000₫</span>
-                            <a class="btn btn-primary btn-sm" href="./detail.php">Xem chi tiết</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <!-- Course Card -->
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"
-                    class="card-img-top" alt="Course">
-
-                <div class="card-body d-flex flex-column">
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="badge bg-primary">Lập trình</span>
-                        <span class="badge bg-warning text-dark">
-                            <i class="fa fa-star"></i> 4.8
-                        </span>
-                    </div>
-
-                    <h6 class="card-title fw-semibold mb-2">Python cho Người Mới Bắt Đầu</h6>
-
-                    <p class="card-text text-muted small mb-3">
-                        Học Python từ cơ bản đến nâng cao với dự án thực tế
-                    </p>
-
-                    <!-- Info -->
-                    <div class="mt-auto">
-                        <div class="d-flex align-items-center mb-2 small text-muted">
-                            <i class="fa fa-user me-1"></i>234 học viên
-                            <span class="mx-2">•</span>
-                            <i class="fa fa-clock me-1"></i>12 giờ
-                        </div>
-
-                        <div class="d-flex align-items-center text-muted small mb-3">
-                            <img src="https://i.pravatar.cc/30?img=1" class="rounded-circle me-2" width="24" height="24">
-                            <span>Nguyễn Văn A</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-primary">499.000₫</span>
-                            <a class="btn btn-primary btn-sm" href="./detail.php">Xem chi tiết</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <!-- Course Card -->
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"
-                    class="card-img-top" alt="Course">
-
-                <div class="card-body d-flex flex-column">
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="badge bg-primary">Lập trình</span>
-                        <span class="badge bg-warning text-dark">
-                            <i class="fa fa-star"></i> 4.8
-                        </span>
-                    </div>
-
-                    <h6 class="card-title fw-semibold mb-2">Python cho Người Mới Bắt Đầu</h6>
-
-                    <p class="card-text text-muted small mb-3">
-                        Học Python từ cơ bản đến nâng cao với dự án thực tế
-                    </p>
-
-                    <!-- Info -->
-                    <div class="mt-auto">
-                        <div class="d-flex align-items-center mb-2 small text-muted">
-                            <i class="fa fa-user me-1"></i>234 học viên
-                            <span class="mx-2">•</span>
-                            <i class="fa fa-clock me-1"></i>12 giờ
-                        </div>
-
-                        <div class="d-flex align-items-center text-muted small mb-3">
-                            <img src="https://i.pravatar.cc/30?img=1" class="rounded-circle me-2" width="24" height="24">
-                            <span>Nguyễn Văn A</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-primary">499.000₫</span>
-                            <a class="btn btn-primary btn-sm" href="./detail.php">Xem chi tiết</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <!-- Course Card -->
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"
-                    class="card-img-top" alt="Course">
-
-                <div class="card-body d-flex flex-column">
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="badge bg-primary">Lập trình</span>
-                        <span class="badge bg-warning text-dark">
-                            <i class="fa fa-star"></i> 4.8
-                        </span>
-                    </div>
-
-                    <h6 class="card-title fw-semibold mb-2">Python cho Người Mới Bắt Đầu</h6>
-
-                    <p class="card-text text-muted small mb-3">
-                        Học Python từ cơ bản đến nâng cao với dự án thực tế
-                    </p>
-
-                    <!-- Info -->
-                    <div class="mt-auto">
-                        <div class="d-flex align-items-center mb-2 small text-muted">
-                            <i class="fa fa-user me-1"></i>234 học viên
-                            <span class="mx-2">•</span>
-                            <i class="fa fa-clock me-1"></i>12 giờ
-                        </div>
-
-                        <div class="d-flex align-items-center text-muted small mb-3">
-                            <img src="https://i.pravatar.cc/30?img=1" class="rounded-circle me-2" width="24" height="24">
-                            <span>Nguyễn Văn A</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-primary">499.000₫</span>
-                            <a class="btn btn-primary btn-sm" href="./detail.php">Xem chi tiết</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-        <!-- Course Card -->
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400"
-                    class="card-img-top" alt="Course">
-
-                <div class="card-body d-flex flex-column">
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="badge bg-primary">Lập trình</span>
-                        <span class="badge bg-warning text-dark">
-                            <i class="fa fa-star"></i> 4.8
-                        </span>
-                    </div>
-
-                    <h6 class="card-title fw-semibold mb-2">Python cho Người Mới Bắt Đầu</h6>
-
-                    <p class="card-text text-muted small mb-3">
-                        Học Python từ cơ bản đến nâng cao với dự án thực tế
-                    </p>
-
-                    <!-- Info -->
-                    <div class="mt-auto">
-                        <div class="d-flex align-items-center mb-2 small text-muted">
-                            <i class="fa fa-user me-1"></i>234 học viên
-                            <span class="mx-2">•</span>
-                            <i class="fa fa-clock me-1"></i>12 giờ
-                        </div>
-
-                        <div class="d-flex align-items-center text-muted small mb-3">
-                            <img src="https://i.pravatar.cc/30?img=1" class="rounded-circle me-2" width="24" height="24">
-                            <span>Nguyễn Văn A</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-primary">499.000₫</span>
-                            <a class="btn btn-primary btn-sm" href="./detail.php">Xem chi tiết</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
+        <?php endforeach; ?>
     </div>
+
 </div>
 
 

@@ -1,8 +1,31 @@
-<?php require_once __DIR__ . '/../../config/config.php';
+<?php
+require_once __DIR__ . '/../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
-?>
 
+// Mảng danh sách người dùng
+$users = [
+    [
+        "username" => "user1",
+        "fullname" => "Nguyễn Văn A",
+        "email" => "nguyenvana@example.com",
+        "password" => "******",
+        "created_at" => "2025-12-04",
+        "role" => "Sinh Viên",
+        "edit_link" => "./edit.php"
+    ],
+    [
+        "username" => "teacher1",
+        "fullname" => "Trần Thị B",
+        "email" => "tranthib@example.com",
+        "password" => "******",
+        "created_at" => "2025-12-04",
+        "role" => "Giảng Viên",
+        "edit_link" => "./edit.php"
+    ],
+    // Thêm người dùng khác nếu cần
+];
+?>
 
 <!-- Main Content -->
 <main class="main-content p-4">
@@ -10,14 +33,13 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
     <!-- Header + Button -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="fw-bold">Danh sách tài khoản</h4>
-
         <a href="create.php" class="btn btn-success">
             <i class="fas fa-user-plus"></i> Tạo người dùng
         </a>
     </div>
 
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white" style="margin-bottom:20px;">
+        <div class="card-header bg-primary text-white mb-2">
             <h5 class="mb-0">Quản lý người dùng</h5>
         </div>
 
@@ -37,53 +59,40 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Tên tài khoản</td>
-                        <td>Họ và tên</td>
-                        <td>email@example.com</td>
-                        <td>******</td>
-                        <td>2025-12-04</td>
-                        <td>Sinh Viên</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash">Xóa</i>
-                            </button>
-                        </td>
-                        <td class="text-center">
-                            <a href="./edit.php" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit">Sửa</i>
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Tên tài khoản</td>
-                        <td>Họ và tên</td>
-                        <td>email@example.com</td>
-                        <td>******</td>
-                        <td>2025-12-04</td>
-                        <td>Giảng Viên</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash">Xóa</i>
-                            </button>
-                        </td>
-                        <td class="text-center">
-                            <a href="./edit.php" class="btn btn-sm btn-warning">
-                                <i class="fas fa-edit">Sửa</i>
-                            </a>
-                        </td>
-                    </tr>
-
+                    <?php if (empty($users)): ?>
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-3">
+                                Chưa có tài khoản nào.
+                            </td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($users as $index => $user): ?>
+                            <tr>
+                                <th scope="row"><?= $index + 1 ?></th>
+                                <td><?= $user['username'] ?></td>
+                                <td><?= $user['fullname'] ?></td>
+                                <td><?= $user['email'] ?></td>
+                                <td><?= $user['password'] ?></td>
+                                <td><?= $user['created_at'] ?></td>
+                                <td><?= $user['role'] ?></td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                </td>
+                                <td class="text-center">
+                                    <a href="<?= $user['edit_link'] ?>" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Sửa
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
 
 </main>
-
-
 
 <?php require_once _PATH_URL . '/../views/layouts/footer.php'; ?>

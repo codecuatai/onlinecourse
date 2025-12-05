@@ -1,6 +1,26 @@
-<?php require_once __DIR__ . '/../../../config/config.php';
+<?php
+require_once __DIR__ . '/../../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
+
+// Mảng chứa bài học của khóa học
+$lessons = [
+    [
+        "title" => "Giới thiệu Python",
+        "video" => "video1.mp4",
+        "document" => "doc1.pdf",
+        "created_at" => "01/12/2025",
+        "edit_link" => "./edit.php"
+    ],
+    [
+        "title" => "Biến và kiểu dữ liệu",
+        "video" => "video2.mp4",
+        "document" => "doc2.pdf",
+        "created_at" => "02/12/2025",
+        "edit_link" => "./edit.php"
+    ],
+    // Bạn có thể thêm nhiều bài học khác vào đây
+];
 ?>
 
 <div class="container-fluid mt-4">
@@ -8,7 +28,6 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
     <!-- Header + nút quay lại -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0">Quản lý bài học - Python cho Người Mới</h4>
-
         <a href="javascript:history.back()" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
@@ -35,71 +54,42 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             <th>Hành động</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        <!-- Bài học 1 -->
-                        <tr class="text-center">
-                            <th>1</th>
-                            <td class="text-start">Giới thiệu Python</td>
-                            <td>
-                                <a href="video1.mp4" target="_blank" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-video"></i> Xem video
-                                </a>
-                            </td>
-                            <td>
-                                <a href="doc1.pdf" target="_blank" class="btn btn-sm btn-secondary">
-                                    <i class="fas fa-file-pdf"></i> Tài liệu
-                                </a>
-                            </td>
-                            <td>01/12/2025</td>
-                            <td>
-                                <div class="d-flex justify-content-center flex-wrap gap-1">
-                                    <a href="./edit.php" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i> Sửa
-                                    </a>
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i> Xóa
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Bài học 2 -->
-                        <tr class="text-center">
-                            <th>2</th>
-                            <td class="text-start">Biến và kiểu dữ liệu</td>
-                            <td>
-                                <a href="video2.mp4" target="_blank" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-video"></i> Xem video
-                                </a>
-                            </td>
-                            <td>
-                                <a href="doc2.pdf" target="_blank" class="btn btn-sm btn-secondary">
-                                    <i class="fas fa-file-pdf"></i> Tài liệu
-                                </a>
-                            </td>
-                            <td>02/12/2025</td>
-                            <td>
-                                <div class="d-flex justify-content-center flex-wrap gap-1">
-                                    <a href="./edit.php" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i> Sửa
-                                    </a>
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i> Xóa
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Nếu chưa có dữ liệu -->
-                        <!-- 
-                        <tr>
-                            <td colspan="6" class="text-center text-muted py-3">
-                                Chưa có bài học nào.
-                            </td>
-                        </tr>
-                        -->
-
+                        <?php if (empty($lessons)): ?>
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-3">
+                                    Chưa có bài học nào.
+                                </td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($lessons as $index => $lesson): ?>
+                                <tr class="text-center">
+                                    <th><?= $index + 1 ?></th>
+                                    <td class="text-start"><?= $lesson['title'] ?></td>
+                                    <td>
+                                        <a href="<?= $lesson['video'] ?>" target="_blank" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-video"></i> Xem video
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="<?= $lesson['document'] ?>" target="_blank" class="btn btn-sm btn-secondary">
+                                            <i class="fas fa-file-pdf"></i> Tài liệu
+                                        </a>
+                                    </td>
+                                    <td><?= $lesson['created_at'] ?></td>
+                                    <td>
+                                        <div class="d-flex justify-content-center flex-wrap gap-1">
+                                            <a href="<?= $lesson['edit_link'] ?>" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit"></i> Sửa
+                                            </a>
+                                            <button class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i> Xóa
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -107,7 +97,6 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
     </div>
 </div>
 
-
-
 <?php
 require_once _PATH_URL . '/../views/layouts/footer.php';
+?>
