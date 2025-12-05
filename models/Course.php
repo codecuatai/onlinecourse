@@ -1,58 +1,59 @@
-// Trong models/Course.php
-<php?
+<?php
 class Course {
-    private $db;
+    private $conn;
+    private $table = "courses";
 
     public function __construct($db) {
-        $this->db = $db; // Đối tượng kết nối CSDL (PDO)
+        $this->conn = $db;
     }
 
-    public function createCourse($data) {
-        // SQL Injection Prevention (Sử dụng prepared statement) 
-        $sql = "INSERT INTO courses (title, description, instructor_id, category_id, price, duration_weeks, level, image, created_at, updated_at) 
-                VALUES (:title, :description, :instructor_id, :category_id, :price, :duration_weeks, :level, :image, NOW(), NOW())";
-        
-        $stmt = $this->db->prepare($sql);
-        
-        // Gán các giá trị từ $data vào statement
-        $stmt->bindParam(':title', $data['title']);
-        $stmt->bindParam(':description', $data['description']);
-        $stmt->bindParam(':instructor_id', $data['instructor_id']);
-        $stmt->bindParam(':category_id', $data['category_id']);
-        $stmt->bindParam(':price', $data['price']);
-        $stmt->bindParam(':duration_weeks', $data['duration_weeks']);
-        $stmt->bindParam(':level', $data['level']);
-        $stmt->bindParam(':image', $data['image']);
-
-        return $stmt->execute(); // Trả về true/false
+    // Lấy tất cả khóa học theo giảng viên
+    public function getCoursesByInstructor($instructor_id) {
+        $sql = "SELECT * FROM " . $this->table . " WHERE instructor_id = :instructor_id ORDER BY created_at DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":instructor_id", $instructor_id);
+        $stmt->execute();
+        return $stmt;
     }
-    // ... các phương thức khác
+
+    // Lấy thông tin khóa học theo id
+    public function getCourseById($id) {
+        $sql = "SELECT * FROM " . $this->table . " WHERE id = :id LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Tạo khóa học
+    public function create($data) {
+        $sql = "INSERT INTO " . $this->table . "
+                (title, description, instructor_id, category_id, price, duration_weeks, level, image, created_at)
+                VALUES (:title, :description, :instructor_id, :category_id, :price, :duration_weeks, :level, :image, NOW())";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute($data);
+    }
+
+    // Cập nhật khóa học
+    public function update($data) {
+        $sql = "UPDATE " . $this->table . "
+                SET title = :title, description = :description, category_id = :category_id,
+                    price = :price, duration_weeks = :duration_weeks, level = :level,
+                    image = :image, updated_at = NOW()
+                WHERE id = :id AND instructor_id = :instructor_id";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute($data);
+    }
+
+    // Xóa khóa học
+    public function delete($id, $instructor_id) {
+        $sql = "DELETE FROM " . $this->table . " WHERE id = :id AND instructor_id = :instructor_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":instructor_id", $instructor_id);
+        return $stmt->execute();
+    }
 }
 
-
-// Trong models/Course.php
-
-public function updateCourse($id, $data) {
-    // Chỉ cập nhật các trường được phép
-    $sql = "UPDATE courses SET title = :title, description = :description, 
-            category_id = :category_id, price = :price, duration_weeks = :duration_weeks, 
-            level = :level, image = :image, updated_at = NOW() 
-            WHERE id = :id AND instructor_id = :instructor_id"; // Đảm bảo chỉ Giảng viên tạo mới sửa được
-    
-    $stmt = $this->db->prepare($sql);
-    
-    $stmt->bindParam(':id', $id);
-    $stmt->bindParam(':instructor_id', $data['instructor_id']); // Kiểm tra quyền truy cập [cite: 100]
-    // Gán các giá trị khác...
-    
-    return $stmt->execute();
-}
-
-public function getCourseById($id) {
-    $sql = "SELECT * FROM courses WHERE id = :id";
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
-?>

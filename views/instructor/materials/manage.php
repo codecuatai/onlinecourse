@@ -4,12 +4,12 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 ?>
 
 <div class="container-fluid mt-4">
-    <h4 class="mb-4">Danh sách bài học - Khóa học: Python cho Người Mới</h4>
+    <h4 class="mb-4">Quản lý tài liệu - Khóa học: Python cho Người Mới</h4>
 
-    <!-- Nút tạo bài học mới -->
+    <!-- Nút tải tài liệu mới -->
     <div class="mb-3">
         <button class="btn btn-success">
-            <i class="fas fa-plus"></i> Tạo bài học mới
+            <i class="fas fa-plus"></i> Tải tài liệu mới
         </button>
     </div>
 
@@ -20,28 +20,24 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                     <thead class="table-dark text-center">
                         <tr>
                             <th>Thứ tự</th>
-                            <th>Tên bài học</th>
-                            <th>Video</th>
-                            <th>Tài liệu</th>
-                            <th>Ngày tạo</th>
+                            <th>Tên tài liệu</th>
+                            <th>Loại</th>
+                            <th>Ngày tải lên</th>
+                            <th>Link tải</th>
                             <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="text-center">
                             <td>1</td>
-                            <td class="text-start">Giới thiệu Python</td>
-                            <td>
-                                <a href="https://example.com/video1.mp4" target="_blank" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-video"></i> Xem video
-                                </a>
-                            </td>
-                            <td>
-                                <a href="https://example.com/doc1.pdf" target="_blank" class="btn btn-sm btn-secondary">
-                                    <i class="fas fa-file-pdf"></i> Tài liệu
-                                </a>
-                            </td>
+                            <td class="text-start">Bài học 1 - Giới thiệu Python</td>
+                            <td>PDF</td>
                             <td>01/12/2025</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-download"></i> Tải về
+                                </a>
+                            </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
                                     <button class="btn btn-sm btn-warning">
@@ -56,18 +52,14 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
                         <tr class="text-center">
                             <td>2</td>
-                            <td class="text-start">Biến và kiểu dữ liệu</td>
-                            <td>
-                                <a href="https://example.com/video2.mp4" target="_blank" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-video"></i> Xem video
-                                </a>
-                            </td>
-                            <td>
-                                <a href="https://example.com/doc2.pdf" target="_blank" class="btn btn-sm btn-secondary">
-                                    <i class="fas fa-file-pdf"></i> Tài liệu
-                                </a>
-                            </td>
+                            <td class="text-start">Bài học 2 - Biến và kiểu dữ liệu</td>
+                            <td>DOCX</td>
                             <td>02/12/2025</td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-download"></i> Tải về
+                                </a>
+                            </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
                                     <button class="btn btn-sm btn-warning">
@@ -80,10 +72,10 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                             </td>
                         </tr>
 
-                        <!-- Khi chưa có bài học -->
+                        <!-- Khi chưa có tài liệu -->
                         <!--
                         <tr>
-                            <td colspan="6" class="text-center text-muted">Chưa có bài học nào.</td>
+                            <td colspan="6" class="text-center text-muted">Chưa có tài liệu nào.</td>
                         </tr>
                         -->
                     </tbody>
@@ -92,6 +84,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
         </div>
     </div>
 </div>
+
 
 
 
