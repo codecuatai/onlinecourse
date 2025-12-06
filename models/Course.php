@@ -63,4 +63,64 @@ class Course
         $stmt->bindParam(":instructor_id", $instructor_id);
         return $stmt->execute();
     }
+
+
+    // HỌC VIÊN//
+    // lấy toàn bộ khóa học
+    public function getAll()
+    {
+        $sql = "SELECT 
+                    courses.*, 
+                    users.fullname AS instructor_name,
+                    categories.name AS category_name
+                FROM courses
+                JOIN users ON courses.instructor_id = users.id
+                JOIN categories ON courses.category_id = categories.id
+                ORDER BY courses.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt; // trả về danh sách để controller dùng
+    }
+
+    // Tìm kiếm khóa học theo tên
+    public function search($keyword)
+    {
+        $sql = "SELECT 
+                courses.*, 
+                users.fullname AS instructor_name,
+                categories.name AS category_name
+            FROM courses
+            JOIN users ON courses.instructor_id = users.id
+            JOIN categories ON courses.category_id = categories.id
+            WHERE courses.title LIKE :keyword
+            ORDER BY courses.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $keyword = "%" . $keyword . "%";
+        $stmt->bindParam(":keyword", $keyword);
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    // lấy thông tin chi tiết khóa học
+    public function getById($id)
+    {
+        $sql = "SELECT 
+                courses.*, 
+                users.fullname AS instructor_name,
+                categories.name AS category_name
+            FROM courses
+            JOIN users ON courses.instructor_id = users.id
+            JOIN categories ON courses.category_id = categories.id
+            WHERE courses.id = :id
+            LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
