@@ -1,1 +1,1 @@
-<script src="<?= BASE_URL ?>/assets/js/auth.js"></script>
+<script src="./assets/js/auth.js"></script>

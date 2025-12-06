@@ -99,8 +99,8 @@ $courses = [
                                 <span><?= $course['instructor'] ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                <a href="./course_of_lession.php" class="btn btn-primary btn-sm">Vào khóa học</a>
-                                <a href="./course_of_material.php" class="btn btn-secondary btn-sm">Tải tài liệu</a>
+                                <a href="?views=student&action=course_of_lession" class="btn btn-primary btn-sm">Vào khóa học</a>
+                                <a href="?views=student&action=course_of_material" class="btn btn-secondary btn-sm">Tải tài liệu</a>
                             </div>
                         </div>
                     </div>

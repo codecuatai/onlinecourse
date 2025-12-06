@@ -72,7 +72,7 @@ $courses = [
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <a href="course_of_lession.php?id=<?= $course['id'] ?>" class="btn btn-sm btn-primary">Xem chi tiết</a>
+                                    <a href="?views=student&action=course_of_lession" class="btn btn-sm btn-primary">Xem chi tiết</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

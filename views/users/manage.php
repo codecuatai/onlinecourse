@@ -33,7 +33,7 @@ $users = [
     <!-- Header + Button -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="fw-bold">Danh sách tài khoản</h4>
-        <a href="create.php" class="btn btn-success">
+        <a href="?views=users&action=create" class="btn btn-success">
             <i class="fas fa-user-plus"></i> Tạo người dùng
         </a>
     </div>
@@ -81,7 +81,7 @@ $users = [
                                     </button>
                                 </td>
                                 <td class="text-center">
-                                    <a href="<?= $user['edit_link'] ?>" class="btn btn-sm btn-warning">
+                                    <a href="?views=users&action=edit" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Sửa
                                     </a>
                                 </td>

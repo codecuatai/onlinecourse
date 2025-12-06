@@ -1,4 +1,7 @@
-<?php
+<?php require_once __DIR__ . '/../../config/config.php';
+require_once _PATH_URL . '/../views/layouts/header.php';
+require_once _PATH_URL . '/../views/layouts/sidebar.php';
+
 // Mảng chứa thông tin 3 khóa học
 $courses = [
     [
@@ -79,8 +82,9 @@ $courses = [
                 </div>
             <?php endforeach; ?>
         </div>
-
-
     </div>
-
 </div>
+
+<?php
+require_once _PATH_URL . '/../views/layouts/header.php';
+?>

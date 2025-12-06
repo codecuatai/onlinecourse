@@ -31,14 +31,14 @@ $students = [
         <h4 class="mb-0">Danh sách sinh viên - Khóa học: Python cho Người Mới</h4>
 
         <!-- Nút quay lại -->
-        <a href="../course/manage.php" class="btn btn-secondary btn-sm">
+        <a href="?views=instructor&instructor=course&action=manage" class="btn btn-secondary btn-sm">
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
     </div>
 
     <!-- Nút thêm sinh viên mới -->
     <div class="mb-3">
-        <a href="./create.php" class="btn btn-success">
+        <a href="?views=instructor&instructor=students&action=create" class="btn btn-success">
             <i class="fas fa-plus"></i> Thêm sinh viên mới
         </a>
     </div>
@@ -82,7 +82,7 @@ $students = [
                                     <td><?= $student['progress'] ?>%</td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a href="<?= $student['edit_link'] ?>" class="btn btn-sm btn-warning">
+                                            <a href="?views=instructor&instructor=students&action=edit" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i> Sửa
                                             </a>
                                             <button class="btn btn-sm btn-danger">

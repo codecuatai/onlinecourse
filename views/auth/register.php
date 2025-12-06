@@ -1,18 +1,5 @@
 <?php
-require_once __DIR__ . '/../layouts/header-auth.php';
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// 2. Lấy dữ liệu và lỗi từ Session
-$errors = $_SESSION['register_errors'] ?? [];
-$old_input = $_SESSION['old_input'] ?? [];
-$success_message = $_SESSION['success_message'] ?? ''; // Lấy thông báo thành công
-
-// 3. Xóa Session sau khi lấy ra
-unset($_SESSION['register_errors']);
-unset($_SESSION['old_input']);
-unset($_SESSION['success_message']);
+require_once './views/layouts/header-auth.php';
 ?>
 
 <body>
@@ -55,13 +42,13 @@ unset($_SESSION['success_message']);
             <div style="color: red; padding: 10px; margin-bottom: 15px; border: 1px solid red; background-color: #ffe6e6; border-radius: 4px;">
                 <p style="margin: 0; display: flex; align-items: center;">
                     <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" style="margin-right: 8px;">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
                     </svg>
                     <span><?= htmlspecialchars($errors['exist']) ?></span>
                 </p>
             </div>
         <?php endif; ?>
-        
+
         <form action="index.php?controller=auth&action=register" method="POST">
             <div class="form-group">
                 <label for="fullname">Tên Tài Khoản <span class="required">*</span></label>
@@ -226,12 +213,12 @@ unset($_SESSION['success_message']);
         </form>
 
         <div class="login-link">
-            Đã có tài khoản? <a href="index.php?controller=auth&action=login">Đăng nhập ngay</a>
+            Đã có tài khoản? <a href="?views=auth&action=login">Đăng nhập ngay</a>
         </div>
     </div>
 
 </body>
 
 <?php
-require_once __DIR__ . '/../layouts/footer-auth.php';
+require_once './views/layouts/footer-auth.php';
 ?>

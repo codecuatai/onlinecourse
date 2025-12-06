@@ -12,7 +12,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
             <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Tạo khóa học mới</h5>
 
             <!-- Button Back -->
-            <a href="manage.php" class="btn btn-light btn-sm">
+            <a href="?views=instructor&instructor=course&action=manage" class="btn btn-light btn-sm">
                 <i class="fas fa-arrow-left"></i> Quay lại
             </a>
         </div>

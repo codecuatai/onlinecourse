@@ -52,7 +52,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
         </div>
     </div>
     <?php
-    require_once './statistics.php';
+    require_once './views/reports/statistics.php';
     ?>
 </main>
 

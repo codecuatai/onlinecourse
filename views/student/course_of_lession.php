@@ -30,7 +30,7 @@ $progressPercent = round(($completedLessons / $totalLessons) * 100);
 
     <!-- Nút quay lại -->
     <div class="mb-3 text-end">
-        <a href="./my_courses.php" class="btn btn-secondary">
+        <a href="?views=student&action=my_courses" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
     </div>

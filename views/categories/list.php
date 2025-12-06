@@ -31,7 +31,7 @@ $categories = [
     <div class="card shadow-sm border-0">
         <div style="margin-bottom:20px;" class="card-header d-flex justify-content-between align-items-center bg-success text-white">
             <h4 class="mb-0">Quản lý danh mục khóa học</h4>
-            <a href="create.php" class="btn btn-light btn-sm">+ Thêm danh mục</a>
+            <a href="?views=categories&action=create" class="btn btn-light btn-sm">+ Thêm danh mục</a>
         </div>
 
         <div class="card-body p-0">
@@ -65,7 +65,7 @@ $categories = [
                                 </td>
 
                                 <td class="text-center">
-                                    <a href="./edit.php?id=<?= $item['id'] ?>" class="btn btn-sm btn-warning">
+                                    <a href="?views=categories&action=edit" class="btn btn-sm btn-warning">
                                         Sửa
                                     </a>
                                 </td>

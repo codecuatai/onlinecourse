@@ -19,7 +19,7 @@ $user = [
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="fw-bold">Chỉnh sửa người dùng</h4>
 
-        <a href="./manage.php" class="btn btn-secondary">
+        <a href="?views=users&action=manage" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
     </div>

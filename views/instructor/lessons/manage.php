@@ -35,7 +35,7 @@ $lessons = [
 
     <!-- Nút tạo bài học mới -->
     <div class="mb-3">
-        <a class="btn btn-success" href="./create.php">
+        <a class="btn btn-success" href="?views=instructor&instructor=lessons&action=manage">
             <i class="fas fa-plus"></i> Tạo bài học mới
         </a>
     </div>
@@ -79,7 +79,7 @@ $lessons = [
                                     <td><?= $lesson['created_at'] ?></td>
                                     <td>
                                         <div class="d-flex justify-content-center flex-wrap gap-1">
-                                            <a href="<?= $lesson['edit_link'] ?>" class="btn btn-sm btn-warning">
+                                            <a href="?views=instructor&instructor=lessons&action=edit" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i> Sửa
                                             </a>
                                             <button class="btn btn-sm btn-danger">

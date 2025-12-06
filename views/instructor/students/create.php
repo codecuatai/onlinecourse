@@ -55,7 +55,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         <i class="fas fa-save"></i> Lưu
                     </button>
 
-                    <a href="./manage.php" class="btn btn-danger">
+                    <a href="?views=instructor&instructor=students&action=manage" class="btn btn-danger">
                         <i class="fas fa-times"></i> Hủy
                     </a>
                 </div>

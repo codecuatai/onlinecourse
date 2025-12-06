@@ -12,7 +12,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
         <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Thêm danh mục khóa học</h5>
 
-            <a href="./list.php" class="btn btn-light btn-sm">
+            <a href="?views=categories&action=list" class="btn btn-light btn-sm">
                 Quay lại
             </a>
         </div>

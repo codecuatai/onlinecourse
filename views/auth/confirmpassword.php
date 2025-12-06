@@ -1,5 +1,5 @@
 <?php
-require_once '../layouts/header-auth.php'
+require_once './views/layouts/header-auth.php';
 ?>
 
 <body>
@@ -88,3 +88,7 @@ require_once '../layouts/header-auth.php'
         </div>
 
 </body>
+
+<?php
+require_once './views/layouts/footer-auth.php';
+?>

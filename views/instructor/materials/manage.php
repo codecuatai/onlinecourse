@@ -35,7 +35,7 @@ $materials = [
 
     <!-- Nút tải tài liệu mới -->
     <div class="mb-3">
-        <a class="btn btn-success" href="./create.php">
+        <a class="btn btn-success" href="?views=instructor&instructor=materials&action=create">
             <i class="fas fa-plus"></i> Tải tài liệu mới
         </a>
     </div>
@@ -73,7 +73,7 @@ $materials = [
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a href="<?= $material['edit_link'] ?>" class="btn btn-sm btn-warning">
+                                            <a href="?views=instructor&instructor=materials&action=edit" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i> Sửa
                                             </a>
                                             <button class="btn btn-sm btn-danger">

@@ -38,7 +38,7 @@ $courses = [
 
     <!-- Nút tạo khóa học mới -->
     <div class="mb-3">
-        <a class="btn btn-success" href="./create.php">
+        <a class="btn btn-success" href="?views=instructor&instructor=course&action=create">
             <i class="fas fa-plus"></i> Tạo khóa học mới
         </a>
     </div>
@@ -75,16 +75,16 @@ $courses = [
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center flex-wrap gap-1">
-                                        <a href="<?= $course['edit_link'] ?>" class="btn btn-sm btn-warning">
+                                        <a href="?views=instructor&instructor=course&action=edit" class="btn btn-sm btn-warning">
                                             <i class="fas fa-edit"></i> Sửa
                                         </a>
-                                        <a href="<?= $course['students_link'] ?>" class="btn btn-sm btn-info">
+                                        <a href="?views=instructor&instructor=students&action=manage" class="btn btn-sm btn-info">
                                             <i class="fas fa-book"></i> Sinh viên
                                         </a>
-                                        <a href="<?= $course['lessons_link'] ?>" class="btn btn-sm btn-info">
+                                        <a href="?views=instructor&instructor=lessons&action=manage" class="btn btn-sm btn-info">
                                             <i class="fas fa-book"></i> Bài học
                                         </a>
-                                        <a href="<?= $course['materials_link'] ?>" class="btn btn-sm btn-secondary">
+                                        <a href="?views=instructor&instructor=materials&action=manage" class="btn btn-sm btn-secondary">
                                             <i class="fas fa-book"></i> Tài liệu
                                         </a>
                                     </div>

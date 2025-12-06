@@ -11,7 +11,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
         <div class="col-lg-8">
 
             <!-- Title -->
-            <h1 class="fw-bold display-5 mb-3">
+            <h1 class="fw-bold display-6 mb-2">
                 Master Python từ con số 0
             </h1>
 
@@ -73,6 +73,11 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
         <!-- RIGHT SIDEBAR -->
         <div class="col-lg-4">
+            <div class="d-flex justify-content-end mb-4">
+                <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Quay lại
+                </a>
+            </div>
 
             <div class="border-0 shadow rounded-4 overflow-hidden position-sticky" style="top: 100px;">
 

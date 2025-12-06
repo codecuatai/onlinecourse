@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Sửa danh mục</h5>
 
-            <a href="./list.php" class="btn btn-light btn-sm">
+            <a href="?views=categories&action=list" class="btn btn-light btn-sm">
                 Quay lại
             </a>
         </div>
