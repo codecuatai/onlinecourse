@@ -49,3 +49,5 @@ class AuthController
         }
     }
 }
+
+$AuthController = new AuthController();

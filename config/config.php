@@ -13,3 +13,4 @@ define('_PATH_URL_VIEW', __DIR__ . '\views');
 const _VIEW = 'home';
 const _ACTION = 'index';
 const _INSTRUCTOR = '';
+const _CONTROLLERS = '';

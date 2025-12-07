@@ -30,6 +30,7 @@ require_once "./controllers/AdminController.php";
 $view = _VIEW;
 $action = _ACTION;
 $instructor = _INSTRUCTOR;
+$controller = _CONTROLLERS;
 
 // Lấy giá trị từ URL nếu có
 if (!empty($_GET['views'])) {
@@ -41,24 +42,32 @@ if (!empty($_GET['action'])) {
 if (!empty($_GET['instructor'])) {
     $instructor = $_GET['instructor'];
 }
-
-
-// Build path
-if (!empty($instructor)) {
-    // Nếu là instructor
-    $path = 'views/' . $view . '/' . $instructor . '/' . $action . '.php';
-} else {
-    // Người dùng bình thường
-    $path = 'views/' . $view . '/' . $action . '.php';
+if (!empty($_GET['controllers'])) {
+    $controllers = $_GET['controllers'];
 }
 
-// Include file
-if (!empty($path)) {
-    if (file_exists($path)) {
-        require_once $path;
-    } else {
-        echo "Không tìm thấy trang!";
-    }
+
+
+if (!empty($controllers)) {
+    $path = 'controllers/' . $controllers;
 } else {
-    echo "Truy cập lỗi";
+    // Build path
+    if (!empty($instructor)) {
+        // Nếu là instructor
+        $path = 'views/' . $view . '/' . $instructor . '/' . $action . '.php';
+    } else {
+        // Người dùng bình thường
+        $path = 'views/' . $view . '/' . $action . '.php';
+    }
+
+    // Include file
+    if (!empty($path)) {
+        if (file_exists($path)) {
+            require_once $path;
+        } else {
+            echo "Không tìm thấy trang!";
+        }
+    } else {
+        echo "Truy cập lỗi";
+    }
 }
