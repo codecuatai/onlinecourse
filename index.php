@@ -6,59 +6,76 @@ ob_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// 1. KHỞI ĐỘNG SESSION
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Định nghĩa ROOT (Quan trọng cho các đường dẫn require trong Controller)
+define('ROOT', __DIR__);
 
 // ------------------------------------------------------------
-// 3. NẠP TẤT CẢ CÁC FILE CẦN THIẾT (Sử dụng require_once thủ công)
-// Nếu bạn sử dụng phương pháp này, bạn phải đảm bảo rằng TẤT CẢ Controllers 
-// và Database/Config file đều được thêm vào đây.
+// 2. NẠP TẤT CẢ CÁC FILE CẦN THIẾT (Sử dụng require_once thủ công)
+// *Bạn nên chuyển sang Autoloading nếu dự án lớn hơn*
 require_once './config/config.php';
 require_once './config/Database.php';
-require_once './config/session.php';
+require_once './config/session.php'; // Giả sử file này chứa logic liên quan đến session
+// Tệp PHPMailer nên được require TỪ TRONG Controller (hoặc dùng Composer Autoload)
+// Nếu bạn muốn giữ chúng ở đây:
 require_once "./models/mailer/Exception.php";
 require_once "./models/mailer/PHPMailer.php";
 require_once "./models/mailer/SMTP.php";
+
 require_once "./controllers/AuthController.php";
 require_once "./controllers/AdminController.php";
-// Lưu ý: Nếu có Models, bạn cũng cần require chúng ở đây.
+require_once "./controllers/HomeController.php";
+require_once ROOT . "/controllers/StudentController.php";  // <-- Thêm dòng này
+require_once ROOT . "/controllers/InstructorController.php"; // Thêm HomeController mặc định
 
 // ------------------------------------------------------------
-// 4. ROUTING (Xử lý URL Dựa trên Tham số GET) - Phương pháp cũ hơn
-$view = _VIEW;
-$action = _ACTION;
-$instructor = _INSTRUCTOR;
+// 3. ROUTING (Xử lý URL Dựa trên Tham số GET) - MVC Controller/Action
 
-// Lấy giá trị từ URL nếu có
-if (!empty($_GET['views'])) {
-    $view = $_GET['views'];
-}
-if (!empty($_GET['action'])) {
-    $action = $_GET['action'];
-}
-if (!empty($_GET['instructor'])) {
-    $instructor = $_GET['instructor'];
-}
+// Lấy Controller và Action từ URL (Sử dụng $_GET)
+$controller_segment = $_GET['controller'] ?? 'home'; 
+$method_segment = $_GET['action'] ?? 'index'; 
 
+// Chuẩn hóa tên Controller (e.g., 'auth' -> 'AuthController')
+$controller_name = ucfirst(strtolower($controller_segment)) . 'Controller';
 
-// Build path
-if (!empty($instructor)) {
-    // Nếu là instructor
-    $path = 'views/' . $view . '/' . $instructor . '/' . $action . '.php';
-} else {
-    // Người dùng bình thường
-    $path = 'views/' . $view . '/' . $action . '.php';
+// KHÔNG CHUẨN HÓA SANG CHỮ THƯỜNG Ở ĐÂY. Giữ nguyên case để đảm bảo ucfirst hoạt động đúng.
+$method_name = $method_segment; 
+
+// Xử lý các action liên quan đến POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1. Chuẩn hóa tên phương thức: process + Tên_Action (Viết hoa chữ cái đầu)
+    $method_name = 'process' . ucfirst($method_name);
 }
 
-// Include file
-if (!empty($path)) {
-    if (file_exists($path)) {
-        require_once $path;
+// KHÔNG cần kiểm tra $controller_file vì chúng ta đã require_once ở trên
+$controller_class = $controller_name;
+
+// ------------------------------------------------------------
+// 4. THỰC THI CONTROLLER/ACTION
+
+// Kiểm tra xem Class (Controller) đã được nạp/tồn tại chưa
+if (class_exists($controller_class)) {
+    
+    $controller = new $controller_class();
+    
+    // Kiểm tra xem phương thức (Action) có tồn tại trong Class đó không
+    if (method_exists($controller, $method_name)) {
+        // Gọi phương thức (Action)
+        $controller->$method_name();
     } else {
-        echo "Không tìm thấy trang!";
+        // Xử lý lỗi: Action không tồn tại
+        header("HTTP/1.0 404 Not Found");
+        echo "<h1>404 Not Found</h1>";
+        echo "<p>Action '{$method_name}' không tồn tại trong Controller '{$controller_class}'.</p>";
     }
 } else {
-    echo "Truy cập lỗi";
+    // Xử lý lỗi: Controller không tồn tại 
+    header("HTTP/1.0 404 Not Found");
+    echo "<h1>404 Not Found</h1>";
+    echo "<p>Controller '{$controller_class}' không tồn tại. Vui lòng kiểm tra lại URL.</p>";
 }

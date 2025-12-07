@@ -4,7 +4,7 @@ require_once './views/layouts/header-auth.php';
 
 <body>
 
-    <form action="./controllers/AuthController.php" method="POST">
+    <form method="POST" action="index.php?controller=auth&action=login">
         <div class="container">
             <!-- Left Side - Branding -->
             <div class="branding">
@@ -118,7 +118,7 @@ require_once './views/layouts/header-auth.php';
 
                     <!-- Switch Mode -->
                     <div class=" login-link">
-                        Đã chưa có tài khoản? <a href="?views=auth&action=register">Đăng kí ngay</a>
+                        Đã chưa có tài khoản? <a href="index.php?controller=auth&action=register">Đăng ký</a>
                     </div>
 
                     <!-- Divider -->
