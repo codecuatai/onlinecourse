@@ -31,7 +31,7 @@ class AuthController
     public function processLogin() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             // Chỉ chấp nhận phương thức POST
-            header('Location: index.php?views=auth&action=login');
+            header('Location: ?views=auth&action=login');
             exit;
         }
 
@@ -59,13 +59,13 @@ class AuthController
                 // 4. Điều hướng dựa trên vai trò
                 if ($user['role'] == 2) {
                     // Quản trị viên
-                    header('Location: index.php?views=admin&action=dashboard');
+                    header('Location: ?views=admin&action=dashboard');
                 } elseif ($user['role'] == 1) {
                     // Giảng viên
-                    header('Location: index.php?views=instructor&action=dashboard');
+                    header('Location: ?views=instructor&action=dashboard');
                 } else {
                     // Học viên (role = 0)
-                    header('Location: index.php?views=student&action=dashboard');
+                    header('Location: ?views=student&action=dashboard');
                 }
                 exit;
 
@@ -78,7 +78,7 @@ class AuthController
         session_start();
         $_SESSION['login_errors'] = $errors;
         $_SESSION['old_input'] = ['username' => $username];
-        header('Location: index.php?views=auth&action=login');
+        header('Location: ?views=auth&action=login');
         exit;
     }
 
@@ -95,7 +95,7 @@ class AuthController
      */
     public function processRegister() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?views=auth&action=register');
+            header('Location: ?views=auth&action=register');
             exit;
         }
 
@@ -132,7 +132,7 @@ class AuthController
                 // Đăng ký thành công
                 session_start();
                 $_SESSION['success_message'] = "Đăng ký thành công! Vui lòng đăng nhập.";
-                header('Location: index.php?views=auth&action=login');
+                header('Location: ?views=auth&action=login');
                 exit;
             } else {
                 // Lỗi CSDL (Hiếm khi xảy ra nếu validation tốt)
@@ -144,7 +144,7 @@ class AuthController
         session_start();
         $_SESSION['register_errors'] = $errors;
         $_SESSION['old_input'] = $data;
-        header('Location: index.php?views=auth&action=register');
+        header('Location: ?views=auth&action=register');
         exit;
     }
         // Trong AuthController.php
