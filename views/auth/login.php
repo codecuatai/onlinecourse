@@ -4,7 +4,7 @@ require_once './views/layouts/header-auth.php';
 
 <body>
 
-    <form action="./controllers/AuthController.php" method="POST">
+    <form action="?controller=AuthController" method="POST">
         <div class="container">
             <!-- Left Side - Branding -->
             <div class="branding">
