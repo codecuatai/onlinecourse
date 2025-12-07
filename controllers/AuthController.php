@@ -50,7 +50,6 @@ class AuthController
 
             if ($user && User::verifyPassword($password, $user['password'])) {
                 // 3. Đăng nhập thành công: Thiết lập Session
-                session_start();
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['fullname'] = $user['fullname'];
@@ -59,13 +58,13 @@ class AuthController
                 // 4. Điều hướng dựa trên vai trò
                 if ($user['role'] == 2) {
                     // Quản trị viên
-                    header('Location: ?views=admin&action=dashboard');
+                    header('Location: ?views=admin&action=browseCourses');
                 } elseif ($user['role'] == 1) {
                     // Giảng viên
-                    header('Location: ?views=instructor&action=dashboard');
+                    header('Location: ?views=instructor&action=manageCourses');
                 } else {
                     // Học viên (role = 0)
-                    header('Location: ?views=student&action=dashboard');
+                    header('Location: ?views=student&action=myCourses');
                 }
                 exit;
 
@@ -75,7 +74,6 @@ class AuthController
         }
 
         // Nếu có lỗi, lưu lỗi vào session và chuyển hướng lại trang đăng nhập
-        session_start();
         $_SESSION['login_errors'] = $errors;
         $_SESSION['old_input'] = ['username' => $username];
         header('Location: ?views=auth&action=login');
@@ -130,7 +128,6 @@ class AuthController
             // 3. Nếu không có lỗi, tạo người dùng
             if ($this->userModel->createUser($data)) {
                 // Đăng ký thành công
-                session_start();
                 $_SESSION['success_message'] = "Đăng ký thành công! Vui lòng đăng nhập.";
                 header('Location: ?views=auth&action=login');
                 exit;
@@ -141,7 +138,6 @@ class AuthController
         }
 
         // Nếu có lỗi, lưu lỗi vào session và quay lại trang đăng ký
-        session_start();
         $_SESSION['register_errors'] = $errors;
         $_SESSION['old_input'] = $data;
         header('Location: ?views=auth&action=register');
@@ -191,7 +187,6 @@ class AuthController
      * Xử lý đăng xuất.
      */
     public function logout() {
-        session_start();
         // Hủy bỏ tất cả các biến session
         $_SESSION = [];
         // Hủy session
