@@ -9,7 +9,7 @@ class EnrollmentController
     public function __construct()
     {
         $database = new Database();
-        $db = $database->connect();
+        $db = $database->getConnection();
         $this->enrollModel = new Enrollment($db);
     }
 

@@ -65,7 +65,7 @@ class Course
     }
 
     // lấy toàn bộ khóa học
-     public function getAll()
+    public function getAll()
     {
         $sql = "SELECT 
                     courses.*, 
@@ -83,8 +83,8 @@ class Course
 
     //Tìm kiếm khóa học theo tên
     public function search($keyword)
-{
-    $sql = "SELECT 
+    {
+        $sql = "SELECT 
                 courses.*, 
                 users.fullname AS instructor_name,
                 categories.name AS category_name
@@ -94,18 +94,18 @@ class Course
             WHERE courses.title LIKE :keyword
             ORDER BY courses.created_at DESC";
 
-    $stmt = $this->conn->prepare($sql);
-    $keyword = "%" . $keyword . "%";
-    $stmt->bindParam(":keyword", $keyword);
-    $stmt->execute();
+        $stmt = $this->conn->prepare($sql);
+        $keyword = "%" . $keyword . "%";
+        $stmt->bindParam(":keyword", $keyword);
+        $stmt->execute();
 
-    return $stmt;
-}
+        return $stmt;
+    }
 
     // ✅ LẤY THÔNG TIN CHI TIẾT 1 KHÓA HỌC
-public function getById($id)
-{
-    $sql = "SELECT 
+    public function getById($id)
+    {
+        $sql = "SELECT 
                 courses.*, 
                 users.fullname AS instructor_name,
                 categories.name AS category_name
@@ -115,20 +115,18 @@ public function getById($id)
             WHERE courses.id = :id
             LIMIT 1";
 
-    $stmt = $this->conn->prepare($sql);
-    $stmt->bindParam(":id", $id);
-    $stmt->execute();
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     // ✅ XEM CHI TIẾT KHÓA HỌC
-public function detail()
-{
-    $id = $_GET['id'];
-    $course = $this->courseModel->getById($id);
-    require_once __DIR__ . '/../views/courses/detail.php';
-}
-
-
+    public function detail()
+    {
+        $id = $_GET['id'];
+        $course = $this->courseModel->getById($id);
+        require_once __DIR__ . '/../views/courses/detail.php';
+    }
 }
