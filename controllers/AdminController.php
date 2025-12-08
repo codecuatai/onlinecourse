@@ -1,5 +1,6 @@
 <?php
 // C:\xampp\htdocs\onlinecourse\controllers\AdminController.php
+require_once './models/User.php';
 
 class AdminController
 {
@@ -12,13 +13,13 @@ class AdminController
     {
         // 1. Kiểm tra quyền (Authorization)
         // Đảm bảo chỉ có Quản trị viên (role=2) mới truy cập được.
-        // if ($_SESSION['role'] != 2) { 
-        //     header('Location: unauthorized.php'); 
-        //     exit;
-        // }
+        if ($_SESSION['role'] != 2) {
+            header('Location: unauthorized.php');
+            exit;
+        }
 
         // 2. Gọi Model để lấy dữ liệu (Fetch Data)
-        // $courses = $this->courseModel->getAllCourses(); 
+        // $courses = $this->courseModel->getAllCourses();
 
         // 3. Hiển thị View (Render View)
         include_once ROOT . '/views/admin/browseCourses.php';

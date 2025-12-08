@@ -55,6 +55,8 @@ class AuthController
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['fullname'] = $user['fullname'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['avatar'] = $user['avatar'];
                 $_SESSION['role'] = $user['role']; // 0: học viên, 1: giảng viên, 2: quản trị viên
 
                 // 4. Điều hướng dựa trên vai trò

@@ -36,6 +36,37 @@ switch ($role) {
         .profile-dropdown a:hover {
             background-color: #f1f1f1;
         }
+
+        .avatar-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: all .2s ease;
+        }
+
+        .avatar-img:hover {
+            transform: scale(1.08);
+        }
+
+        .profile-icon {
+            position: relative;
+        }
+
+        .profile-dropdown {
+            top: 110%;
+            right: 0;
+            min-width: 180px;
+            display: none;
+            border-radius: .5rem;
+            overflow: hidden;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #f8f9fa !important;
+        }
     </style>
 </head>
 
@@ -53,18 +84,24 @@ switch ($role) {
                 <div class="notification-icon me-3" title="Thông báo" style="cursor:pointer;">🔔</div>
 
                 <!-- Profile -->
-                <div class="profile-icon" title="Tài khoản" style="cursor:pointer;">
-                    👤
+                <div class="profile-icon d-flex align-items-center" style="cursor:pointer;">
+                    <img src="<?= $_SESSION['avatar'] ?? './assets/img/default-avatar.png' ?>"
+                        alt="Avatar"
+                        class="avatar-img">
                 </div>
+
+
 
                 <!-- Dropdown menu -->
                 <div class="profile-dropdown position-absolute bg-white shadow rounded" style="top:100%; right:0; display:none; min-width:150px; z-index:100;">
-                    
-                    <?php if ($role !== -1): // Đã đăng nhập ?>
+
+                    <?php if ($role !== -1): // Đã đăng nhập 
+                    ?>
                         <a href="?views=users&action=profile" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Profile</a>
                         <a href="?views=auth&action=changepassword" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đổi mật khẩu</a>
                         <a href="?controllers=AuthController&action=logout" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đăng xuất</a>
-                    <?php else: // Chưa đăng nhập ?>
+                    <?php else: // Chưa đăng nhập 
+                    ?>
                         <a href="?views=auth&action=login" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đăng nhập</a>
                         <a href="?views=auth&action=register" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đăng ký</a>
                     <?php endif; ?>

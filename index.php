@@ -36,8 +36,8 @@ $instructor = $_GET['instructor'] ?? null;
 if (!empty($controllers)) {
     // ------------------------------------------------------------
     // XỬ LÝ CONTROLLER (E.g., AuthController)
-    
-    $controllerClassName = $controllers; 
+
+    $controllerClassName = $controllers;
     $controllerPath = 'controllers/' . $controllerClassName . '.php';
 
     // 1. Kiểm tra và nạp Controller (NẾU CHƯA NẠP Ở ĐẦU FILE)
@@ -48,19 +48,19 @@ if (!empty($controllers)) {
             die("Lỗi: Không tìm thấy file Controller '{$controllerPath}'.");
         }
     }
-    
+
     // 2. Khởi tạo Controller và Gọi Action
     if (class_exists($controllerClassName)) {
         $controllerInstance = new $controllerClassName();
-        
+
         // Mặc định action là index nếu không được cung cấp (ví dụ: ?controllers=Home)
-        $actionMethod = $action ?? 'index'; 
+        $actionMethod = $action ?? 'index';
 
         if (method_exists($controllerInstance, $actionMethod)) {
             // THỰC THI PHƯƠNG THỨC: Đây là nơi processLogin() được gọi
-            $controllerInstance->$actionMethod(); 
+            $controllerInstance->$actionMethod();
             // Nếu lệnh header() và exit; trong processLogin() chạy, code sẽ dừng ở đây.
-            
+
         } else {
             // Lỗi nếu action không tồn tại
             die("Lỗi: Phương thức action '{$actionMethod}' không tồn tại trong Controller.");
@@ -68,11 +68,10 @@ if (!empty($controllers)) {
     } else {
         die("Lỗi: Không tìm thấy Class '{$controllerClassName}'.");
     }
-
 } else {
     // ------------------------------------------------------------
     // XỬ LÝ VIEW (Logic cũ cho View tĩnh)
-    
+
     // Đặt lại action mặc định cho View nếu nó không phải Controller
     $action = $_GET['action'] ?? _ACTION;
 
