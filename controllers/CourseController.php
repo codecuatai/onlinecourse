@@ -88,3 +88,35 @@ public function edit($course_id) {
     // Tải View form chỉnh sửa khóa học với dữ liệu $course
     include 'views/instructor/course/edit.php';
 } -->
+<?php
+require_once __DIR__ . '/../models/Course.php';
+require_once __DIR__ . '/../config/Database.php';
+
+class CourseController
+{
+    private $courseModel;
+
+    public function __construct()
+    {
+        $database = new Database();
+        $db = $database->connect();
+        $this->courseModel = new Course($db);
+    }
+
+    // ✅ HIỂN THỊ DANH SÁCH KHÓA HỌC
+    public function index()
+    {
+        $courses = $this->courseModel->getAll();
+        require_once __DIR__ . '/../views/courses/index.php';
+    }
+
+    // ✅ TÌM KIẾM KHÓA HỌC
+public function search()
+{
+    $keyword = $_GET['keyword'] ?? '';
+    $courses = $this->courseModel->search($keyword);
+    require_once __DIR__ . '/../views/courses/search.php';
+}
+
+
+}
