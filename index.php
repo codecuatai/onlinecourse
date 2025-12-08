@@ -33,41 +33,49 @@ require_once "./controllers/InstructorController.php";
 // Ghi chú: Bạn cần require các file Model khác (như User.php) nếu chúng chưa được Controller yêu cầu.
 
 // ------------------------------------------------------------
-// 3. ROUTING (Xử lý URL Dựa trên Tham số GET) - Logic Controller/Action
+// 4. ROUTING (Xử lý URL Dựa trên Tham số GET) - Phương pháp cũ hơn
+$view = _VIEW;
+$action = _ACTION;
+$instructor = _INSTRUCTOR;
+$controller = _CONTROLLERS;
 
-// 3.1. Lấy tham số Controller và Action
-$controllerName = $_GET['views'] ?? 'home'; // Mặc định là 'home'
-$actionName = $_GET['action'] ?? 'index'; // Mặc định là 'index'
+// Lấy giá trị từ URL nếu có
+if (!empty($_GET['views'])) {
+    $view = $_GET['views'];
+}
+if (!empty($_GET['action'])) {
+    $action = $_GET['action'];
+}
+if (!empty($_GET['instructor'])) {
+    $instructor = $_GET['instructor'];
+}
+if (!empty($_GET['controllers'])) {
+    $controllers = $_GET['controllers'];
+}
 
-// Chuẩn hóa tên Controller (ví dụ: 'auth' -> 'AuthController')
-$className = ucfirst($controllerName) . 'Controller';
 
 
-if (class_exists($className)) {
-    // Controller tồn tại: Khởi tạo và gọi Action
-    $controller = new $className();
-    
-    // 3.2. Kiểm tra và gọi Action
-    if (method_exists($controller, $actionName)) {
-        // GỌI PHƯƠNG THỨC XỬ LÝ (ví dụ: AuthController->processLogin())
-        $controller->$actionName();
-    } else {
-        // Nếu Action không tồn tại trong Controller
-        http_response_code(404);
-        echo "Lỗi 404: Action **{$actionName}** không tìm thấy trong Controller **{$className}**.";
-    }
+if (!empty($controllers)) {
+    $path = 'controllers/' . $controllers;
 } else {
-    // 3.3. Trường hợp không phải Controller (Tải View tĩnh/Trang lỗi)
-    
-    // Cố gắng tải View trực tiếp (ví dụ: /views/home/about.php)
-    $path = 'views/' . $controllerName . '/' . $actionName . '.php'; 
-    
-    if (file_exists($path)) {
-        require_once $path;
+    // Build path
+    if (!empty($instructor)) {
+        // Nếu là instructor
+        $path = 'views/' . $view . '/' . $instructor . '/' . $action . '.php';
     } else {
-        // Không tìm thấy cả Controller và View
-        http_response_code(404);
-        echo "Lỗi 404: Không tìm thấy Controller/View cho đường dẫn **?views={$controllerName}&action={$actionName}**";
+        // Người dùng bình thường
+        $path = 'views/' . $view . '/' . $action . '.php';
+    }
+
+    // Include file
+    if (!empty($path)) {
+        if (file_exists($path)) {
+            require_once $path;
+        } else {
+            echo "Không tìm thấy trang!";
+        }
+    } else {
+        echo "Truy cập lỗi";
     }
 }
 
