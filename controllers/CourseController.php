@@ -99,7 +99,7 @@ class CourseController
     public function __construct()
     {
         $database = new Database();
-        $db = $database->connect();
+        $db = $database->getConnection();
         $this->courseModel = new Course($db);
     }
 
