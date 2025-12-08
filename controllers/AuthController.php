@@ -57,17 +57,6 @@ class AuthController
                 $_SESSION['role'] = $user['role']; // 0: học viên, 1: giảng viên, 2: quản trị viên
 
                 // 4. Điều hướng dựa trên vai trò
-                if ($user['role'] == 2) {
-                    // Quản trị viên
-                    header('Location: ?views=admin&action=dashboard');
-                } elseif ($user['role'] == 1) {
-                    // Giảng viên
-                    header('Location: ?views=instructor&action=dashboard');
-                } else {
-                    // Học viên (role = 0)
-                    header('Location: ?views=student&action=dashboard');
-                }
-                exit;
 
             } else {
                 $errors[] = "Tên đăng nhập/Mật khẩu không chính xác.";
