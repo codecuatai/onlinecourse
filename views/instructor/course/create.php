@@ -17,7 +17,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
             </a>
         </div>
 
-        <form action="#" method="POST" enctype="multipart/form-data">
+        <form action="/onlinecourse/index.php?controller=course&action=store" method="POST" enctype="multipart/form-data">
 
             <div class="card-body">
 
@@ -37,12 +37,12 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Thể loại</label>
-                        <select name="category" class="form-select" required>
+                        <select name="category_id" class="form-select" required>
                             <option value="">-- Chọn thể loại --</option>
-                            <option value="programming">Lập trình</option>
-                            <option value="design">Thiết kế</option>
-                            <option value="marketing">Marketing</option>
-                            <option value="business">Kinh doanh</option>
+                            <option value="1">Lập trình</option>
+                            <option value="2">Thiết kế</option>
+                            <option value="3">Marketing</option>
+                            <option value="4">Kinh doanh</option>
                         </select>
                     </div>
 
@@ -66,7 +66,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                 <!-- Ảnh đại diện -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Ảnh đại diện</label>
-                    <input type="file" name="thumbnail" class="form-control">
+                    <input type="file" name="image" class="form-control">
                 </div>
 
             </div>

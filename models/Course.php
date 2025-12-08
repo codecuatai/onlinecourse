@@ -14,7 +14,7 @@ class Course
     public function getCoursesByInstructor($instructor_id)
     {
         $sql = "SELECT * FROM " . $this->table . " WHERE instructor_id = :instructor_id ORDER BY created_at DESC";
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql); 
         $stmt->bindParam(":instructor_id", $instructor_id);
         $stmt->execute();
         return $stmt;
