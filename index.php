@@ -16,7 +16,6 @@ if (session_status() === PHP_SESSION_NONE) {
 // KHẮC PHỤC LỖI: Định nghĩa hằng số ROOT (Đường dẫn tuyệt đối đến thư mục 'onlinecourse')
 define('ROOT', __DIR__);
 
-
 // ------------------------------------------------------------
 // 2. NẠP TẤT CẢ CÁC FILE CẦN THIẾT (Sử dụng require_once thủ công)
 // Tải Config, Database, Model, Controller
@@ -26,10 +25,6 @@ require_once './config/session.php';
 require_once "./models/mailer/Exception.php";
 require_once "./models/mailer/PHPMailer.php";
 require_once "./models/mailer/SMTP.php";
-require_once "./controllers/AuthController.php";
-require_once "./controllers/AdminController.php";
-require_once "./controllers/StudentController.php";
-require_once "./controllers/InstructorController.php";
 // Ghi chú: Bạn cần require các file Model khác (như User.php) nếu chúng chưa được Controller yêu cầu.
 
 // ------------------------------------------------------------

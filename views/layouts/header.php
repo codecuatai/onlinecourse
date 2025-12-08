@@ -1,5 +1,5 @@
 <?php
-$role = 0;
+$role = 2;
 // Tiêu đề header theo role
 switch ($role) {
     case 0:

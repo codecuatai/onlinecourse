@@ -202,4 +202,6 @@ class AuthController
     }
 }
 
+$post = $_POST(['email']);
+echo $post;
 $auth = new AuthController();

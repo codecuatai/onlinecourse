@@ -1,7 +1,7 @@
 <?php
 // C:\xampp\htdocs\onlinecourse\controllers\AdminController.php
 
-class AdminController 
+class AdminController
 {
     // ... Constructor và các hàm khác ...
 
@@ -23,8 +23,6 @@ class AdminController
         // 3. Hiển thị View (Render View)
         include_once ROOT . '/views/admin/browseCourses.php';
     }
-    
+
     // ... Các Action khác (ví dụ: addCourse, editCourse, v.v.)
 }
-
-?>
