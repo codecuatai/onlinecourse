@@ -58,16 +58,7 @@ class AuthController
                 $_SESSION['role'] = $user['role']; // 0: học viên, 1: giảng viên, 2: quản trị viên
 
                 // 4. Điều hướng dựa trên vai trò
-                if ($user['role'] == 2) {
-                    // Quản trị viên
-                    header('Location: ?views=admin&action=browseCourses');
-                } elseif ($user['role'] == 1) {
-                    // Giảng viên
-                    header('Location: ?views=instructor&action=manageCourses');
-                } else {
-                    // Học viên (role = 0)
-                    header('Location: ?views=student&action=myCourses');
-                }
+                header('Location: ?views=home&action=index'); // ĐÃ SỬA: Chuyển hướng chung về trang chủ
                 exit;
             } else {
                 $errors[] = "Tên đăng nhập/Mật khẩu không chính xác.";
@@ -197,7 +188,7 @@ class AuthController
         // Hủy session
         session_destroy();
         // Điều hướng về trang chủ hoặc trang đăng nhập
-        header('Location: index.php');
+        header('Location: ?views=home&action=index');
         exit;
     }
 }

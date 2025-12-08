@@ -26,59 +26,72 @@ require_once './config/session.php';
 require_once "./models/mailer/Exception.php";
 require_once "./models/mailer/PHPMailer.php";
 require_once "./models/mailer/SMTP.php";
-require_once "./controllers/AuthController.php";
-require_once "./controllers/AdminController.php";
-require_once "./controllers/StudentController.php";
-require_once "./controllers/InstructorController.php";
-// Ghi chú: Bạn cần require các file Model khác (như User.php) nếu chúng chưa được Controller yêu cầu.
+
 
 // ------------------------------------------------------------
 // 4. ROUTING (Xử lý URL Dựa trên Tham số GET) - Phương pháp cũ hơn
-$view = _VIEW;
-$action = _ACTION;
-$instructor = _INSTRUCTOR;
-$controller = _CONTROLLERS;
-
-// Lấy giá trị từ URL nếu có
-if (!empty($_GET['views'])) {
-    $view = $_GET['views'];
-}
-if (!empty($_GET['action'])) {
-    $action = $_GET['action'];
-}
-if (!empty($_GET['instructor'])) {
-    $instructor = $_GET['instructor'];
-}
-if (!empty($_GET['controllers'])) {
-    $controllers = $_GET['controllers'];
-}
-
-
+$controllers = $_GET['controllers'] ?? null;
+$action = $_GET['action'] ?? null;
+$view = $_GET['views'] ?? _VIEW;
+$instructor = $_GET['instructor'] ?? null;
 
 if (!empty($controllers)) {
-    $path = 'controllers/' . $controllers;
+    // ------------------------------------------------------------
+    // XỬ LÝ CONTROLLER (E.g., AuthController)
+    
+    $controllerClassName = $controllers; 
+    $controllerPath = 'controllers/' . $controllerClassName . '.php';
+
+    // 1. Kiểm tra và nạp Controller (NẾU CHƯA NẠP Ở ĐẦU FILE)
+    if (!class_exists($controllerClassName)) {
+        if (file_exists($controllerPath)) {
+            require_once $controllerPath;
+        } else {
+            die("Lỗi: Không tìm thấy file Controller '{$controllerPath}'.");
+        }
+    }
+    
+    // 2. Khởi tạo Controller và Gọi Action
+    if (class_exists($controllerClassName)) {
+        $controllerInstance = new $controllerClassName();
+        
+        // Mặc định action là index nếu không được cung cấp (ví dụ: ?controllers=Home)
+        $actionMethod = $action ?? 'index'; 
+
+        if (method_exists($controllerInstance, $actionMethod)) {
+            // THỰC THI PHƯƠNG THỨC: Đây là nơi processLogin() được gọi
+            $controllerInstance->$actionMethod(); 
+            // Nếu lệnh header() và exit; trong processLogin() chạy, code sẽ dừng ở đây.
+            
+        } else {
+            // Lỗi nếu action không tồn tại
+            die("Lỗi: Phương thức action '{$actionMethod}' không tồn tại trong Controller.");
+        }
+    } else {
+        die("Lỗi: Không tìm thấy Class '{$controllerClassName}'.");
+    }
+
 } else {
+    // ------------------------------------------------------------
+    // XỬ LÝ VIEW (Logic cũ cho View tĩnh)
+    
+    // Đặt lại action mặc định cho View nếu nó không phải Controller
+    $action = $_GET['action'] ?? _ACTION;
+
     // Build path
     if (!empty($instructor)) {
-        // Nếu là instructor
         $path = 'views/' . $view . '/' . $instructor . '/' . $action . '.php';
     } else {
-        // Người dùng bình thường
         $path = 'views/' . $view . '/' . $action . '.php';
     }
 
     // Include file
-    if (!empty($path)) {
-        if (file_exists($path)) {
-            require_once $path;
-        } else {
-            echo "Không tìm thấy trang!";
-        }
+    if (file_exists($path)) {
+        require_once $path;
     } else {
-        echo "Truy cập lỗi";
+        echo "Không tìm thấy trang View!";
     }
 }
-
 // ------------------------------------------------------------
 // KẾT THÚC CHƯƠNG TRÌNH
 ob_end_flush(); // Đảm bảo bộ đệm đầu ra được đẩy ra trình duyệt

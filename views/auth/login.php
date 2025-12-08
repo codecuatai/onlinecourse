@@ -60,7 +60,7 @@ require_once './views/layouts/header-auth.php';
                     <p id="form-subtitle">Chào mừng bạn trở lại!</p>
                 </div>
 
-                <form action="?controllers=AuthController" method="post">
+                <form action="?controllers=AuthController&action=processLogin" method="post">
                     <!-- Email -->
                     <div class="form-group">
                         <label for="email">Email</label>
