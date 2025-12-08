@@ -111,38 +111,51 @@ $courses = [
 <div class="container my-4">
 
     <!-- Search + Filter -->
-    <form class="row g-2 mb-4">
+<form class="row g-2 mb-4" method="GET" action="index.php" id="searchForm">
 
-        <div class="col-12 col-md-6">
-            <div class="input-group shadow-sm">
-                <span class="input-group-text bg-white border-end-0">
-                    <i class="bi bi-search"></i>
-                </span>
-                <input type="text" class="form-control border-start-0" placeholder="Tìm kiếm khóa học...">
-            </div>
+    <input type="hidden" name="controller" value="course">
+    <input type="hidden" name="action" value="search">
+
+    <!-- Ô tìm kiếm -->
+    <div class="col-12 col-md-6">
+        <div class="input-group shadow-sm">
+            <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-search"></i>
+            </span>
+            <input 
+                type="text" 
+                name="keyword" 
+                id="keyword"
+                class="form-control border-start-0"
+                placeholder="Tìm kiếm khóa học..."
+                autocomplete="off"
+            >
         </div>
+    </div>
 
-        <div class="col-6 col-md-3">
-            <select class="form-select shadow-sm">
-                <option value="">Tất cả lĩnh vực</option>
-                <option>Lập trình</option>
-                <option>Thiết kế</option>
-                <option>Kinh doanh</option>
-                <option>Video</option>
-            </select>
-        </div>
+    <!-- Lọc danh mục -->
+    <div class="col-6 col-md-3">
+        <select class="form-select shadow-sm" name="category" id="category">
+            <option value="">Tất cả lĩnh vực</option>
+            <option value="1">Lập trình</option>
+            <option value="2">Thiết kế</option>
+            <option value="3">Kinh doanh</option>
+            <option value="4">Video</option>
+        </select>
+    </div>
 
-        <div class="col-6 col-md-3">
-            <select class="form-select shadow-sm">
-                <option value="">Sắp xếp</option>
-                <option>Phổ biến nhất</option>
-                <option>Mới nhất</option>
-                <option>Giá thấp → cao</option>
-                <option>Giá cao → thấp</option>
-            </select>
-        </div>
+    <!-- Sắp xếp -->
+    <div class="col-6 col-md-3">
+        <select class="form-select shadow-sm" name="sort" id="sort">
+            <option value="">Sắp xếp</option>
+            <option value="popular">Phổ biến nhất</option>
+            <option value="new">Mới nhất</option>
+            <option value="price_asc">Giá thấp → cao</option>
+            <option value="price_desc">Giá cao → thấp</option>
+        </select>
+    </div>
 
-    </form>
+</form>
 
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
@@ -191,7 +204,6 @@ $courses = [
 </div>
 
 
-
 <?php
-require_once _PATH_URL . '/../views/layouts/header.php';
+require_once _PATH_URL . '/../views/layouts/footer.php';
 ?>
