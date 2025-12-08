@@ -49,7 +49,7 @@ require_once './views/layouts/header-auth.php';
             </div>
         <?php endif; ?>
 
-        <form action="index.php?controller=auth&action=register" method="POST">
+            <form action="?controllers=AuthController&action=processRegister" method="post">
             <div class="form-group">
                 <label for="fullname">Tên Tài Khoản <span class="required">*</span></label>
                 <div class="input-wrapper">

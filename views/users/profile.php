@@ -17,6 +17,12 @@ $user = [
 <main class="main-content p-4">
     <div class="container">
         <h4 class="mb-4">Trang cá nhân</h4>
+        <div class="d-flex justify-content-end mb-2">
+            <a href="javascript:history.back()" class="btn btn-secondary btn-sm">
+                ← Quay lại
+            </a>
+        </div>
+
 
         <div class="row">
             <!-- Avatar và thông tin cơ bản -->

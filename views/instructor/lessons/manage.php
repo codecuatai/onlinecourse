@@ -35,7 +35,7 @@ $lessons = [
 
     <!-- Nút tạo bài học mới -->
     <div class="mb-3">
-        <a class="btn btn-success" href="?views=instructor&instructor=lessons&action=manage">
+        <a class="btn btn-success" href="?views=instructor&instructor=lessons&action=create">
             <i class="fas fa-plus"></i> Tạo bài học mới
         </a>
     </div>
