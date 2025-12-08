@@ -2,8 +2,14 @@
 require_once './views/layouts/header-auth.php';
 ?>
 
+
 <body>
     <div class="forgot-password-container">
+        <a href="javascript:history.back()" class="back-btn">
+            ← Quay lại
+        </a>
+
+
         <!-- Decorative elements -->
         <div class="circle-decoration circle-1"></div>
         <div class="circle-decoration circle-2"></div>
@@ -122,8 +128,6 @@ require_once './views/layouts/header-auth.php';
         </div>
 
 </body>
-
-
 
 <?php
 require_once './views/layouts/footer-auth.php';

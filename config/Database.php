@@ -2,7 +2,7 @@
 
 
 // Thông tin kết nối của bạn
-const _HOST = "localhost";
+const _HOST = "localhost:3307";
 const _DB = "onlinecourse";
 const _USER = "root";
 const _PASS = "";
