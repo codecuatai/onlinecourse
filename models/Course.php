@@ -3,11 +3,15 @@ require_once __DIR__ . '/../config/Database.php';
 class Course
 {
     private $conn;
-    private $table = "courses";
+    private $table = 'courses'; // Giữ lại tên biến ngắn gọn 'table'
 
-    public function __construct($db)
+    // Khởi tạo kết nối CSDL trong constructor
+    // Giữ lại cách khởi tạo tự động trong constructor (từ nhánh Duong)
+    public function __construct()
     {
-        $this->conn = $db;
+        // Lấy đối tượng kết nối PDO đã được cấu hình
+        $database = new Database();
+        $this->conn = $database->getConnection();
     }
 
     // Lấy tất cả khóa học theo giảng viên

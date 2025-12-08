@@ -4,8 +4,6 @@ require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
 // Mẫu dữ liệu user (thực tế sẽ lấy từ database)
-$user = $_SESSION;
-print_r($user);
 ?>
 
 <main class="main-content p-4">

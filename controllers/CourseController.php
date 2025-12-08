@@ -5,21 +5,29 @@ require_once __DIR__ . '/../config/Database.php';
 class CourseController
 {
 
-    private $db;
     private $courseModel;
 
-    public function __construct($db)
+    public function __construct()
     {
-        // Kiểm tra quyền: chỉ Giảng viên (role = 1) mới dùng chức năng này
-        session_start();
-        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 1) {
-            header("Location: index.php?controller=auth&action=login");
-            exit;
-        }
+        if (!session_id()) session_start();
 
-        $this->db = $db;
-        $this->courseModel = new Course($db);
+        $this->courseModel = new Course();
     }
+
+    // hiện thị danh sách khóa học ở trang khóa học
+    public function viewAllCourses()
+    {
+        // Lấy tất cả khóa học từ model
+        $stmt = $this->courseModel->getAll(); // hoặc phương thức phù hợp trong model
+        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $_SESSION['courses'] = $courses;
+        header('Location: ?views=courses&action=index');
+        exit;
+    }
+
+
+
+
 
     // Danh sách khóa học của giảng viên
     public function manage()
