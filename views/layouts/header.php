@@ -1,5 +1,7 @@
 <?php
+
 $role = $_SESSION['role'] ?? -1;
+
 // Tiêu đề header theo role
 switch ($role) {
     case 0:

@@ -16,7 +16,6 @@ if (session_status() === PHP_SESSION_NONE) {
 // KHẮC PHỤC LỖI: Định nghĩa hằng số ROOT (Đường dẫn tuyệt đối đến thư mục 'onlinecourse')
 define('ROOT', __DIR__);
 
-
 // ------------------------------------------------------------
 // 2. NẠP TẤT CẢ CÁC FILE CẦN THIẾT (Sử dụng require_once thủ công)
 // Tải Config, Database, Model, Controller
@@ -26,7 +25,6 @@ require_once './config/session.php';
 require_once "./models/mailer/Exception.php";
 require_once "./models/mailer/PHPMailer.php";
 require_once "./models/mailer/SMTP.php";
-
 
 // ------------------------------------------------------------
 // 4. ROUTING (Xử lý URL Dựa trên Tham số GET) - Phương pháp cũ hơn
