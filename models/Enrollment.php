@@ -18,8 +18,8 @@ class Enrollment
                   AND student_id = :student_id";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":course_id", $course_id);
-        $stmt->bindParam(":student_id", $student_id);
+        $stmt->bindValue(":course_id", (int)$course_id, PDO::PARAM_INT);
+        $stmt->bindValue(":student_id", (int)$student_id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->rowCount() > 0;
@@ -33,11 +33,12 @@ class Enrollment
                 VALUES (:course_id, :student_id, NOW(), 'active', 0)";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":course_id", $course_id);
-        $stmt->bindParam(":student_id", $student_id);
+        $stmt->bindValue(":course_id", (int)$course_id, PDO::PARAM_INT);
+        $stmt->bindValue(":student_id", (int)$student_id, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
+
 
     // ✅ LẤY DANH SÁCH KHÓA HỌC HỌC VIÊN ĐÃ ĐĂNG KÝ
     public function getMyCourses($student_id)
@@ -51,9 +52,9 @@ class Enrollment
                 WHERE enrollments.student_id = :student_id";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":student_id", $student_id);
+        $stmt->bindValue(":student_id", (int)$student_id, PDO::PARAM_INT);
         $stmt->execute();
 
-        return $stmt;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

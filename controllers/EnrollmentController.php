@@ -24,27 +24,34 @@ class EnrollmentController
             exit();
         }
 
-        $course_id  = $_POST['course_id'];
+        $course_id  = $_POST['course_id']?? 0;
         $student_id = $_SESSION['user_id'];
 
         // Kiểm tra trùng đăng ký
-        if ($this->enrollModel->isEnrolled($course_id, $student_id)) {
-            echo "Bạn đã đăng ký khóa học này rồi!";
-            return;
+        if ($course_id == 0) {
+            $_SESSION['error'] = "Khóa học không hợp lệ!";
+            header("Location: index.php");
+            exit();
         }
+
 
         // Thực hiện đăng ký
         if ($this->enrollModel->enroll($course_id, $student_id)) {
+            $_SESSION['success'] = "Đăng ký khóa học thành công!";
             header("Location: index.php?controller=enrollment&action=myCourses");
         } else {
             echo "Đăng ký thất bại!";
+            header("Location: index.php?controller=course&action=detail&id=" . $course_id);
         }
     }
 
     // ✅ HIỂN THỊ KHÓA HỌC ĐÃ ĐĂNG KÝ
     public function myCourses()
     {
-        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?controller=auth&action=login");
+            exit();
+        }
         $student_id = $_SESSION['user_id'];
 
         $courses = $this->enrollModel->getMyCourses($student_id);

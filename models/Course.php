@@ -85,6 +85,22 @@ class Course
         return $stmt; // trả về danh sách để controller dùng
     }
 
+    public function getLimit3()
+    {
+        $sql = "SELECT limit 3
+                    courses.*, 
+                    users.fullname AS instructor_name,
+                    categories.name AS category_name
+                FROM courses
+                JOIN users ON courses.instructor_id = users.id
+                JOIN categories ON courses.category_id = categories.id
+                ORDER BY courses.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt; // trả về danh sách để controller dùng
+    }
+
     // ✅ TÌM KIẾM KHÓA HỌC
 public function search($keyword = '', $category = '', $sort = '')
 {
@@ -146,9 +162,8 @@ return $stmt; // trả về PDOStatement
     $stmt->bindParam(":id", $id);
     $stmt->execute();
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
 
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
-    
 }
