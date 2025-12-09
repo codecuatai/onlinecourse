@@ -105,7 +105,7 @@ $courses = $_SESSION['courses'];
 
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="fw-bold text-primary"><?= $course['price'] ?></span>
-                                <a class="btn btn-primary btn-sm" href="?views=courses&action=detail">Xem chi tiết</a>
+                                <a class="btn btn-primary btn-sm" href="<?php echo "?controllers=CourseController&action=viewDetail&id=" . $course['id']; ?>">Xem chi tiết</a>
                             </div>
                         </div>
 

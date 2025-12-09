@@ -27,12 +27,23 @@ class Course
     // Lấy thông tin khóa học theo id
     public function getCourseById($id)
     {
-        $sql = "SELECT * FROM " . $this->table . " WHERE id = :id LIMIT 1";
+        $sql = "SELECT 
+                courses.*, 
+                users.fullname AS instructor_name,
+                categories.name AS category_name
+            FROM courses
+            JOIN users ON courses.instructor_id = users.id
+            JOIN categories ON courses.category_id = categories.id
+            WHERE courses.id = :id
+            LIMIT 1"; // chỉ lấy 1 khóa học
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC); // trả về 1 mảng kết quả
     }
+
 
     // Tạo khóa học
     public function create($data)
@@ -87,19 +98,21 @@ class Course
 
     public function getLimit3()
     {
-        $sql = "SELECT limit 3
-                    courses.*, 
-                    users.fullname AS instructor_name,
-                    categories.name AS category_name
-                FROM courses
-                JOIN users ON courses.instructor_id = users.id
-                JOIN categories ON courses.category_id = categories.id
-                ORDER BY courses.created_at DESC";
+        $sql = "SELECT 
+                courses.*, 
+                users.fullname AS instructor_name,
+                categories.name AS category_name
+            FROM courses
+            JOIN users ON courses.instructor_id = users.id
+            JOIN categories ON courses.category_id = categories.id
+            ORDER BY courses.created_at DESC
+            LIMIT 3"; // Lưu ý: LIMIT ở cuối
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt; // trả về danh sách để controller dùng
     }
+
 
     //Tìm kiếm khóa học theo tên
     public function search($keyword)

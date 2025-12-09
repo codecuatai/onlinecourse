@@ -33,6 +33,26 @@ class CourseController
         header('Location: ?views=home&action=index');
         exit;
     }
+    public function viewDetail()
+    {
+        if (!isset($_GET['id']) || empty($_GET['id'])) {
+            // Nếu không có id, chuyển về trang home
+            header('Location: ?views=home&action=index');
+            exit;
+        }
+
+        $id = (int) $_GET['id']; // đảm bảo id là số nguyên
+        $course = $this->courseModel->getCourseById($id);
+
+        if (!$course) {
+            // Nếu không tìm thấy khóa học, chuyển về trang home hoặc hiển thị thông báo
+            header('Location: ?views=home&action=index');
+            exit;
+        }
+
+        // Gọi view và truyền dữ liệu
+        require_once './views/courses/detail.php';
+    }
 
 
 
