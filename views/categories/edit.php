@@ -3,41 +3,7 @@ require_once __DIR__ . '/../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
-
-// Fake data (vì bạn chưa dùng DB)
-$categories = [
-    1 => ["name" => "Lập trình Web", "description" => "HTML, CSS, JavaScript", "created_at" => "2024-05-01"],
-    2 => ["name" => "Phân tích dữ liệu", "description" => "Python, pandas, visualization", "created_at" => "2024-05-05"],
-    3 => ["name" => "AI & Machine Learning", "description" => "Thuật toán, mô hình AI", "created_at" => "2024-06-01"]
-];
-
-
-// Lấy ID từ URL
-$id = $_GET['id'] ?? null;
-
-// Kiểm tra tồn tại
-if (!$id || !isset($categories[$id])) {
-    echo "<div class='alert alert-danger m-4'>Không tìm thấy danh mục!</div>";
-    require_once _PATH_URL . '/../views/layouts/footer.php';
-    exit;
-}
-
-$cate = $categories[$id];
-
-// Xử lý POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $new_name = $_POST['name'] ?? '';
-    $new_desc = $_POST['description'] ?? '';
-
-    // Tạm thời chỉ debug dữ liệu
-    echo "<pre>";
-    print_r($_POST);
-    echo "</pre>";
-
-    $cate['name'] = $new_name;
-    $cate['description'] = $new_desc;
-}
-
+$cate = $_SESSION['category_edit'];
 ?>
 
 <main class="main-content p-4">
@@ -56,7 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Body -->
         <div class="card-body">
 
-            <form action="" method="POST">
+            <form action="?controllers=CategoryController&action=updateCategory" method="POST">
+                <!-- Hidden ID -->
+                <input type="hidden" name="id" value="<?= $cate['id'] ?>">
 
                 <!-- Tên danh mục -->
                 <div class="mb-3">

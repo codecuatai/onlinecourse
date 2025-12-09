@@ -20,7 +20,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
         <!-- Body -->
         <div class="card-body">
 
-            <form action="" method="POST">
+            <form action="?controllers=CategoryController&action=createCategory" method="POST">
 
                 <!-- Tên danh mục -->
                 <div class="mb-3">

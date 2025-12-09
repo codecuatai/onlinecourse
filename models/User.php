@@ -191,5 +191,64 @@ class User
     }
 
 
+    // xóa người dùng
+    public function deleteUser($id)
+    {
+        $sql = "DELETE FROM " . $this->table . " WHERE id = :id";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute(); // trả về true nếu thành công
+        } catch (PDOException $e) {
+            // Có thể log lỗi hoặc hiển thị (chỉ dùng trong dev)
+            echo "<h2>Lỗi khi xóa người dùng</h2>";
+            echo "Chi tiết lỗi: " . $e->getMessage();
+            return false;
+        }
+    }
+
+
+    //edit người dùng
+    public function updateUser($id, array $data)
+    {
+        // Bắt đầu query
+        $fields = "username = :username, email = :email, fullname = :fullname, role = :role";
+
+        // Nếu password được truyền, hash và thêm vào query
+        if (!empty($data['password'])) {
+            $fields .= ", password = :password";
+            $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+
+        $sql = "UPDATE " . $this->table . " SET $fields WHERE id = :id";
+
+        try {
+            $stmt = $this->conn->prepare($sql);
+
+            // Làm sạch dữ liệu
+            $username = htmlspecialchars(strip_tags($data['username']));
+            $email = htmlspecialchars(strip_tags($data['email']));
+            $fullname = htmlspecialchars(strip_tags($data['fullname']));
+            $role = (int)($data['role'] ?? 0);
+
+            // Bind tham số
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':fullname', $fullname);
+            $stmt->bindParam(':role', $role, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+            if (!empty($data['password'])) {
+                $stmt->bindParam(':password', $hashed_password);
+            }
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            echo "<h2>Lỗi khi cập nhật người dùng</h2>";
+            echo "Chi tiết lỗi: " . $e->getMessage();
+            return false;
+        }
+    }
+
     // Thêm các phương thức CRUD khác tại đây (updateUser, deleteUser...)
 }

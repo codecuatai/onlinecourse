@@ -1,6 +1,10 @@
-<?php require_once __DIR__ . '/../../../config/config.php';
+<?php
+require_once __DIR__ . '/../../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
+
+$course = $_SESSION['edit_course'];
+$categories = $_SESSION['edit_categories'];
 ?>
 
 <div class="container mt-5">
@@ -18,34 +22,39 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
         </div>
 
         <!-- Form -->
-        <form action="#" method="POST" enctype="multipart/form-data">
+        <form action="?controllers=CourseController&action=updateCourse" method="POST" enctype="multipart/form-data">
+
+            <!-- Hidden ID + old image -->
+            <input type="hidden" name="id" value="<?= $course['id']; ?>">
+            <input type="hidden" name="old_image" value="<?= $course['image']; ?>">
 
             <div class="card-body">
-
                 <!-- Tên khóa học -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Tên khóa học</label>
                     <input type="text" name="title" class="form-control"
-                        value="Python cho người mới"
-                        required>
+                        value="<?= htmlspecialchars($course['title']); ?>" required>
                 </div>
 
                 <!-- Mô tả -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Mô tả khóa học</label>
-                    <textarea name="description" class="form-control" rows="3" required>Khóa học này giúp bạn làm quen với Python từ cơ bản đến nâng cao.</textarea>
+                    <input name="description" class="form-control" value="<?= htmlspecialchars($course['description']); ?>">
                 </div>
 
                 <!-- Thể loại + Level -->
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Thể loại</label>
-                        <select name="category" class="form-select" required>
+                        <select name="category_id" class="form-select" required>
                             <option value="">-- Chọn thể loại --</option>
-                            <option value="programming" selected>Lập trình</option>
-                            <option value="design">Thiết kế</option>
-                            <option value="marketing">Marketing</option>
-                            <option value="business">Kinh doanh</option>
+
+                            <?php foreach ($categories as $c): ?>
+                                <option value="<?= $c['id']; ?>"
+                                    <?= ($c['id'] == $course['category_id']) ? 'selected' : ''; ?>>
+                                    <?= htmlspecialchars($c['name']); ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
@@ -53,9 +62,11 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         <label class="form-label fw-bold">Level</label>
                         <select name="level" class="form-select" required>
                             <option value="">-- Chọn level --</option>
-                            <option value="beginner" selected>Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="advanced">Advanced</option>
+
+                            <option value="beginner" <?= ($course['level'] == 'beginner' ? 'selected' : '') ?>>Beginner</option>
+                            <option value="intermediate" <?= ($course['level'] == 'intermediate' ? 'selected' : '') ?>>Intermediate</option>
+                            <option value="advanced" <?= ($course['level'] == 'advanced' ? 'selected' : '') ?>>Advanced</option>
+
                         </select>
                     </div>
                 </div>
@@ -64,20 +75,25 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                 <div class="mb-3">
                     <label class="form-label fw-bold">Giá (VNĐ)</label>
                     <input type="number" name="price" class="form-control"
-                        value="499000" min="0">
+                        value="<?= $course['price']; ?>" min="0">
                 </div>
 
                 <!-- Ảnh cũ -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Ảnh đại diện hiện tại</label>
                     <br>
-                    <img src="https://via.placeholder.com/200x120?text=Course+Image" class="img-thumbnail" width="200">
+
+                    <?php if (!empty($course['image'])): ?>
+                        <img src="/onlinecourse/<?= $course['image']; ?>" class="img-thumbnail" width="200">
+                    <?php else: ?>
+                        <img src="https://via.placeholder.com/200x120?text=No+Image" class="img-thumbnail" width="200">
+                    <?php endif; ?>
                 </div>
 
                 <!-- Upload ảnh mới -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Đổi ảnh đại diện (nếu muốn)</label>
-                    <input type="file" name="thumbnail" class="form-control">
+                    <input type="file" name="image" class="form-control">
                 </div>
 
             </div>
@@ -94,8 +110,6 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
     </div>
 </div>
 
-
-
-
 <?php
 require_once _PATH_URL . '/../views/layouts/footer.php';
+?>

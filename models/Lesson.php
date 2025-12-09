@@ -1,14 +1,22 @@
 <?php
-class Lesson {
+class Lesson
+{
     private $conn;
-    private $table = "lessons";
+    private $table = 'lessons'; // Giữ lại tên biến ngắn gọn 'table'
 
-    public function __construct($db) {
-        $this->conn = $db;
+    // Khởi tạo kết nối CSDL trong constructor
+    // Giữ lại cách khởi tạo tự động trong constructor (từ nhánh Duong)
+    public function __construct()
+    {
+        // Lấy đối tượng kết nối PDO đã được cấu hình
+        $database = new Database();
+        $this->conn = $database->getConnection();
     }
 
+
     // Lấy danh sách bài học của khóa học
-    public function getLessonsByCourse($course_id) {
+    public function getLessonsByCourse($course_id)
+    {
         $sql = "SELECT * FROM " . $this->table . " 
                 WHERE course_id = :course_id ORDER BY lesson_order ASC";
         $stmt = $this->conn->prepare($sql);
@@ -18,7 +26,8 @@ class Lesson {
     }
 
     // Lấy một bài học theo id
-    public function getLessonById($id) {
+    public function getLessonById($id)
+    {
         $sql = "SELECT * FROM " . $this->table . " WHERE id = :id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":id", $id);
@@ -27,7 +36,8 @@ class Lesson {
     }
 
     // Thêm bài học mới
-    public function create($data) {
+    public function create($data)
+    {
         $sql = "INSERT INTO " . $this->table . "
                 (course_id, title, content, video_url, lesson_order)
                 VALUES (:course_id, :title, :content, :video_url, :lesson_order)";
@@ -36,7 +46,8 @@ class Lesson {
     }
 
     // Cập nhật bài học
-    public function update($data) {
+    public function update($data)
+    {
         $sql = "UPDATE " . $this->table . "
                 SET title = :title, content = :content,
                     video_url = :video_url, lesson_order = :lesson_order
@@ -46,7 +57,8 @@ class Lesson {
     }
 
     // Xóa bài học
-    public function delete($id, $course_id) {
+    public function delete($id, $course_id)
+    {
         $sql = "DELETE FROM " . $this->table . " 
                 WHERE id = :id AND course_id = :course_id";
         $stmt = $this->conn->prepare($sql);
