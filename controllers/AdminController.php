@@ -4,26 +4,95 @@ require_once './models/User.php';
 
 class AdminController
 {
-    // ... Constructor và các hàm khác ...
+    private $userModel;
 
-    /**
-     * Hiển thị danh sách khóa học trong trang quản trị.
-     */
-    public function browseCourses()
+    public function __construct()
     {
-        // 1. Kiểm tra quyền (Authorization)
-        // Đảm bảo chỉ có Quản trị viên (role=2) mới truy cập được.
-        if ($_SESSION['role'] != 2) {
-            header('Location: unauthorized.php');
+        // Khởi tạo User Model để tương tác với CSDL
+        $this->userModel = new User();
+    }
+
+    public function viewUser()
+    {
+        $users = $this->userModel->getAllUsers();
+        $_SESSION['list_user'] = $users;
+        // Gọi view và truyền dữ liệu
+        header("Location: ?views=users&action=manage");
+    }
+
+    // Xử lý POST để tạo người dùng
+    public function createUser()
+    {
+        // Kiểm tra xem form đã submit chưa
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'username' => $_POST['username'] ?? '',
+                'email' => $_POST['email'] ?? '',
+                'password' => $_POST['password'] ?? '',
+                'fullname' => $_POST['fullname'] ?? '',
+                'role' => $_POST['role'] ?? 0
+            ];
+
+            // Gọi model để tạo user
+            $result = $this->userModel->createUser($data);
+
+            if ($result) {
+                // Thành công, redirect về danh sách người dùng
+                header('Location: ?controllers=AdminController&action=viewUser');
+                exit;
+            } else {
+                // Thất bại
+                $error = "Không thể tạo người dùng mới.";
+                header('Location: ?views=users&action=create');
+            }
+        }
+    }
+    public function deleteUser()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+            $id = (int) $_POST['id'];
+            $this->userModel->deleteUser($id);
+        }
+        header('Location: ?controllers=AdminController&action=viewUser');
+        exit;
+    }
+
+
+    public function editUserForm()
+    {
+        if (!isset($_GET['id']) || empty($_GET['id'])) {
+            header('Location: ?controllers=AdminController&action=viewUser');
             exit;
         }
 
-        // 2. Gọi Model để lấy dữ liệu (Fetch Data)
-        // $courses = $this->courseModel->getAllCourses();
-
-        // 3. Hiển thị View (Render View)
-        include_once ROOT . '/views/admin/browseCourses.php';
+        $id = (int) $_GET['id'];
+        $user = $this->userModel->getUserById($id); // bạn nên thêm getUserById trong model
+        $_SESSION['user'] = $user;
+        header('Location: ?views=users&action=edit');
     }
 
-    // ... Các Action khác (ví dụ: addCourse, editCourse, v.v.)
+    // Xử lý POST để cập nhật người dùng
+    public function updateUser()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+            $id = (int) $_POST['id'];
+            $data = [
+                'username' => $_POST['username'] ?? '',
+                'email' => $_POST['email'] ?? '',
+                'fullname' => $_POST['fullname'] ?? '',
+                'role' => $_POST['role'] ?? 0,
+                'password' => $_POST['password'] ?? '' // nếu bỏ trống, password không thay đổi
+            ];
+
+            $result = $this->userModel->updateUser($id, $data);
+
+            // Chuyển về danh sách user sau khi cập nhật
+            header('Location: ?controllers=AdminController&action=viewUser');
+            exit;
+        } else {
+            // Nếu truy cập trực tiếp, chuyển về danh sách
+            header('Location: ?controllers=AdminController&action=viewUser');
+            exit;
+        }
+    }
 }

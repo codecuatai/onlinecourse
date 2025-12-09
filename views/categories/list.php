@@ -3,27 +3,7 @@ require_once __DIR__ . '/../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
-
-$categories = [
-    [
-        "id" => 1,
-        "name" => "Lập trình Web",
-        "description" => "Khóa học về HTML, CSS, JavaScript",
-        "created_at" => "2024-05-01"
-    ],
-    [
-        "id" => 2,
-        "name" => "Phân tích dữ liệu",
-        "description" => "Python, pandas, trực quan hóa dữ liệu",
-        "created_at" => "2024-05-05"
-    ],
-    [
-        "id" => 3,
-        "name" => "AI & Machine Learning",
-        "description" => "Thuật toán, mô hình, huấn luyện AI",
-        "created_at" => "2024-06-01"
-    ],
-];
+$categories = $_SESSION['categories'];
 ?>
 
 <main class="main-content p-4">
@@ -59,20 +39,22 @@ $categories = [
 
                                 <!-- Nút danh sách khóa học -->
                                 <td class="text-center">
-                                    <a href="../courses/index.php?category_id=<?= $item['id'] ?>" class="btn btn-sm btn-info text-white">
+                                    <a href="?controllers=CategoryController&action=viewCoursesByCategory&category_id=<?= $item['id'] ?>" class="btn btn-sm btn-info text-white">
                                         Danh sách
                                     </a>
                                 </td>
 
+                                <!-- Nút sửa -->
                                 <td class="text-center">
-                                    <a href="?views=categories&action=edit" class="btn btn-sm btn-warning">
-                                        Sửa
+                                    <a href="?controllers=CategoryController&action=viewEditCategory&id=<?= $item['id'] ?>" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Sửa
                                     </a>
                                 </td>
 
+                                <!-- Nút xóa -->
                                 <td class="text-center">
-                                    <a href="#" class="btn btn-sm btn-danger">
-                                        Xóa
+                                    <a href="?controllers=CategoryController&action=deleteCategory&id=<?= $item['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa danh mục này?')">
+                                        <i class="fas fa-trash"></i> Xóa
                                     </a>
                                 </td>
                             </tr>

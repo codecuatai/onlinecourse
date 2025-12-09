@@ -1,6 +1,9 @@
 <?php require_once __DIR__ . '/../../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
+
+
+$categories = $_SESSION['categories'];
 ?>
 
 <div class="container mt-5">
@@ -17,7 +20,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
             </a>
         </div>
 
-        <form action="/onlinecourse/index.php?controller=course&action=store" method="POST" enctype="multipart/form-data">
+        <form action="?controllers=CourseController&action=storeCoures" method="POST" enctype="multipart/form-data">
 
             <div class="card-body">
 
@@ -39,12 +42,16 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         <label class="form-label fw-bold">Thể loại</label>
                         <select name="category_id" class="form-select" required>
                             <option value="">-- Chọn thể loại --</option>
-                            <option value="1">Lập trình</option>
-                            <option value="2">Thiết kế</option>
-                            <option value="3">Marketing</option>
-                            <option value="4">Kinh doanh</option>
+
+                            <?php foreach ($categories as $cate): ?>
+                                <option value="<?= $cate['id'] ?>">
+                                    <?= htmlspecialchars($cate['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+
                         </select>
                     </div>
+
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Level</label>

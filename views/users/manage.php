@@ -3,28 +3,7 @@ require_once __DIR__ . '/../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
-// Mảng danh sách người dùng
-$users = [
-    [
-        "username" => "user1",
-        "fullname" => "Nguyễn Văn A",
-        "email" => "nguyenvana@example.com",
-        "password" => "******",
-        "created_at" => "2025-12-04",
-        "role" => "Sinh Viên",
-        "edit_link" => "./edit.php"
-    ],
-    [
-        "username" => "teacher1",
-        "fullname" => "Trần Thị B",
-        "email" => "tranthib@example.com",
-        "password" => "******",
-        "created_at" => "2025-12-04",
-        "role" => "Giảng Viên",
-        "edit_link" => "./edit.php"
-    ],
-    // Thêm người dùng khác nếu cần
-];
+$users = $_SESSION['list_user'];
 ?>
 
 <!-- Main Content -->
@@ -51,7 +30,6 @@ $users = [
                         <th scope="col">Tên tài khoản</th>
                         <th scope="col">Họ và tên</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Mật Khẩu</th>
                         <th scope="col">Tạo lúc</th>
                         <th scope="col">Role</th>
                         <th scope="col" class="text-center">Xóa</th>
@@ -72,18 +50,22 @@ $users = [
                                 <td><?= $user['username'] ?></td>
                                 <td><?= $user['fullname'] ?></td>
                                 <td><?= $user['email'] ?></td>
-                                <td><?= $user['password'] ?></td>
                                 <td><?= $user['created_at'] ?></td>
                                 <td><?= $user['role'] ?></td>
                                 <td class="text-center">
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i> Xóa
-                                    </button>
+                                    <form action="?controllers=AdminController&action=deleteUser" method="POST" class="d-inline">
+                                        <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                            <i class="fas fa-trash"></i> Xóa
+                                        </button>
+                                    </form>
+
                                 </td>
                                 <td class="text-center">
-                                    <a href="?views=users&action=edit" class="btn btn-sm btn-warning">
+                                    <a href="?controllers=AdminController&action=editUserForm&id=<?= $user['id'] ?>" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i> Sửa
                                     </a>
+
                                 </td>
                             </tr>
                         <?php endforeach; ?>

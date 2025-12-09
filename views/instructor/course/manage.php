@@ -4,33 +4,7 @@ require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
 // Mảng chứa khóa học của giảng viên
-$courses = [
-    [
-        "title" => "Python cho Người Mới",
-        "created_at" => "01/12/2025",
-        "category" => "Lập trình",
-        "level" => "Beginner",
-        "price" => "499.000₫",
-        "status" => "Chờ duyệt",
-        "students_link" => "../students/manage.php",
-        "lessons_link" => "../lessons/manage.php",
-        "materials_link" => "../materials/manage.php",
-        "edit_link" => "./edit.php"
-    ],
-    [
-        "title" => "ReactJS Mastery",
-        "created_at" => "15/11/2025",
-        "category" => "Lập trình",
-        "level" => "Intermediate",
-        "price" => "599.000₫",
-        "status" => "Đang duyệt",
-        "students_link" => "../students/manage.php",
-        "lessons_link" => "../lessons/manage.php",
-        "materials_link" => "../materials/manage.php",
-        "edit_link" => "./edit.php"
-    ],
-    // Bạn có thể thêm nhiều khóa học khác vào đây
-];
+$courses = $_SESSION['instructor_courses'];
 ?>
 
 <div class="container-fluid mt-4">
@@ -38,7 +12,7 @@ $courses = [
 
     <!-- Nút tạo khóa học mới -->
     <div class="mb-3">
-        <a class="btn btn-success" href="?views=instructor&instructor=course&action=create">
+        <a class="btn btn-success" href="?controllers=CourseController&action=viewCreate">
             <i class="fas fa-plus"></i> Tạo khóa học mới
         </a>
     </div>
@@ -52,10 +26,9 @@ $courses = [
                             <th>#</th>
                             <th>Tên khóa học</th>
                             <th>Ngày tạo</th>
-                            <th>Thể loại</th>
+                            <th>Mô tả</th>
                             <th>Level</th>
                             <th>Giá</th>
-                            <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
                     </thead>
@@ -63,34 +36,34 @@ $courses = [
                         <?php foreach ($courses as $index => $course): ?>
                             <tr class="text-center">
                                 <th scope="row"><?= $index + 1 ?></th>
-                                <td class="text-start"><?= $course['title'] ?></td>
+                                <td class="text-start"><?= htmlspecialchars($course['title']) ?></td>
                                 <td><?= $course['created_at'] ?></td>
-                                <td><?= $course['category'] ?></td>
-                                <td><?= $course['level'] ?></td>
-                                <td><?= $course['price'] ?></td>
-                                <td>
-                                    <span class="badge <?= $course['status'] == 'Chờ duyệt' ? 'bg-warning text-dark' : 'bg-success' ?>">
-                                        <?= $course['status'] ?>
-                                    </span>
-                                </td>
+                                <td><?= htmlspecialchars($course['description']) ?></td>
+                                <td><?= htmlspecialchars($course['level']) ?></td>
+                                <td><?= number_format($course['price'], 0, ',', '.') ?> VNĐ</td>
                                 <td>
                                     <div class="d-flex justify-content-center flex-wrap gap-1">
-                                        <a href="?views=instructor&instructor=course&action=edit" class="btn btn-sm btn-warning">
+                                        <a href="?controllers=CourseController&action=viewEdit&id=<?= $course['id'] ?>" class="btn btn-sm btn-warning">
                                             <i class="fas fa-edit"></i> Sửa
                                         </a>
-                                        <a href="?views=instructor&instructor=students&action=manage" class="btn btn-sm btn-info">
-                                            <i class="fas fa-book"></i> Sinh viên
+                                        <a href="?controllers=CourseController&action=deleteCourseOfInstructor&id=<?= $course['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa khóa học này?')">
+                                            <i class="fas fa-trash"></i> Xóa
                                         </a>
-                                        <a href="?views=instructor&instructor=lessons&action=manage" class="btn btn-sm btn-info">
+                                        <a href="?controllers=LessonController&action=viewLessonsByCourse&id=<?= $course['id'] ?>" class="btn btn-sm btn-info">
                                             <i class="fas fa-book"></i> Bài học
                                         </a>
-                                        <a href="?views=instructor&instructor=materials&action=manage" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-book"></i> Tài liệu
+                                        <a href="?controllers=MaterialController&action=manage&course_id=<?= $course['id'] ?>" class="btn btn-sm btn-secondary">
+                                            <i class="fas fa-file"></i> Tài liệu
                                         </a>
                                     </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
+                        <?php if (empty($courses)): ?>
+                            <tr>
+                                <td colspan="7" class="text-center">Chưa có khóa học nào</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
