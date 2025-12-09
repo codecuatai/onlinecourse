@@ -179,4 +179,20 @@ class Course
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function getCoursesByCategory($category_id)
+    {
+        $sql = "SELECT courses.*, users.fullname AS instructor_name, categories.name AS category_name
+                FROM courses
+                JOIN users ON courses.instructor_id = users.id
+                JOIN categories ON courses.category_id = categories.id
+                WHERE courses.category_id = :category_id
+                ORDER BY courses.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Các phương thức khác (thêm/sửa/xóa) có thể thêm ở đây
 }
