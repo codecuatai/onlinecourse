@@ -42,9 +42,14 @@ class AuthController
         $errors = [];
 
         // 1. Validation cơ bản
-        if (empty($username) || empty($password)) {
-            $errors[] = "Vui lòng điền đầy đủ Tên đăng nhập/Email và Mật khẩu.";
+        if (empty($username)) {
+            $errors['username'] = "Vui lòng điền Tên đăng nhập/Email.";
         }
+
+        if (empty($password)) {
+            $errors['password'] = "Vui lòng điền Mật khẩu.";
+        }
+        
 
         if (empty($errors)) {
             // 2. Tìm người dùng trong CSDL
@@ -60,16 +65,30 @@ class AuthController
                 // 4. Điều hướng dựa trên vai trò
                 header('Location: ?views=home&action=index'); // ĐÃ SỬA: Chuyển hướng chung về trang chủ
                 exit;
-            } else {
-                $errors[] = "Tên đăng nhập/Mật khẩu không chính xác.";
+            }
+            else {
+                // THÊM LỖI VÀO ĐÂY: Tài khoản không tồn tại HOẶC Mật khẩu không đúng
+                $errors['general'] = "Tên đăng nhập hoặc mật khẩu không đúng.";
             }
         }
+
+        // Nếu có lỗi (bao gồm lỗi general vừa gán), lưu lỗi vào session và chuyển hướng lại trang đăng nhập
+        if (!empty($errors)) { // <== Đảm bảo khối này chỉ chạy khi có lỗi
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['login_errors'] = $errors;
+            $_SESSION['old_input'] = ['username' => $username];
+            header('Location: ?views=auth&action=login');
+            exit;
+                }
 
         // Nếu có lỗi, lưu lỗi vào session và chuyển hướng lại trang đăng nhập
         $_SESSION['login_errors'] = $errors;
         $_SESSION['old_input'] = ['username' => $username];
         header('Location: ?views=auth&action=login');
         exit;
+
     }
 
     /**
@@ -109,7 +128,7 @@ class AuthController
         if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = "Email không hợp lệ.";
         }
-        if (strlen($data['password']) < 6) $errors[] = "Mật khẩu phải có ít nhất 6 ký tự.";
+        if (strlen($data['password']) < 6) $errors['password'] = "Mật khẩu phải có ít nhất 6 ký tự.";
         if ($data['password'] !== $data['confirm_password']) $errors['confirm_password'] = "Xác nhận mật khẩu không khớp.";
         // Thêm kiểm tra terms_agreed nếu cần
 

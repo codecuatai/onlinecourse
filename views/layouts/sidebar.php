@@ -33,21 +33,6 @@ $role = $_SESSION['role'] ?? -1; // 0 = học viên, 1 = giảng viên, 2 = admi
             <li><a href="?views=reports&action=index" class="d-flex align-items-center"><span class="icon me-2">📊</span> Thống kê hệ thống</a></li>
             <li><a href="?views=admin&action=browseCourses" class="d-flex align-items-center"><span class="icon me-2">✅</span> Duyệt khóa học</a></li>
         <?php endif; ?>
-        <?php if ($role === -1): // Mặc định: Chưa đăng nhập 
-        ?>
-            <li>
-                <a href="?views=auth&action=login" class="d-flex align-items-center">
-                    <span class="icon me-2">➡️</span>
-                    <span>Đăng Nhập</span>
-                </a>
-            </li>
-            <li>
-                <a href="?views=auth&action=register" class="d-flex align-items-center">
-                    <span class="icon me-2">✍️</span>
-                    <span>Đăng Ký</span>
-                </a>
-            </li>
-        <?php endif; ?>
     </ul>
 </aside>
 
