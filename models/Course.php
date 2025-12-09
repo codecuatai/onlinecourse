@@ -56,6 +56,7 @@ class Course
         return $stmt->execute($data);
     }
 
+
     // Cập nhật khóa học
     public function update($data)
     {
@@ -68,6 +69,9 @@ class Course
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute($data);
     }
+
+
+
 
     // Xóa khóa học
     public function delete($id, $instructor_id)
@@ -192,6 +196,34 @@ class Course
         $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+    /**
+     * Lấy 1 khóa học theo id và instructor_id (dùng để kiểm tra quyền của giảng viên)
+     * @param int $course_id
+     * @param int $instructor_id
+     * @return array|false  mảng assoc của khóa học hoặc false nếu không tìm thấy
+     */
+    public function getCourseByInstructor($course_id, $instructor_id)
+    {
+        $sql = "SELECT 
+                courses.*,
+                users.fullname AS instructor_name,
+                categories.name AS category_name
+            FROM {$this->table}
+            JOIN users ON courses.instructor_id = users.id
+            JOIN categories ON courses.category_id = categories.id
+            WHERE courses.id = :course_id AND courses.instructor_id = :instructor_id
+            LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
+        $stmt->bindParam(':instructor_id', $instructor_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC); // trả về false nếu không tìm thấy
     }
 
     // Các phương thức khác (thêm/sửa/xóa) có thể thêm ở đây
