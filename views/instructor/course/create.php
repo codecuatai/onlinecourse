@@ -17,7 +17,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
             </a>
         </div>
 
-        <form action="/onlinecourse/index.php?controller=course&action=store" method="POST" enctype="multipart/form-data">
+        <form action="?controllers=CourseController&action=store" method="POST" enctype="multipart/form-data">
 
             <div class="card-body">
 

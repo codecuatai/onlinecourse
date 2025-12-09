@@ -42,17 +42,20 @@ class CourseController
         }
 
         $id = (int) $_GET['id']; // đảm bảo id là số nguyên
-        $course = $this->courseModel->getCourseById($id);
+        $course_detail = $this->courseModel->getCourseById($id);
 
-        if (!$course) {
+
+        if (!$course_detail) {
             // Nếu không tìm thấy khóa học, chuyển về trang home hoặc hiển thị thông báo
             header('Location: ?views=home&action=index');
             exit;
         }
 
-        // Gọi view và truyền dữ liệu
-        require_once './views/courses/detail.php';
+        $_SESSION['course_detail'] = $course_detail;
+
+        header("Location: ?views=courses&action=detail");
     }
+
 
 
 
@@ -79,7 +82,7 @@ class CourseController
         // Validate dữ liệu
         if (empty($_POST['title']) || empty($_POST['category_id'])) {
             $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin!";
-            header("Location: index.php?controller=course&action=create");
+            header("Location: ?controllers=course&action=create");
             exit;
         }
 
@@ -108,7 +111,7 @@ class CourseController
             $_SESSION['error'] = "Không thể tạo khóa học!";
         }
 
-        header("Location: index.php?controller=course&action=manage");
+        header("Location: index.php?controllers=course&action=manage");
     }
 
     // Hiển thị form sửa khóa học
