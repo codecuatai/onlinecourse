@@ -1,5 +1,17 @@
 <?php
 require_once './views/layouts/header-auth.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$errors = $_SESSION['login_errors'] ?? [];
+$success_message = $_SESSION['success_message'] ?? '';
+$old_input = $_SESSION['old_input'] ?? [];
+
+// Xóa thông báo lỗi và dữ liệu cũ sau khi lấy ra để không hiển thị lại
+unset($_SESSION['login_errors']);
+unset($_SESSION['success_message']);
+unset($_SESSION['old_input']);
 ?>
 
 <body>
@@ -59,6 +71,18 @@ require_once './views/layouts/header-auth.php';
                     <h2 id="form-title">Đăng nhập</h2>
                     <p id="form-subtitle">Chào mừng bạn trở lại!</p>
                 </div>
+
+                <?php if (!empty($success_message)): ?>
+                    <div class="alert alert-success" style="display: block; color: #155724; border: 1px solid #c3e6cb; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
+                        <span><?= htmlspecialchars($success_message) ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($errors['general'])): ?>
+                    <div class="error-message general-error" style="display: block; color: #dc3545; border: 1px solid #dc3545; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
+                        <span><?= htmlspecialchars($errors['general']) ?></span>
+                    </div>
+                <?php endif; ?>
 
                 <form action="?controllers=AuthController&action=processLogin" method="post">
                     <!-- Email -->

@@ -1,5 +1,18 @@
 <?php
 require_once './views/layouts/header-auth.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// 2. Lấy dữ liệu và lỗi từ Session
+$errors = $_SESSION['register_errors'] ?? [];
+$old_input = $_SESSION['old_input'] ?? [];
+$success_message = $_SESSION['success_message'] ?? ''; // Lấy thông báo thành công
+
+// 3. Xóa Session sau khi lấy ra
+unset($_SESSION['register_errors']);
+unset($_SESSION['old_input']);
+unset($_SESSION['success_message']);
 ?>
 
 <body>
@@ -38,16 +51,21 @@ require_once './views/layouts/header-auth.php';
             <span>hoặc đăng ký bằng email</span>
         </div>
 
-        <?php if (isset($errors['exist'])): ?>
-            <div style="color: red; padding: 10px; margin-bottom: 15px; border: 1px solid red; background-color: #ffe6e6; border-radius: 4px;">
-                <p style="margin: 0; display: flex; align-items: center;">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" style="margin-right: 8px;">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-                    </svg>
-                    <span><?= htmlspecialchars($errors['exist']) ?></span>
-                </p>
+        <?php if (!empty($success_message)): ?>
+            <div class="alert alert-success" style="color: #155724; border: 1px solid #c3e6cb; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
+                <span><?= htmlspecialchars($success_message) ?></span>
             </div>
         <?php endif; ?>
+
+        <?php if (isset($errors['db_error'])): ?>
+            <div class="error-message general-error" 
+                style="display: block; color: #dc3545; border: 1px solid #dc3545; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
+                <span><?= htmlspecialchars($errors['db_error']) ?></span>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($errors['exist'])): ?>
+            <?php endif; ?>
 
             <form action="?controllers=AuthController&action=processRegister" method="post">
             <div class="form-group">
@@ -213,12 +231,15 @@ require_once './views/layouts/header-auth.php';
         </form>
 
         <div class="login-link">
-            Đã có tài khoản? <a href="?controller=auth&action=login">Đăng nhập ngay</a>
+            Đã có tài khoản? <a href="?views=auth&action=login">Đăng nhập ngay</a>
         </div>
     </div>
 
 </body>
 
 <?php
+
+
+
 require_once './views/layouts/footer-auth.php';
 ?>
