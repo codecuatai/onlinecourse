@@ -66,6 +66,7 @@ switch ($role) {
                         <a href="?controllers=AuthController&action=logout" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đăng xuất</a>
                     <?php else: // Chưa đăng nhập ?>
                         <a href="?views=auth&action=login" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đăng nhập</a>
+                        <a href="?views=auth&action=register" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đăng ký</a>
                     <?php endif; ?>
                 </div>
 

@@ -10,14 +10,14 @@ class Lesson {
     // Lấy danh sách bài học của khóa học
     public function getLessonsByCourse($course_id) {
         $sql = "SELECT * FROM " . $this->table . " 
-                WHERE course_id = :course_id ORDER BY `order` ASC";
+                WHERE course_id = :course_id ORDER BY lesson_order ASC";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":course_id", $course_id);
         $stmt->execute();
         return $stmt;
     }
 
-    // Lấy bài học theo id
+    // Lấy một bài học theo id
     public function getLessonById($id) {
         $sql = "SELECT * FROM " . $this->table . " WHERE id = :id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
@@ -26,12 +26,11 @@ class Lesson {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Tạo bài học mới
+    // Thêm bài học mới
     public function create($data) {
         $sql = "INSERT INTO " . $this->table . "
-                (course_id, title, content, video_url, `order`, created_at)
-                VALUES (:course_id, :title, :content, :video_url, :order, NOW())";
-
+                (course_id, title, content, video_url, lesson_order)
+                VALUES (:course_id, :title, :content, :video_url, :lesson_order)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute($data);
     }
@@ -39,10 +38,9 @@ class Lesson {
     // Cập nhật bài học
     public function update($data) {
         $sql = "UPDATE " . $this->table . "
-                SET title = :title, content = :content, 
-                    video_url = :video_url, `order` = :order
+                SET title = :title, content = :content,
+                    video_url = :video_url, lesson_order = :lesson_order
                 WHERE id = :id AND course_id = :course_id";
-
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute($data);
     }
