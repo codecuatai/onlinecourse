@@ -56,7 +56,6 @@ class CourseController
 
 
 
-
     // Danh sách khóa học của giảng viên
     public function manage()
     {
@@ -184,5 +183,38 @@ class CourseController
         }
 
         header("Location: index.php?controller=course&action=manage");
+    }
+
+
+
+
+    // ✅ HIỂN THỊ DANH SÁCH KHÓA HỌC
+    public function index()
+    {
+        $stmt = $this->courseModel->getAll();
+        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        require_once __DIR__ . '/../views/courses/index.php';
+    }
+
+
+    // ✅ TÌM KIẾM KHÓA HỌC
+    public function search()
+    {
+        $keyword  = $_GET['keyword']  ?? '';
+        $category = $_GET['category'] ?? '';
+        $sort     = $_GET['sort'] ?? '';
+
+        $stmt = $this->courseModel->search($keyword, $category, $sort);
+        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        require_once __DIR__ . '/../views/courses/index.php';
+    }
+
+    // ✅ XEM CHI TIẾT KHÓA HỌC
+    public function detail()
+    {
+        $id = $_GET['id'];
+        $course = $this->courseModel->getById($id);
+        require_once __DIR__ . '/../views/courses/detail.php';
     }
 }
