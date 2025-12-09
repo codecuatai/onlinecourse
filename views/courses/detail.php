@@ -87,10 +87,15 @@ $course_detail = $_SESSION['course_detail'];
                     <p class="text-muted small mb-4">Truy cập trọn đời</p>
 
                     <!-- CTA -->
-                    <button class="btn btn-dark w-100 py-3 fw-bold mb-3 rounded-4">
-                        <i class="bi bi-bag-check me-2"></i>
-                        Thanh toán ngay
-                    </button>
+                    
+                    <form method="POST" action="index.php?controller=EnrollmentController&action=enroll">
+                    <input type="hidden" name="course_id" value="<?= $course_detail['id'] ?>">
+
+
+                        <button type="submit" class="btn btn-dark w-100 py-3 fw-bold mb-3 rounded-4">
+                            Đăng ký khóa học
+                        </button>
+                    </form>
 
                     <hr class="my-4">
 

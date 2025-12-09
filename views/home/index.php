@@ -71,5 +71,5 @@ if ($_SESSION['courses']) {
 </div>
 
 <?php
-require_once _PATH_URL . '/../views/layouts/header.php';
+require_once _PATH_URL . '/../views/layouts/footer.php';
 ?>
