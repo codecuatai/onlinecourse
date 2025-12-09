@@ -25,6 +25,14 @@ class CourseController
         exit;
     }
 
+    public function viewCourseHome()
+    {
+        $stmt = $this->courseModel->getLimit3(); // hoặc phương thức phù hợp trong model
+        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $_SESSION['courses'] = $courses;
+        header('Location: ?views=home&action=index');
+        exit;
+    }
 
 
 

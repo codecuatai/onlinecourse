@@ -85,6 +85,22 @@ class Course
         return $stmt; // trả về danh sách để controller dùng
     }
 
+    public function getLimit3()
+    {
+        $sql = "SELECT limit 3
+                    courses.*, 
+                    users.fullname AS instructor_name,
+                    categories.name AS category_name
+                FROM courses
+                JOIN users ON courses.instructor_id = users.id
+                JOIN categories ON courses.category_id = categories.id
+                ORDER BY courses.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt; // trả về danh sách để controller dùng
+    }
+
     //Tìm kiếm khóa học theo tên
     public function search($keyword)
     {
@@ -124,13 +140,5 @@ class Course
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    // ✅ XEM CHI TIẾT KHÓA HỌC
-    public function detail()
-    {
-        $id = $_GET['id'];
-        $course = $this->courseModel->getById($id);
-        require_once __DIR__ . '/../views/courses/detail.php';
     }
 }
