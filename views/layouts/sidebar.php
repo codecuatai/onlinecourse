@@ -1,5 +1,5 @@
 <?php
-$role = 0; // 0 = học viên, 1 = giảng viên, 2 = admin
+$role = $_SESSION['role'] ?? -1; // 0 = học viên, 1 = giảng viên, 2 = admin
 ?>
 <aside class="sidebar">
     <div class="sidebar-logo">
@@ -8,7 +8,7 @@ $role = 0; // 0 = học viên, 1 = giảng viên, 2 = admin
     <ul class="sidebar-menu list-unstyled">
 
         <li>
-            <a href="?views=courses&action=index" class="d-flex align-items-center">
+            <a href="?controllers=CourseController&action=viewAllCourses" class="d-flex align-items-center">
                 <span class="icon me-2">📊</span>
                 <span>Khóa học</span>
             </a>

@@ -19,7 +19,8 @@ class AuthController
     /**
      * Hiển thị trang đăng nhập.
      */
-    public function login() {
+    public function login()
+    {
         // Hiển thị view đăng nhập
         // LƯU Ý: Nếu có thông báo lỗi từ session, cần truyền vào view
         include_once __DIR__ . '/../views/auth/login.php';
@@ -28,7 +29,8 @@ class AuthController
     /**
      * Xử lý logic đăng nhập (POST request).
      */
-    public function processLogin() {
+    public function processLogin()
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             // Chỉ chấp nhận phương thức POST
             header('Location: ?views=auth&action=login');
@@ -53,21 +55,13 @@ class AuthController
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['fullname'] = $user['fullname'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['avatar'] = $user['avatar'];
                 $_SESSION['role'] = $user['role']; // 0: học viên, 1: giảng viên, 2: quản trị viên
 
                 // 4. Điều hướng dựa trên vai trò
-                if ($user['role'] == 2) {
-                    // Quản trị viên
-                    header('Location: ?views=admin&action=browseCourses');
-                } elseif ($user['role'] == 1) {
-                    // Giảng viên
-                    header('Location: ?views=instructor&action=manageCourses');
-                } else {
-                    // Học viên (role = 0)
-                    header('Location: ?views=student&action=myCourses');
-                }
+                header('Location: ?views=home&action=index'); // ĐÃ SỬA: Chuyển hướng chung về trang chủ
                 exit;
-
             } else {
                 $errors[] = "Tên đăng nhập/Mật khẩu không chính xác.";
             }
@@ -83,7 +77,8 @@ class AuthController
     /**
      * Hiển thị trang đăng ký.
      */
-    public function register() {
+    public function register()
+    {
         // Hiển thị view đăng ký
         include_once __DIR__ . '/../views/auth/register.php';
     }
@@ -91,7 +86,8 @@ class AuthController
     /**
      * Xử lý logic đăng ký (POST request).
      */
-    public function processRegister() {
+    public function processRegister()
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ?views=auth&action=register');
             exit;
@@ -106,14 +102,14 @@ class AuthController
             'confirm_password' => $_POST['confirm_password'] ?? '',
             'role' => (int)($_POST['role'] ?? 0), // Nhận giá trị 0 hoặc 1/2 từ form
         ];
-        
+
         $errors = [];
 
         // 1. Validation chi tiết
         if (empty($data['username'])) $errors['username'] = "Tên tài khoản không được để trống.";
         if (empty($data['fullname'])) $errors['fullname'] = "Họ và tên không được để trống.";
         if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-             $errors['email'] = "Email không hợp lệ.";
+            $errors['email'] = "Email không hợp lệ.";
         }
         if (strlen($data['password']) < 6) $errors[] = "Mật khẩu phải có ít nhất 6 ký tự.";
         if ($data['password'] !== $data['confirm_password']) $errors['confirm_password'] = "Xác nhận mật khẩu không khớp.";
@@ -143,11 +139,12 @@ class AuthController
         header('Location: ?views=auth&action=register');
         exit;
     }
-        // Trong AuthController.php
-        public function forgotPassword() {
-            // Logic hiển thị form quên mật khẩu
-            include_once ROOT . '/views/auth/forgot.php'; 
-        }
+    // Trong AuthController.php
+    public function forgotPassword()
+    {
+        // Logic hiển thị form quên mật khẩu
+        include_once ROOT . '/views/auth/forgot.php';
+    }
 
     public function sendMailForgotPassword($emailTo, $content)
     {
@@ -183,16 +180,19 @@ class AuthController
         }
     }
 
-        /**
+    /**
      * Xử lý đăng xuất.
      */
-    public function logout() {
+    public function logout()
+    {
         // Hủy bỏ tất cả các biến session
         $_SESSION = [];
         // Hủy session
         session_destroy();
         // Điều hướng về trang chủ hoặc trang đăng nhập
-        header('Location: index.php');
+        header('Location: ?views=home&action=index');
         exit;
     }
 }
+
+$auth = new AuthController();
