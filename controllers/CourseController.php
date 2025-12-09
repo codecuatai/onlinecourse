@@ -25,7 +25,34 @@ class CourseController
         exit;
     }
 
+    public function viewCourseHome()
+    {
+        $stmt = $this->courseModel->getLimit3(); // hoặc phương thức phù hợp trong model
+        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $_SESSION['courses'] = $courses;
+        header('Location: ?views=home&action=index');
+        exit;
+    }
+    public function viewDetail()
+    {
+        if (!isset($_GET['id']) || empty($_GET['id'])) {
+            // Nếu không có id, chuyển về trang home
+            header('Location: ?views=home&action=index');
+            exit;
+        }
 
+        $id = (int) $_GET['id']; // đảm bảo id là số nguyên
+        $course = $this->courseModel->getCourseById($id);
+
+        if (!$course) {
+            // Nếu không tìm thấy khóa học, chuyển về trang home hoặc hiển thị thông báo
+            header('Location: ?views=home&action=index');
+            exit;
+        }
+
+        // Gọi view và truyền dữ liệu
+        require_once './views/courses/detail.php';
+    }
 
 
 
@@ -156,5 +183,38 @@ class CourseController
         }
 
         header("Location: index.php?controller=course&action=manage");
+    }
+
+
+
+
+    // ✅ HIỂN THỊ DANH SÁCH KHÓA HỌC
+    public function index()
+    {
+        $stmt = $this->courseModel->getAll();
+        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        require_once __DIR__ . '/../views/courses/index.php';
+    }
+
+
+    // ✅ TÌM KIẾM KHÓA HỌC
+    public function search()
+    {
+        $keyword  = $_GET['keyword']  ?? '';
+        $category = $_GET['category'] ?? '';
+        $sort     = $_GET['sort'] ?? '';
+
+        $stmt = $this->courseModel->search($keyword, $category, $sort);
+        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        require_once __DIR__ . '/../views/courses/index.php';
+    }
+
+    // ✅ XEM CHI TIẾT KHÓA HỌC
+    public function detail()
+    {
+        $id = $_GET['id'];
+        $course = $this->courseModel->getById($id);
+        require_once __DIR__ . '/../views/courses/detail.php';
     }
 }

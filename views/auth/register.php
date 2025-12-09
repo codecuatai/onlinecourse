@@ -213,7 +213,7 @@ require_once './views/layouts/header-auth.php';
         </form>
 
         <div class="login-link">
-            Đã có tài khoản? <a href="?views=auth&action=login">Đăng nhập ngay</a>
+            Đã có tài khoản? <a href="?controller=auth&action=login">Đăng nhập ngay</a>
         </div>
     </div>
 

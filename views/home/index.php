@@ -2,27 +2,8 @@
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
+$courses = $_SESSION['courses'];
 // Mảng chứa thông tin 3 khóa học
-$courses = [
-    [
-        "title" => "Web Fullstack",
-        "description" => "Xây dựng website từ Frontend đến Backend.",
-        "image" => "https://picsum.photos/600/400?random=1",
-        "link" => "#"
-    ],
-    [
-        "title" => "ReactJS Mastery",
-        "description" => "Hiểu sâu và xây dựng dự án thực tế.",
-        "image" => "https://picsum.photos/600/400?random=2",
-        "link" => "#"
-    ],
-    [
-        "title" => "Python Cơ Bản",
-        "description" => "Lập trình Python cho người mới bắt đầu.",
-        "image" => "https://picsum.photos/600/400?random=3",
-        "link" => "#"
-    ],
-];
 ?>
 
 <div class="container py-5">
@@ -76,7 +57,7 @@ $courses = [
                         <div class="card-body">
                             <h5 class="card-title fw-bold"><?= $course['title'] ?></h5>
                             <p class="text-muted small mb-4"><?= $course['description'] ?></p>
-                            <a href="<?= $course['link'] ?>" class="btn btn-primary w-100">Xem chi tiết</a>
+                            <a href="<?php echo "?controllers=CourseController&action=viewDetail&id=" . $course['id']; ?>" class="btn btn-primary w-100">Xem chi tiết</a>
                         </div>
                     </div>
                 </div>

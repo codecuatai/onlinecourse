@@ -27,12 +27,23 @@ class Course
     // Lấy thông tin khóa học theo id
     public function getCourseById($id)
     {
-        $sql = "SELECT * FROM " . $this->table . " WHERE id = :id LIMIT 1";
+        $sql = "SELECT 
+                courses.*, 
+                users.fullname AS instructor_name,
+                categories.name AS category_name
+            FROM courses
+            JOIN users ON courses.instructor_id = users.id
+            JOIN categories ON courses.category_id = categories.id
+            WHERE courses.id = :id
+            LIMIT 1"; // chỉ lấy 1 khóa học
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC); // trả về 1 mảng kết quả
     }
+
 
     // Tạo khóa học
     public function create($data)
@@ -85,8 +96,7 @@ class Course
         return $stmt; // trả về danh sách để controller dùng
     }
 
-    //Tìm kiếm khóa học theo tên
-    public function search($keyword)
+    public function getLimit3()
     {
         $sql = "SELECT 
                 courses.*, 
@@ -95,42 +105,78 @@ class Course
             FROM courses
             JOIN users ON courses.instructor_id = users.id
             JOIN categories ON courses.category_id = categories.id
-            WHERE courses.title LIKE :keyword
-            ORDER BY courses.created_at DESC";
+            ORDER BY courses.created_at DESC
+            LIMIT 3"; // Lưu ý: LIMIT ở cuối
 
         $stmt = $this->conn->prepare($sql);
-        $keyword = "%" . $keyword . "%";
-        $stmt->bindParam(":keyword", $keyword);
         $stmt->execute();
-
-        return $stmt;
+        return $stmt; // trả về danh sách để controller dùng
     }
+
+
+
+    // ✅ TÌM KIẾM KHÓA HỌC
+    public function search($keyword = '', $category = '', $sort = '')
+    {
+        $sql = "SELECT c.*, cat.name AS category_name
+            FROM courses c
+            JOIN categories cat ON c.category_id = cat.id
+            WHERE 1=1";
+
+        $params = [];
+
+        // Tìm theo tên khóa học
+        if (!empty($keyword)) {
+            $sql .= " AND c.title LIKE ?";
+            $params[] = "%" . $keyword . "%";
+        }
+
+        // Lọc theo danh mục
+        if (!empty($category)) {
+            $sql .= " AND c.category_id = ?";
+            $params[] = $category;
+        }
+
+        // Sắp xếp
+        switch ($sort) {
+            case 'new':
+                $sql .= " ORDER BY c.created_at DESC";
+                break;
+            case 'price_asc':
+                $sql .= " ORDER BY c.price ASC";
+                break;
+            case 'price_desc':
+                $sql .= " ORDER BY c.price DESC";
+                break;
+            default:
+                $sql .= " ORDER BY c.id DESC";
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt; // trả về PDOStatement
+
+    }
+
 
     // ✅ LẤY THÔNG TIN CHI TIẾT 1 KHÓA HỌC
     public function getById($id)
     {
         $sql = "SELECT 
-                courses.*, 
-                users.fullname AS instructor_name,
-                categories.name AS category_name
-            FROM courses
-            JOIN users ON courses.instructor_id = users.id
-            JOIN categories ON courses.category_id = categories.id
-            WHERE courses.id = :id
-            LIMIT 1";
+            courses.*, 
+            users.fullname AS instructor_name,
+            categories.name AS category_name
+        FROM courses
+        JOIN users ON courses.instructor_id = users.id
+        JOIN categories ON courses.category_id = categories.id
+        WHERE courses.id = :id
+        LIMIT 1";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
 
-    // ✅ XEM CHI TIẾT KHÓA HỌC
-    public function detail()
-    {
-        $id = $_GET['id'];
-        $course = $this->courseModel->getById($id);
-        require_once __DIR__ . '/../views/courses/detail.php';
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
