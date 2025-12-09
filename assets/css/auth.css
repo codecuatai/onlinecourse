@@ -961,3 +961,20 @@ body.forgot-password-page {
     gap: 8px;
   }
 }
+.back-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #6c63ff;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #f3f2ff;
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #e6e4ff;
+}
