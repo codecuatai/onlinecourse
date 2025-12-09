@@ -60,7 +60,7 @@ class AuthController
                 $_SESSION['role'] = $user['role']; // 0: học viên, 1: giảng viên, 2: quản trị viên
 
                 // 4. Điều hướng dựa trên vai trò
-                header('Location: ?views=home&action=index'); // ĐÃ SỬA: Chuyển hướng chung về trang chủ
+                header('Location: ?controllers=CourseController&action=viewCourseHome'); // ĐÃ SỬA: Chuyển hướng chung về trang chủ
                 exit;
             } else {
                 $errors[] = "Tên đăng nhập/Mật khẩu không chính xác.";
@@ -190,7 +190,7 @@ class AuthController
         // Hủy session
         session_destroy();
         // Điều hướng về trang chủ hoặc trang đăng nhập
-        header('Location: ?views=home&action=index');
+        header('Location: ?controllers=CourseController&action=viewCourseHome');
         exit;
     }
 }
