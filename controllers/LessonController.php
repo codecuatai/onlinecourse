@@ -1,28 +1,114 @@
 <?php
-class LessonController {
+require_once __DIR__ . '/../models/Lesson.php';
+require_once __DIR__ . '/../models/Course.php';
 
-    private $db;
+class LessonController
+{
     private $lessonModel;
-    private $materialModel;
+    private $courseModel;
 
-    public function __construct($db) {
-        session_start();
+    public function __construct()
+    {
+        // Khởi tạo Lesson Model để tương tác với CSDL
+        $this->lessonModel = new Lesson();
+        $this->courseModel = new Course();
+    }
 
-        // Chỉ cho phép giảng viên
-        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 1) {
-            header("Location: index.php?controller=auth&action=login");
+    public function viewLessonsByCourse()
+    {
+        if (!isset($_GET['id'])) {
+            $_SESSION['error'] = "Không tìm thấy khóa học!";
+            header("Location: ?views=instructor&instructor=courses&action=manage");
             exit;
         }
 
-        include_once "models/Lesson.php";
-        include_once "models/Material.php";
-        $this->db = $db;
-        $this->lessonModel = new Lesson($db);
-        $this->materialModel = new Material($db);
+        $course_id = $_GET['id'];
+
+        // Lấy danh sách bài học
+        $stmt = $this->lessonModel->getLessonsByCourse($course_id);
+        $lessons = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Lưu vào session để sang view hiển thị
+        $_SESSION['lessons'] = $lessons;
+
+        // Lấy thông tin khóa học
+        $course = $this->courseModel->getCourseById($course_id);
+        $_SESSION['course'] = $course;
+
+        // Chuyển đến trang manage của bài học
+        header("Location: ?views=instructor&instructor=lessons&action=manage&id=" . $course_id);
+        exit;
     }
 
+    public function createLesson()
+    {
+        // Lấy course_id từ URL: ?course&id=5
+        if (!isset($_POST['id'])) {
+            $_SESSION['error'] = "Không tìm thấy khóa học!";
+            header("Location: ?views=instructor&instructor=lessons&action=manage");
+            exit;
+        }
+
+        $course_id = $_POST['id'];
+
+        // Kiểm tra dữ liệu POST
+        if (empty($_POST['title'])) {
+            $_SESSION['error'] = "Vui lòng nhập tên bài học!";
+            header("Location: ?views=instructor&instructor=lessons&action=create&id=" . $course_id);
+            exit;
+        }
+
+        // ==========================
+        // Xử lý upload video (nếu có)
+        // ==========================
+        $video_url = null;
+
+        if (!empty($_FILES['video']['name'])) {
+            $videoName = time() . "_" . basename($_FILES['video']['name']);
+            $videoPath = "assets/uploads/videos/" . $videoName;
+
+            move_uploaded_file($_FILES['video']['tmp_name'], $videoPath);
+
+            $video_url = $videoPath;
+        }
+
+        // ==========================
+        // Xử lý upload document (nếu có)
+        // ==========================
+        $doc_url = null;
+
+        if (!empty($_FILES['document']['name'])) {
+            $docName = time() . "_" . basename($_FILES['document']['name']);
+            $docPath = "assets/uploads/documents/" . $docName;
+
+            move_uploaded_file($_FILES['document']['tmp_name'], $docPath);
+
+            $doc_url = $docPath;
+        }
+
+        // ==========================
+        // Dữ liệu insert
+        // (Theo đúng model của bạn)
+        // ==========================
+        $data = [
+            ":course_id"    => $course_id,
+            ":title"        => $_POST['title'],
+            ":content"      => $_POST['description'] ?? "",
+            ":video_url"    => $video_url,
+            ":lesson_order" => 1, // Mặc định = 1; hoặc bạn tự tính thứ tự
+        ];
+
+        header("Location: ?controllers=LessonController&action=viewLessonsByCourse");
+        exit;
+    }
+
+
+
+
+
     // Quản lý bài học theo khóa học
-    public function manage() {
+    public function manage()
+    {
         if (!isset($_GET["course_id"])) {
             header("Location: index.php?controller=course&action=manage");
             exit;
@@ -35,17 +121,13 @@ class LessonController {
         include "views/instructor/lessons/manage.php";
     }
 
-    // Hiển thị form tạo bài học
-    public function create() {
-        $course_id = $_GET["course_id"] ?? null;
-        include "views/instructor/lessons/create.php";
-    }
 
     // Lưu bài học mới
-    public function store() {
+    public function store()
+    {
         if (empty($_POST['title'])) {
             $_SESSION['error'] = "Vui lòng nhập tiêu đề!";
-            header("Location: index.php?controller=lesson&action=create&course_id=".$_POST['course_id']);
+            header("Location: index.php?controller=lesson&action=create&course_id=" . $_POST['course_id']);
             exit;
         }
 
@@ -59,18 +141,20 @@ class LessonController {
 
         $this->lessonModel->create($data);
 
-        header("Location: index.php?controller=lesson&action=manage&course_id=".$_POST["course_id"]);
+        header("Location: index.php?controller=lesson&action=manage&course_id=" . $_POST["course_id"]);
     }
 
     // Hiển thị form sửa bài học
-    public function edit() {
+    public function edit()
+    {
         $id = $_GET["id"];
         $lesson = $this->lessonModel->getLessonById($id);
         include "views/instructor/lessons/edit.php";
     }
 
     // Lưu cập nhật
-    public function update() {
+    public function update()
+    {
         $data = [
             ":id" => $_POST["id"],
             ":course_id" => $_POST["course_id"],
@@ -82,73 +166,17 @@ class LessonController {
 
         $this->lessonModel->update($data);
 
-        header("Location: index.php?controller=lesson&action=manage&course_id=".$_POST["course_id"]);
+        header("Location: index.php?controller=lesson&action=manage&course_id=" . $_POST["course_id"]);
     }
 
     // Xóa bài học
-    public function delete() {
+    public function delete()
+    {
         $id = $_GET["id"];
         $course_id = $_GET["course_id"];
 
         $this->lessonModel->delete($id, $course_id);
 
         header("Location: index.php?controller=lesson&action=manage&course_id=$course_id");
-    }
-
-
-// ================= MATERIAL FUNCTIONS ================= //
-
-    // Form upload tài liệu
-    public function uploadMaterial() {
-        $lesson_id = $_GET['lesson_id'];
-        include "views/instructor/materials/upload.php";
-    }
-
-    // Xử lý upload
-    public function storeMaterial() {
-        $lesson_id = $_POST['lesson_id'];
-
-        if (!empty($_FILES['material']['name'])) {
-
-            // đặt tên file tránh trùng
-            $file_name = time() . "_" . $_FILES['material']['name']; 
-            $file_tmp = $_FILES['material']['tmp_name'];
-            $file_type = pathinfo($file_name, PATHINFO_EXTENSION);
-
-            $uploadPath = "assets/uploads/materials/" . $file_name;
-
-            // tạo thư mục nếu chưa có
-            if (!is_dir("assets/uploads/materials/")) {
-                mkdir("assets/uploads/materials/", 0777, true);
-            }
-
-            move_uploaded_file($file_tmp, $uploadPath);
-
-            $data = [
-                ":lesson_id" => $lesson_id,
-                ":filename" => $file_name,
-                ":file_path" => $uploadPath,
-                ":file_type" => $file_type,
-            ];
-
-            $this->materialModel->create($data);
-        }
-
-        header("Location: index.php?controller=lesson&action=edit&id=" . $lesson_id);
-    }
-
-    // Xóa tài liệu
-    public function deleteMaterial() {
-        $id = $_GET["id"];
-
-        $file = $this->materialModel->getFileById($id);
-
-        if ($file && file_exists($file['file_path'])) {
-            unlink($file['file_path']);
-        }
-
-        $this->materialModel->delete($id);
-
-        header("Location: index.php?controller=lesson&action=edit&id=" . $file['lesson_id']);
     }
 }

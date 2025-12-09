@@ -18,8 +18,9 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
     <div class="card border-0 shadow-sm">
         <div class="card-body">
 
-            <form action="store.php" method="POST" enctype="multipart/form-data">
+            <form action="?controllers=LessonController&action=createLesson" method="POST" enctype="multipart/form-data">
 
+                <input type="hidden" name="id" value="<?= $_GET['id'] ?>>">
                 <!-- Tên bài học -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Tên bài học</label>
