@@ -2,7 +2,11 @@
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
-$courses = $_SESSION['courses'];
+if ($_SESSION['courses']) {
+    $courses = $_SESSION['courses'];
+} else {
+    $courses = [];
+}
 // Mảng chứa thông tin 3 khóa học
 ?>
 
