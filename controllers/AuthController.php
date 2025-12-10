@@ -49,7 +49,7 @@ class AuthController
         if (empty($password)) {
             $errors['password'] = "Vui lòng điền Mật khẩu.";
         }
-        
+
 
         if (empty($errors)) {
             // 2. Tìm người dùng trong CSDL
@@ -67,8 +67,7 @@ class AuthController
                 // 4. Điều hướng dựa trên vai trò
                 header('Location: ?controllers=CourseController&action=viewCourseHome'); // ĐÃ SỬA: Chuyển hướng chung về trang chủ
                 exit;
-            }
-            else {
+            } else {
                 // THÊM LỖI VÀO ĐÂY: Tài khoản không tồn tại HOẶC Mật khẩu không đúng
                 $errors['general'] = "Tên đăng nhập hoặc mật khẩu không đúng.";
             }
@@ -83,14 +82,13 @@ class AuthController
             $_SESSION['old_input'] = ['username' => $username];
             header('Location: ?views=auth&action=login');
             exit;
-                }
+        }
 
         // Nếu có lỗi, lưu lỗi vào session và chuyển hướng lại trang đăng nhập
         $_SESSION['login_errors'] = $errors;
         $_SESSION['old_input'] = ['username' => $username];
         header('Location: ?views=auth&action=login');
         exit;
-
     }
 
     /**
@@ -165,40 +163,6 @@ class AuthController
         include_once ROOT . '/views/auth/forgot.php';
     }
 
-    public function sendMailForgotPassword($emailTo, $content)
-    {
-
-        //Create an instance; passing `true` enables exceptions
-        $mail = new PHPMailer(true);
-
-        try {
-            //Server settings
-            $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
-            $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = 'mynicktai1@gmail.com';                     //SMTP username
-            $mail->Password   = 'rydyaaqnbuvhlhxq';                               //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-            $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-            //Recipients
-            $mail->setFrom('mynicktai1@gmail.com', 'Online Courses Group 3');
-            $mail->addAddress($emailTo);     //Add a recipient
-
-            //Content
-            $mail->CharSet = 'UTF-8';
-            $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = "Quên Mật Khẩu Tài Khoản Online Courses Group 3";
-            $mail->Body    = $content;
-
-            $mail->send();
-            echo 'Message has been sent';
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-        }
-    }
-
     /**
      * Xử lý đăng xuất.
      */
@@ -212,6 +176,221 @@ class AuthController
         header('Location: ?controllers=CourseController&action=viewCourseHome');
         exit;
     }
-}
 
-$auth = new AuthController();
+    //forgot
+    public function forgot()
+    {
+        // Nếu chưa submit form → chỉ hiển thị form
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ?views=auth&action=forgot');
+            return;
+        }
+
+        // Lấy email từ form
+        $email = trim($_POST['email'] ?? '');
+
+        if (empty($email)) {
+            $_SESSION['error'] = "Vui lòng nhập email!";
+            header("Location: ?views=auth&action=forgot");
+            exit();
+        }
+
+        // Kiểm tra email có tồn tại trong DB
+        $user = $this->userModel->getUserByEmail($email);
+
+
+        if (!$user) {
+            $_SESSION['error'] = "Email không tồn tại trong hệ thống!";
+            header("Location: ?views=auth&action=forgot");
+            exit();
+        }
+
+        // Tạo mã OTP
+        $otp = rand(100000, 999999);
+
+        // Lưu OTP vào session
+        $_SESSION['otp'] = $otp;
+        $_SESSION['otp_email'] = $email;
+        $_SESSION['otp_expire'] = time() + 300; // hết hạn sau 5 phút
+
+        // Nội dung email
+        $content = "
+            <h3>Mã khôi phục mật khẩu của bạn là:</h3>
+            <h2 style='color:red; font-size:28px;'>$otp</h2>
+            <p>Mã này chỉ có hiệu lực trong 5 phút.</p>
+        ";
+
+        // Gửi mail
+        $this->sendMailForgotPassword($email, $content);
+
+        $_SESSION['success'] = "Mã xác nhận đã được gửi đến email của bạn!";
+        header("Location: ?views=auth&action=verifyOtp");
+        exit();
+    }
+
+
+    // ================================
+    // 2️⃣ HÀM GỬI MAIL
+    // ================================
+    public function sendMailForgotPassword($emailTo, $content)
+    {
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->SMTPDebug = SMTP::DEBUG_OFF;
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'mynicktai1@gmail.com';
+            $mail->Password   = 'rydyaaqnbuvhlhxq';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port       = 465;
+
+            $mail->setFrom('mynicktai1@gmail.com', 'Online Courses Group 3');
+            $mail->addAddress($emailTo);
+
+            $mail->CharSet = 'UTF-8';
+            $mail->isHTML(true);
+            $mail->Subject = "Quên Mật Khẩu - Online Courses Group 3";
+            $mail->Body    = $content;
+
+            $mail->send();
+        } catch (Exception $e) {
+            echo "Lỗi gửi Email: {$mail->ErrorInfo}";
+        }
+    }
+
+    public function verifyOtp()
+    {
+        // Lấy OTP từ URL
+        $otpFromUrl = $_POST['otp'] ?? '';
+
+        if (
+            empty($otpFromUrl)
+            || !isset($_SESSION['otp'])
+            || !isset($_SESSION['otp_email'])
+            || $_SESSION['otp_expire'] < time()
+        ) {
+            echo "OTP đã hết hạn hoặc không hợp lệ!";
+            exit();
+        }
+
+        // So sánh OTP
+        if ($otpFromUrl != $_SESSION['otp']) {
+            echo "OTP không chính xác!";
+            exit();
+        }
+
+        // Nếu đúng → chuyển đến trang đặt mật khẩu mới
+        header("Location: ?views=auth&action=resetPassword");
+        exit();
+    }
+
+    public function resetPassword()
+    {
+        // Lấy dữ liệu từ form
+        $password = trim($_POST['password'] ?? '');
+        $confirm = trim($_POST['confirm_password'] ?? '');
+
+        // Validate
+        if (empty($password) || empty($confirm)) {
+            $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin!";
+            header("Location: ?views=auth&action=resetPassword");
+            exit();
+        }
+
+        if (strlen($password) < 6) {
+            $_SESSION['error'] = "Mật khẩu phải có ít nhất 6 ký tự!";
+            header("Location: ?views=auth&action=resetPassword");
+            exit();
+        }
+
+        if ($password !== $confirm) {
+            $_SESSION['error'] = "Mật khẩu xác nhận không trùng khớp!";
+            header("Location: ?views=auth&action=resetPassword");
+            exit();
+        }
+
+        // Hash mật khẩu
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Lấy email từ session
+        $email = $_SESSION['otp_email'];
+
+
+        // Update mật khẩu trong model
+        $this->userModel->updatePasswordByEmail($email, $hashedPassword);
+
+        // Xóa session OTP
+        unset($_SESSION['otp']);
+        unset($_SESSION['otp_email']);
+        unset($_SESSION['otp_expire']);
+
+        $_SESSION['success'] = "Cập nhật mật khẩu thành công! Hãy đăng nhập lại.";
+
+        header("Location: ?views=auth&action=login");
+        exit();
+    }
+
+    public function changePassword()
+    {
+        // Lấy ID user từ GET
+        if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+            echo "<script>alert('Thiếu ID người dùng'); window.history.back();</script>";
+            exit;
+        }
+
+        $userId = intval($_SESSION['user_id']);
+
+        // Lấy dữ liệu từ form
+        $oldPassword     = $_POST['old_password'] ?? '';
+        $newPassword     = $_POST['password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+
+        // Validate input rỗng
+        if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
+            echo "<script>alert('Vui lòng nhập đầy đủ thông tin'); window.history.back();</script>";
+            exit;
+        }
+
+        // Validate trùng confirm
+        if ($newPassword !== $confirmPassword) {
+            echo "<script>alert('Mật khẩu xác nhận không trùng khớp'); window.history.back();</script>";
+            exit;
+        }
+
+        // Lấy thông tin người dùng
+        require_once './models/User.php';
+        $userModel = new User();
+        $user = $userModel->getUserById($userId);
+
+        if (!$user) {
+            echo "<script>alert('Không tìm thấy người dùng'); window.history.back();</script>";
+            exit;
+        }
+
+        // Kiểm tra mật khẩu cũ đúng hay không
+        if (!password_verify($oldPassword, $user['password'])) {
+            echo "<script>alert('Mật khẩu cũ không chính xác'); window.history.back();</script>";
+            exit;
+        }
+
+        // Không cho phép dùng lại mật khẩu cũ
+        if (password_verify($newPassword, $user['password'])) {
+            echo "<script>alert('Mật khẩu mới không được trùng mật khẩu cũ'); window.history.back();</script>";
+            exit;
+        }
+
+        // Hash mật khẩu mới
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        // Cập nhật mật khẩu
+        $update = $userModel->updatePasswordById($userId, $hashedPassword);
+
+        if ($update) {
+            echo "<script>alert('Đổi mật khẩu thành công'); window.location.href='?controllers=AuthController&action=login';</script>";
+        } else {
+            echo "<script>alert('Có lỗi xảy ra, vui lòng thử lại'); window.history.back();</script>";
+        }
+    }
+}

@@ -250,5 +250,38 @@ class User
         }
     }
 
+
+    public function getUserByEmail($email)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE email = :email LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":email", $email);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC); // trả về mảng user hoặc false
+    }
+
+
+    public function updatePasswordByEmail($email, $newPassword)
+    {
+        $sql = "UPDATE users SET password = :password WHERE email = :email";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':password' => $newPassword,
+            ':email' => $email
+        ]);
+    }
+
+
+    public function updatePasswordById($id, $newPassword)
+    {
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            ':password' => $newPassword,
+            ':id'       => $id
+        ]);
+    }
     // Thêm các phương thức CRUD khác tại đây (updateUser, deleteUser...)
 }

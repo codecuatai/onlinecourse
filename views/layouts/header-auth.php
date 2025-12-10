@@ -8,10 +8,12 @@ if ($action == 'register') {
     $title = 'Đăng Nhập';
 } elseif ($action == 'forgot') {
     $title = 'Quên mật khẩu';
-} elseif ($action == 'confirmpassword') {
+} elseif ($action == 'resetPassword') {
     $title = 'Xác nhận mật khẩu';
 } elseif ($action == 'changepassword') {
     $title = 'Đổi mật khấu';
+} elseif ($action == 'verifyOtp') {
+    $title = 'Xác Thực';
 }
 ?>
 <!DOCTYPE html>

@@ -3,7 +3,7 @@ require_once './views/layouts/header-auth.php';
 ?>
 
 <body>
-    <form action="">
+    <form action="?controllers=AuthController&action=forgot" method="POST">
         <div class="forgot-password-container">
             <!-- Decorative elements -->
             <div class="circle-decoration circle-1"></div>
@@ -34,7 +34,7 @@ require_once './views/layouts/header-auth.php';
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                                     <path d="M22 6l-10 7L2 6" />
                                 </svg>
-                                <input type="email" id="email" placeholder="email@example.com">
+                                <input type="email" id="email" name="email" placeholder="email@example.com">
                             </div>
                         </div>
 

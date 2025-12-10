@@ -98,7 +98,7 @@ switch ($role) {
                     <?php if ($role !== -1): // Đã đăng nhập 
                     ?>
                         <a href="?controllers=UserController&action=profile" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Profile</a>
-                        <a href="?views=auth&action=changepassword" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đổi mật khẩu</a>
+                        <a href="<?php echo "?views=auth&action=changepassword&id=" . $_SESSION['user_id']; ?>" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đổi mật khẩu</a>
                         <a href="?controllers=AuthController&action=logout" class="dropdown-item d-block px-3 py-2 text-decoration-none text-dark">Đăng xuất</a>
                     <?php else: // Chưa đăng nhập 
                     ?>

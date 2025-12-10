@@ -23,7 +23,7 @@ require_once './views/layouts/header-auth.php';
         <div class="form-content">
             <!-- Step 1: Enter Email -->
             <div class="step-content active" id="content-1">
-                <form action="" method="post">
+                <form action="?controllers=AuthController&action=resetPassword" method="post">
                     <div class="form-group">
                         <label for="password">Mật khẩu <span class="required">*</span></label>
                         <div class="input-wrapper">
@@ -32,7 +32,7 @@ require_once './views/layouts/header-auth.php';
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                             </svg>
 
-                            <input type="password" id="password" placeholder="Ít nhất 6 ký tự">
+                            <input type="password" id="password" name="password" placeholder="Ít nhất 6 ký tự">
 
                             <button type="button" class="toggle-password" onclick="togglePassword('password')">
                                 <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -64,7 +64,7 @@ require_once './views/layouts/header-auth.php';
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                             </svg>
 
-                            <input type="password" id="confirm-password" placeholder="Nhập lại mật khẩu">
+                            <input type="password" id="confirm-password" name="confirm_password" placeholder="Nhập lại mật khẩu">
 
                             <button type="button" class="toggle-password" onclick="togglePassword('confirm-password')">
                                 <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
