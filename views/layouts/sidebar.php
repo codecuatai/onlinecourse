@@ -16,7 +16,7 @@ $role = $_SESSION['role'] ?? -1; // 0 = học viên, 1 = giảng viên, 2 = admi
 
         <!-- Học viên -->
         <?php if ($role == 0): ?>
-            <li><a href="?views=student&action=my_courses" class="d-flex align-items-center"><span class="icon me-2">🎓</span> Khóa học đã đăng ký</a></li>
+            <li><a href="?controllers=EnrollmentController&action=myCourses" class="d-flex align-items-center"><span class="icon me-2">🎓</span> Khóa học đã đăng ký</a></li>
         <?php endif; ?>
 
         <!-- Giảng viên -->

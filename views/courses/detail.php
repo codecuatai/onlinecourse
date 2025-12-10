@@ -7,6 +7,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 $course_detail = $_SESSION['course_detail'];
 ?>
 
+
 <main class="container py-5">
 
     <div class="row g-5">
@@ -87,10 +88,13 @@ $course_detail = $_SESSION['course_detail'];
                     <p class="text-muted small mb-4">Truy cập trọn đời</p>
 
                     <!-- CTA -->
-                    <button class="btn btn-dark w-100 py-3 fw-bold mb-3 rounded-4">
-                        <i class="bi bi-bag-check me-2"></i>
-                        Thanh toán ngay
-                    </button>
+                    <form action="?controllers=EnrollmentController&action=enroll" method="POST">
+                        <input type="hidden" name="course_id" value="<?= $course_detail['id'] ?>>">
+                        <button type="submit" class="btn btn-dark w-100 py-3 fw-bold mb-3 rounded-4">
+                            <i class="bi bi-bag-check me-2"></i>
+                            Thanh toán ngay
+                        </button>
+                    </form>
 
                     <hr class="my-4">
 
@@ -113,5 +117,12 @@ $course_detail = $_SESSION['course_detail'];
 </main>
 
 <?php
+
+if (isset($_SESSION['error_enrolled'])): ?>
+    <script>
+        alert("<?= $_SESSION['error_enrolled'] ?>");
+    </script>
+    <?php unset($_SESSION['error_enrolled']); ?>
+<?php endif;
 require_once _PATH_URL . '/../views/layouts/footer.php';
 ?>

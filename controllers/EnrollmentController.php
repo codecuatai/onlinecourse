@@ -1,53 +1,71 @@
 <?php
 require_once __DIR__ . '/../models/Enrollment.php';
-require_once __DIR__ . '/../config/Database.php';
 
 class EnrollmentController
 {
-    private $enrollModel;
+    private $enrollmentModel;
 
     public function __construct()
     {
-        $database = new Database();
-        $db = $database->getConnection();
-        $this->enrollModel = new Enrollment($db);
+        $this->enrollmentModel = new Enrollment();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
-    // ✅ XỬ LÝ ĐĂNG KÝ KHÓA HỌC
+
+    // ===============================================
+    // 🔵 XỬ LÝ ĐĂNG KÝ KHÓA HỌC
+    // ===============================================
     public function enroll()
     {
-        session_start();
-
         // Kiểm tra đăng nhập
         if (!isset($_SESSION['user_id'])) {
-            header("Location: index.php?controller=auth&action=login");
+            $_SESSION['error'] = "Vui lòng đăng nhập để đăng ký!";
+            header("Location: ?controller=auth&action=login");
             exit();
         }
 
-        $course_id  = $_POST['course_id'];
-        $student_id = $_SESSION['user_id'];
+        $course_id  = (int) $_POST['course_id'];
+        $student_id = (int) $_SESSION['user_id'];
+
 
         // Kiểm tra trùng đăng ký
-        if ($this->enrollModel->isEnrolled($course_id, $student_id)) {
-            echo "Bạn đã đăng ký khóa học này rồi!";
-            return;
+        if ($this->enrollmentModel->isEnrolled($course_id, $student_id)) {
+            $_SESSION['error_enrolled'] = "Bạn đã đăng ký khóa học này rồi!";
+            header("Location: ?controllers=CourseController&action=viewDetail&id=$course_id");
+            exit();
         }
-
         // Thực hiện đăng ký
-        if ($this->enrollModel->enroll($course_id, $student_id)) {
-            header("Location: index.php?controller=enrollment&action=myCourses");
+        if ($this->enrollmentModel->enroll($course_id, $student_id)) {
+            $_SESSION['success'] = "Đăng ký khóa học thành công!";
+            header("Location: ?controllers=EnrollmentController&action=myCourses");
+            exit();
         } else {
-            echo "Đăng ký thất bại!";
+            $_SESSION['error'] = "Đăng ký thất bại, vui lòng thử lại!";
+            header("Location: ?controllers=CourseController&action=viewDetail&id=$course_id");
+            exit();
         }
     }
 
-    // ✅ HIỂN THỊ KHÓA HỌC ĐÃ ĐĂNG KÝ
+
+    // ===============================================
+    // 🔵 HIỂN THỊ KHÓA HỌC ĐÃ ĐĂNG KÝ CỦA HỌC VIÊN
+    // ===============================================
     public function myCourses()
     {
-        session_start();
-        $student_id = $_SESSION['user_id'];
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['error'] = "Vui lòng đăng nhập!";
+            header("Location: ?controllers=AuthController&action=login");
+            exit();
+        }
 
-        $courses = $this->enrollModel->getMyCourses($student_id);
-        require_once __DIR__ . '/../views/student/my_courses.php';
+        $student_id = (int) $_SESSION['user_id'];
+
+        // Lấy danh sách khóa học đã đăng ký
+        $courses = $this->enrollmentModel->getMyCourses($student_id);
+        $_SESSION['enroll_courses'] = $courses;
+
+        header("Location: ?views=student&action=my_courses");
     }
 }

@@ -1,13 +1,17 @@
 <?php
+require_once __DIR__ . '/../config/Database.php';
 class Enrollment
 {
     private $conn;
     private $table = "enrollments";
 
-    public function __construct($db)
+    public function __construct()
     {
-        $this->conn = $db;
+        // Lấy đối tượng kết nối PDO đã được cấu hình
+        $database = new Database();
+        $this->conn = $database->getConnection();
     }
+
 
     // ✅ KIỂM TRA HỌC VIÊN ĐÃ ĐĂNG KÝ KHÓA HỌC CHƯA
     public function isEnrolled($course_id, $student_id)
@@ -45,15 +49,19 @@ class Enrollment
         $sql = "SELECT 
                     courses.*, 
                     enrollments.progress,
-                    enrollments.status
+                    enrollments.status,
+                    users.fullname as instructor_name,
+                    categories.name as category_name
                 FROM enrollments
                 JOIN courses ON enrollments.course_id = courses.id
+                JOIN users ON courses.instructor_id = users.id
+                JOIN categories ON categories.id = courses.category_id
                 WHERE enrollments.student_id = :student_id";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":student_id", $student_id);
         $stmt->execute();
 
-        return $stmt;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);;
     }
 }

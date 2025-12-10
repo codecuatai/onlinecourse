@@ -91,7 +91,6 @@ $progressPercent = round(($completedLessons / $totalLessons) * 100);
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-primary">Xem video</button>
                                     <button class="btn btn-sm btn-success">Hoàn thành</button>
-                                    <button class="btn btn-sm btn-warning">Nộp bài</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

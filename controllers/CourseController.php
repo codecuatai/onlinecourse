@@ -38,6 +38,11 @@ class CourseController
     }
     public function viewDetail()
     {
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['error'] = "Vui lòng đăng nhập để đăng ký!";
+            header("Location: views=auth&action=login");
+            exit();
+        }
         if (!isset($_GET['id']) || empty($_GET['id'])) {
             // Nếu không có id, chuyển về trang home
             header('Location: ?views=home&action=index');
