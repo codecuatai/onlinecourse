@@ -1,41 +1,47 @@
 <?php
-class Material {
+class Material
+{
     private $conn;
     private $table = "materials";
 
-    public function __construct($db) {
-        $this->conn = $db;
+    public function __construct()
+    {
+        $database = new Database();
+        $this->conn = $database->getConnection();
     }
 
-    public function getByLesson($lesson_id) {
-        $sql = "SELECT * FROM " . $this->table . " WHERE lesson_id = :lesson_id";
+    // Lấy tất cả materials theo lesson_id
+    public function getMaterialsByCourse($course_id)
+    {
+        $sql = "SELECT m.* 
+            FROM materials AS m
+            INNER JOIN lessons AS l ON m.lesson_id = l.id
+            WHERE l.course_id = :course_id
+            ORDER BY m.uploaded_at DESC";
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":lesson_id", $lesson_id);
+        $stmt->bindParam(":course_id", $course_id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt;
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function create($data) {
-        $sql = "INSERT INTO " . $this->table . "
-                (lesson_id, filename, file_path, file_type, uploaded_at)
-                VALUES (:lesson_id, :filename, :file_path, :file_type, NOW())";
+
+    // Thêm tài liệu mới
+    public function create($data)
+    {
+        $sql = "INSERT INTO " . $this->table . " (lesson_id, filename, file_path, file_type, uploaded_at)
+                VALUES (:lesson_id, :filename, :file_path, :file_type, :uploaded_at)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute($data);
     }
 
-    public function getFileById($id) {
-        $sql = "SELECT * FROM " . $this->table . " WHERE id = :id LIMIT 1";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function delete($id) {
+    // Xóa tài liệu
+    public function delete($id)
+    {
         $sql = "DELETE FROM " . $this->table . " WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(":id", $id);
         return $stmt->execute();
     }
 }
-?>

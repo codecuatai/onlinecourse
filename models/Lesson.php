@@ -45,17 +45,6 @@ class Lesson
         return $stmt->execute($data);
     }
 
-    // Cập nhật bài học
-    public function update($data)
-    {
-        $sql = "UPDATE " . $this->table . "
-                SET title = :title, content = :content,
-                    video_url = :video_url, lesson_order = :lesson_order
-                WHERE id = :id AND course_id = :course_id";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute($data);
-    }
-
     // Xóa bài học
     public function delete($id, $course_id)
     {
@@ -65,5 +54,21 @@ class Lesson
         $stmt->bindParam(":id", $id);
         $stmt->bindParam(":course_id", $course_id);
         return $stmt->execute();
+    }
+
+
+    // Cập nhật bài học
+    // Model: Lesson.php
+    public function update($data)
+    {
+        $sql = "UPDATE " . $this->table . "
+            SET title = :title,
+                content = :content,
+                video_url = :video_url,
+                lesson_order = :lesson_order
+            WHERE id = :id AND course_id = :course_id";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute($data);
     }
 }

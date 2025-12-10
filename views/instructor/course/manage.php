@@ -52,7 +52,7 @@ $courses = $_SESSION['instructor_courses'];
                                         <a href="?controllers=LessonController&action=viewLessonsByCourse&id=<?= $course['id'] ?>" class="btn btn-sm btn-info">
                                             <i class="fas fa-book"></i> Bài học
                                         </a>
-                                        <a href="?controllers=MaterialController&action=manage&course_id=<?= $course['id'] ?>" class="btn btn-sm btn-secondary">
+                                        <a href="?controllers=MaterialController&action=viewMaterials&course_id=<?= $course['id'] ?>" class="btn btn-sm btn-secondary">
                                             <i class="fas fa-file"></i> Tài liệu
                                         </a>
                                     </div>

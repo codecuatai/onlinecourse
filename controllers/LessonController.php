@@ -1,24 +1,27 @@
 <?php
 require_once __DIR__ . '/../models/Lesson.php';
 require_once __DIR__ . '/../models/Course.php';
+require_once __DIR__ . '/../models/Material.php';
 
 class LessonController
 {
     private $lessonModel;
     private $courseModel;
+    private $materialModel;
 
     public function __construct()
     {
         // Khởi tạo Lesson Model để tương tác với CSDL
         $this->lessonModel = new Lesson();
         $this->courseModel = new Course();
+        $this->materialModel = new Material();
     }
 
     public function viewLessonsByCourse()
     {
         if (!isset($_GET['id'])) {
             $_SESSION['error'] = "Không tìm thấy khóa học!";
-            header("Location: ?views=instructor&instructor=courses&action=manage");
+            header("Location: ?views=instructor&instructor=lessons&action=manage");
             exit;
         }
 
@@ -44,8 +47,7 @@ class LessonController
     {
         // Lấy course_id từ URL: ?course&id=5
         if (!isset($_POST['id'])) {
-            $_SESSION['error'] = "Không tìm thấy khóa học!";
-            header("Location: ?views=instructor&instructor=lessons&action=manage");
+            header("Location: ?views=instructor&instructor=course&action=manage");
             exit;
         }
 
@@ -59,36 +61,12 @@ class LessonController
         }
 
         // ==========================
-        // Xử lý upload video (nếu có)
+        // Lấy đường link video (text)
         // ==========================
-        $video_url = null;
-
-        if (!empty($_FILES['video']['name'])) {
-            $videoName = time() . "_" . basename($_FILES['video']['name']);
-            $videoPath = "assets/uploads/videos/" . $videoName;
-
-            move_uploaded_file($_FILES['video']['tmp_name'], $videoPath);
-
-            $video_url = $videoPath;
-        }
-
-        // ==========================
-        // Xử lý upload document (nếu có)
-        // ==========================
-        $doc_url = null;
-
-        if (!empty($_FILES['document']['name'])) {
-            $docName = time() . "_" . basename($_FILES['document']['name']);
-            $docPath = "assets/uploads/documents/" . $docName;
-
-            move_uploaded_file($_FILES['document']['tmp_name'], $docPath);
-
-            $doc_url = $docPath;
-        }
+        $video_url = !empty($_POST['video']) ? trim($_POST['video']) : null;
 
         // ==========================
         // Dữ liệu insert
-        // (Theo đúng model của bạn)
         // ==========================
         $data = [
             ":course_id"    => $course_id,
@@ -98,9 +76,34 @@ class LessonController
             ":lesson_order" => 1, // Mặc định = 1; hoặc bạn tự tính thứ tự
         ];
 
-        header("Location: ?controllers=LessonController&action=viewLessonsByCourse");
+        $result = $this->lessonModel->create($data);
+
+        header("Location: ?controllers=LessonController&action=viewLessonsByCourse&id=" . $course_id);
         exit;
     }
+
+
+
+    public function deleteLesson()
+    {
+        // Kiểm tra GET params
+        if (!isset($_GET['lesson_id']) || !isset($_GET['id'])) {
+            $_SESSION['error'] = "Không tìm thấy bài học!";
+            header("Location: ?controllers=CoursesController&action=viewCoursesOfInstructor");
+            exit;
+        }
+
+        $lesson_id = $_GET['lesson_id'];
+        $course_id = $_GET['id'];
+
+        // Gọi model để xóa bài học
+        $result = $this->lessonModel->delete($lesson_id, $course_id);
+
+        // Redirect về trang quản lý bài học của khóa học
+        header("Location: ?controllers=LessonController&action=viewLessonsByCourse&id=" . $course_id);
+        exit;
+    }
+
 
 
 
@@ -145,38 +148,61 @@ class LessonController
     }
 
     // Hiển thị form sửa bài học
-    public function edit()
+    public function editLesson()
     {
-        $id = $_GET["id"];
-        $lesson = $this->lessonModel->getLessonById($id);
-        include "views/instructor/lessons/edit.php";
+        // Kiểm tra id bài học
+        if (!isset($_GET['lesson_id'])) {
+            $_SESSION['error'] = "Không tìm thấy bài học!";
+            header("Location: ?views=instructor&instructor=lessons&action=manage");
+            exit;
+        }
+
+        $lesson_id = $_GET['lesson_id'];
+
+        // Lấy dữ liệu bài học từ model
+        $lesson = $this->lessonModel->getLessonById($lesson_id);
+
+        $_SESSION['lesson'] = $lesson;
+        // Include form sửa bài học
+        // Form sẽ sử dụng biến $lesson để hiển thị dữ liệu cũ
+        header("Location: ?views=instructor&instructor=lessons&action=edit");
     }
 
+
+
     // Lưu cập nhật
-    public function update()
+    // Cập nhật bài học
+    public function updateLesson()
     {
+        if (!isset($_POST['id']) || !isset($_POST['course_id'])) {
+            $_SESSION['error'] = "Dữ liệu không hợp lệ!";
+            header("Location: ?views=instructor&instructor=lessons&action=manage");
+            exit;
+        }
+
+        $lesson_id   = $_POST['id'];
+        $course_id   = $_POST['course_id'];
+        $title       = $_POST['title'] ?? '';
+        $content     = $_POST['description'] ?? '';
+        $lesson_order = $_POST['lesson_order'] ?? 1;
+
+        // Chỉ lấy đường dẫn video từ input text
+        $video_url = $_POST['video_url'] ?? '';
+
+        // Dữ liệu cập nhật bài học
         $data = [
-            ":id" => $_POST["id"],
-            ":course_id" => $_POST["course_id"],
-            ":title" => $_POST["title"],
-            ":content" => $_POST["content"],
-            ":video_url" => $_POST["video_url"],
-            ":lesson_order" => $_POST["lesson_order"]
+            ":id"          => $lesson_id,
+            ":course_id"   => $course_id,
+            ":title"       => $title,
+            ":content"     => $content,
+            ":video_url"   => $video_url,
+            ":lesson_order" => $lesson_order
         ];
 
         $this->lessonModel->update($data);
 
-        header("Location: index.php?controller=lesson&action=manage&course_id=" . $_POST["course_id"]);
-    }
-
-    // Xóa bài học
-    public function delete()
-    {
-        $id = $_GET["id"];
-        $course_id = $_GET["course_id"];
-
-        $this->lessonModel->delete($id, $course_id);
-
-        header("Location: index.php?controller=lesson&action=manage&course_id=$course_id");
+        // Chuyển hướng về danh sách bài học của khóa học
+        header("Location: ?controllers=LessonController&action=viewLessonsByCourse&id=" . $course_id);
+        exit;
     }
 }

@@ -150,7 +150,7 @@ class UserController
         // Nếu có lỗi, lưu session và redirect về profile
         if (!empty($errors)) {
             $_SESSION['profile_errors'] = $errors;
-            header("Location: ?views=users&action=profile");
+            header("Location: ?controllers=UserController&action=profile");
             exit;
         }
 
@@ -164,7 +164,7 @@ class UserController
         $_SESSION['email']    = $email;
         if ($newAvatarPath) $_SESSION['avatar'] = $newAvatarPath;
 
-        header("Location: ?views=users&action=profile");
+        header("Location: ?controllers=UserController&action=profile");
         exit;
     }
 }

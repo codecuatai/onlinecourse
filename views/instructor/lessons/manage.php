@@ -40,7 +40,6 @@ $course = $_SESSION['course'] ?? null;
                             <th>#</th>
                             <th>Tên bài học</th>
                             <th>Video</th>
-                            <th>Tài liệu</th>
                             <th>Ngày tạo</th>
                             <th>Hành động</th>
                         </tr>
@@ -65,8 +64,8 @@ $course = $_SESSION['course'] ?? null;
 
                                     <!-- VIDEO -->
                                     <td>
-                                        <?php if (!empty($lesson['video'])): ?>
-                                            <a href="<?= htmlspecialchars($lesson['video']) ?>"
+                                        <?php if (!empty($lesson['video_url'])): ?>
+                                            <a href="<?= htmlspecialchars($lesson['video_url']) ?>"
                                                 target="_blank" class="btn btn-sm btn-primary">
                                                 <i class="fas fa-video"></i> Xem video
                                             </a>
@@ -75,17 +74,6 @@ $course = $_SESSION['course'] ?? null;
                                         <?php endif; ?>
                                     </td>
 
-                                    <!-- DOCUMENT -->
-                                    <td>
-                                        <?php if (!empty($lesson['document'])): ?>
-                                            <a href="<?= htmlspecialchars($lesson['document']) ?>"
-                                                target="_blank" class="btn btn-sm btn-secondary">
-                                                <i class="fas fa-file-pdf"></i> Tài liệu
-                                            </a>
-                                        <?php else: ?>
-                                            <span class="text-muted">Không có</span>
-                                        <?php endif; ?>
-                                    </td>
 
                                     <td><?= $lesson['created_at'] ?></td>
 
@@ -93,13 +81,13 @@ $course = $_SESSION['course'] ?? null;
                                         <div class="d-flex justify-content-center flex-wrap gap-1">
 
                                             <!-- EDIT -->
-                                            <a href="?views=instructor&instructor=lessons&action=edit&id=<?= $lesson['id'] ?>"
+                                            <a href="?controllers=LessonController&action=editLesson&id=<?= $course['id'] ?>&lesson_id=<?= $lesson['id'] ?>"
                                                 class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i> Sửa
                                             </a>
 
                                             <!-- DELETE -->
-                                            <a href="?views=instructor&instructor=lessons&action=delete&id=<?= $lesson['id'] ?>"
+                                            <a href="?controllers=LessonController&action=deleteLesson&id=<?= $course['id'] ?>&lesson_id=<?= $lesson['id'] ?>"
                                                 class="btn btn-sm btn-danger"
                                                 onclick="return confirm('Bạn có chắc muốn xóa bài học này?');">
                                                 <i class="fas fa-trash"></i> Xóa

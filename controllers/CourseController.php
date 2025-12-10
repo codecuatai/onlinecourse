@@ -94,9 +94,6 @@ class CourseController
         exit;
     }
 
-
-
-
     // Lưu khóa học mới
     public function storeCoures()
     {
@@ -107,7 +104,6 @@ class CourseController
             header("Location: ?controllers=CourseController&action=viewCreate");
             exit;
         }
-
         /* ===================== XỬ LÝ ẢNH ===================== */
         $image = null;
 
