@@ -3,18 +3,23 @@ require_once __DIR__ . '/../../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
-// Giả sử controller đã truyền $materials và $lessons
 // Nếu chưa có, fallback về mảng rỗng
-$materials = $_SESSION['materials'];
-$lessons = $_SESSION['lessons'];
-$course = $_SESSION['course'];
+$materials = $_SESSION['materials'] ?? [];
+$lessons = $_SESSION['lessons'] ?? [];
+$course = $_SESSION['course'] ?? [];
+
+// Tạo map lesson_id => lesson_title
+$lessonMap = [];
+foreach ($lessons as $lesson) {
+    $lessonMap[$lesson['id']] = $lesson['title'];
+}
 ?>
 
 <div class="container-fluid mt-4">
 
     <!-- Header + nút quay lại -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0">Quản lý tài liệu - Khóa học: <?= htmlspecialchars($courses['title']) ?></h4>
+        <h4 class="mb-0">Quản lý tài liệu - Khóa học: <?= htmlspecialchars($course['title'] ?? 'Chưa xác định') ?></h4>
         <a href="javascript:history.back()" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
@@ -22,7 +27,7 @@ $course = $_SESSION['course'];
 
     <!-- Nút tải tài liệu mới -->
     <div class="mb-3">
-        <a class="btn btn-success" href="?controllers=MaterialController&action=viewCreateMaterial&course_id=<?= $course_id ?>">
+        <a class="btn btn-success" href="?controllers=MaterialController&action=viewCreateMaterial&course_id=<?= $course['id'] ?? 0 ?>">
             <i class="fas fa-plus"></i> Tải tài liệu mới
         </a>
     </div>
@@ -34,7 +39,7 @@ $course = $_SESSION['course'];
                     <thead class="table-dark text-center">
                         <tr>
                             <th>Thứ tự</th>
-                            <th>Tên tài liệu</th>
+                            <th>Tên bài học</th>
                             <th>Loại</th>
                             <th>Ngày tải lên</th>
                             <th>Link tải</th>
@@ -50,7 +55,9 @@ $course = $_SESSION['course'];
                             <?php foreach ($materials as $index => $material): ?>
                                 <tr class="text-center">
                                     <td><?= $index + 1 ?></td>
-                                    <td class="text-start"><?= htmlspecialchars($material['filename']) ?></td>
+                                    <td class="text-start">
+                                        <?= htmlspecialchars($lessonMap[$material['lesson_id']] ?? 'Chưa xác định') ?>
+                                    </td>
                                     <td><?= htmlspecialchars($material['file_type']) ?></td>
                                     <td><?= htmlspecialchars($material['uploaded_at']) ?></td>
                                     <td>
@@ -60,12 +67,15 @@ $course = $_SESSION['course'];
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a href="?views=instructor&instructor=materials&action=edit&material_id=<?= $material['id'] ?>" class="btn btn-sm btn-warning">
+                                            <a href="?controllers=MaterialController&action=viewEditMaterial&material_id=<?= $material['id'] ?>&course_id=<?= $course['id'] ?>" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i> Sửa
                                             </a>
-                                            <a href="?views=instructor&instructor=materials&action=delete&material_id=<?= $material['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa tài liệu này?')">
+                                            <a href="?controllers=MaterialController&action=deleteMaterial&material_id=<?= $material['id'] ?>&course_id=<?= $course['id'] ?>"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Bạn có chắc muốn xóa tài liệu này?')">
                                                 <i class="fas fa-trash"></i> Xóa
                                             </a>
+
                                         </div>
                                     </td>
                                 </tr>

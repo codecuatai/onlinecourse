@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
-// $lessons được controller truyền vào
+// $lessons và $course_id được controller truyền vào
 $lessons = $lessons ?? [];
 $course_id = $course_id ?? 0;
 ?>
@@ -22,7 +22,7 @@ $course_id = $course_id ?? 0;
     <div class="card border-0 shadow-sm">
         <div class="card-body">
 
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="?controllers=MaterialController&action=createMaterial" method="POST" enctype="multipart/form-data">
 
                 <!-- Chọn bài học -->
                 <div class="mb-3">
@@ -34,6 +34,7 @@ $course_id = $course_id ?? 0;
                         <?php endforeach; ?>
                     </select>
                 </div>
+
 
                 <!-- Upload file -->
                 <div class="mb-3">
