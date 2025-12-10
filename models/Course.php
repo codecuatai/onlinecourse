@@ -72,14 +72,15 @@ class Course
                     users.fullname AS instructor_name,
                     categories.name AS category_name
                 FROM courses
-                JOIN users ON courses.instructor_id = users.id
-                JOIN categories ON courses.category_id = categories.id
+                LEFT JOIN users ON courses.instructor_id = users.id
+                LEFT JOIN categories ON courses.category_id = categories.id
                 ORDER BY courses.created_at DESC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
-        return $stmt; // trả về danh sách để controller dùng
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // trả về mảng luôn
     }
+
 
     //Tìm kiếm khóa học theo tên
     public function search($keyword)
@@ -122,11 +123,29 @@ class Course
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // ✅ XEM CHI TIẾT KHÓA HỌC
-    public function detail()
-    {
-        $id = $_GET['id'];
-        $course = $this->courseModel->getById($id);
-        require_once __DIR__ . '/../views/courses/detail.php';
-    }
+
+// Lấy danh sách khóa học đang chờ duyệt
+public function getPendingCourses()
+{
+    $sql = "SELECT c.*, u.fullname AS instructor_name
+            FROM courses c
+            JOIN users u ON c.instructor_id = u.id
+            WHERE c.status = 'pending'
+            ORDER BY c.created_at DESC";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+public function updateStatus($id, $status)
+{
+    $sql = "UPDATE courses SET status = :status WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(":status", $status);
+    $stmt->bindParam(":id", $id);
+    return $stmt->execute();
+}
+
 }

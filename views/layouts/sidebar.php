@@ -28,8 +28,8 @@ $role = $_SESSION['role'] ?? -1; // 0 = học viên, 1 = giảng viên, 2 = admi
 
         <!-- Quản trị viên -->
         <?php if ($role == 2): ?>
-            <li><a href="?views=users&action=manage" class="d-flex align-items-center"><span class="icon me-2">👥</span> Quản lý người dùng</a></li>
-            <li><a href="?views=categories&action=list" class="d-flex align-items-center"><span class="icon me-2">📁</span> Quản lý danh mục</a></li>
+            <li><a href="?controllers=AdminController&action=viewUser" class="d-flex align-items-center"><span class="icon me-2">👥</span> Quản lý người dùng</a></li>
+            <li><a href="?controllers=CategoryController&action=viewCategories" class="d-flex align-items-center"><span class="icon me-2">📁</span> Quản lý danh mục</a></li>
             <li><a href="?views=reports&action=index" class="d-flex align-items-center"><span class="icon me-2">📊</span> Thống kê hệ thống</a></li>
             <li><a href="?views=admin&action=browseCourses" class="d-flex align-items-center"><span class="icon me-2">✅</span> Duyệt khóa học</a></li>
         <?php endif; ?>

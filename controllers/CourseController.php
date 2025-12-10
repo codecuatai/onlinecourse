@@ -30,6 +30,14 @@ class CourseController
         include "views/instructor/course/manage.php";
     }
 
+    // Chi tiết khóa học
+    public function detail()
+    {
+        $id = $_GET['id'];
+        $course = $this->courseModel->getById($id);
+        require_once __DIR__ . '/../views/courses/detail.php';
+    }
+
     // Hiển thị form tạo khóa học
     public function create()
     {

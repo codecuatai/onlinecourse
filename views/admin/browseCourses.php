@@ -1,26 +1,7 @@
 <?php require_once __DIR__ . '/../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
-
-
-// Dữ liệu demo
-$courses = [
-    [
-        'id' => 1,
-        'title' => 'Python cho người mới',
-        'teacher' => 'Nguyễn Văn A',
-        'created_at' => '01/12/2025',
-        'status' => 'Pending'
-    ],
-    [
-        'id' => 2,
-        'title' => 'JavaScript nâng cao',
-        'teacher' => 'Trần Thị B',
-        'created_at' => '02/12/2025',
-        'status' => 'Pending'
-    ]
-];
-
+$courses = $courses ?? [];
 ?>
 
 <div class="container-fluid mt-4">
@@ -51,23 +32,25 @@ $courses = [
                         <?php foreach ($courses as $index => $course): ?>
                             <tr class="text-center">
                                 <td><?= $index + 1 ?></td>
-                                <td class="text-start"><?= $course['title'] ?></td>
-                                <td><?= $course['teacher'] ?></td>
-                                <td><?= $course['created_at'] ?></td>
+                                
+                                <td class="text-start"><?= htmlspecialchars($course['title'] ?? 'N/A') ?></td>
+                                
+                                <td><?= htmlspecialchars($course['instructor_name'] ?? 'Không rõ') ?></td>
+                                
+                                <td><?= htmlspecialchars($course['created_at'] ?? 'N/A') ?></td>
+                                
                                 <td>
-                                    <span class="badge bg-warning text-dark"><?= $course['status'] ?></span>
+                                    <span class="badge bg-warning text-dark"><?= htmlspecialchars($course['status'] ?? 'N/A') ?></span>
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
 
-                                        <!-- Approve Button -->
-                                        <a href="approve_action.php?id=<?= $course['id'] ?>&approve=1"
+                                        <a href="?views=admin&action=approveCourse&id=<?= $course['id'] ?>"
                                             class="btn btn-sm btn-success">
                                             <i class="fas fa-check"></i> Duyệt
                                         </a>
 
-                                        <!-- Reject Button -->
-                                        <a href="approve_action.php?id=<?= $course['id'] ?>&reject=1"
+                                        <a href="?views=admin&action=rejectCourse&id=<?= $course['id'] ?>"
                                             class="btn btn-sm btn-danger">
                                             <i class="fas fa-times"></i> Từ chối
                                         </a>

@@ -85,9 +85,13 @@ class User
         // Lấy và băm mật khẩu (Giữ lại PASSWORD_BCRYPT/PASSWORD_DEFAULT là an toàn)
         $hashed_password = password_hash($data['password'], PASSWORD_DEFAULT);
         
+        $phone_number = $data['phone_number'] ?? NULL;               // Dữ liệu bạn gửi là NULL
+        $avatar = $data['avatar'] ?? 'default_avatar.jpg';           // Dùng 'avatar' (sau khi sửa CSDL)
+        $status = $data['status'] ?? 1;
         // Giữ lại query của nhánh Duong, thêm created_at
-        $query = "INSERT INTO " . $this->table . " (username, email, password, fullname, role, created_at) 
-                  VALUES (:username, :email, :password, :fullname, :role, NOW())";
+        $query = "INSERT INTO " . $this->table . " 
+              (username, email, password, fullname, role, phone_number, avatar, status, created_at) 
+              VALUES (:username, :email, :password, :fullname, :role, :phone_number, :avatar, :status, NOW())";
 
         $stmt = $this->conn->prepare($query);
 
@@ -104,6 +108,10 @@ class User
         $stmt->bindParam(':password', $hashed_password); 
         $stmt->bindParam(':fullname', $fullname);
         $stmt->bindParam(':role', $role, PDO::PARAM_INT); // Ràng buộc kiểu dữ liệu số nguyên
+
+        $stmt->bindParam(':phone_number', $phone_number);
+        $stmt->bindParam(':avatar', $avatar);
+        $stmt->bindParam(':status', $status, PDO::PARAM_INT);
 
         // Thực thi truy vấn
         try {
@@ -130,8 +138,7 @@ class User
     // Lấy danh sách tất cả người dùng (dành cho Admin)
     public function getAllUsers()
     {
-        // Giữ lại logic và query của nhánh HEAD
-        $query = "SELECT id, username, email, fullname, role, created_at FROM " . $this->table . " ORDER BY created_at DESC";
+        $query = "SELECT id, username, email, fullname, role, status, created_at FROM " . $this->table . " ORDER BY created_at DESC";
 
         try {
             $stmt = $this->conn->prepare($query);
@@ -141,6 +148,7 @@ class User
             return [];
         }
     }
+
 
     // Cập nhật vai trò (role) của người dùng
     public function updateRole($user_id, $new_role)
@@ -158,6 +166,211 @@ class User
         }
     }
 
-    // Thêm các phương thức CRUD khác tại đây (updateUser, deleteUser...)
+        public function getById($id)
+    {
+        $query = "SELECT id, username, email, password, fullname, role, status, created_at 
+                  FROM " . $this->table . " 
+                  WHERE id = :id 
+                  LIMIT 1";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Cập nhật thông tin user (fullname, email)
+     */
+    public function updateUser($id, array $data)
+    {
+        $query = "UPDATE " . $this->table . " 
+                  SET fullname = :fullname, email = :email 
+                  WHERE id = :id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+
+            $fullname = htmlspecialchars(strip_tags($data['fullname']));
+            $email    = htmlspecialchars(strip_tags($data['email']));
+
+            $stmt->bindParam(':fullname', $fullname);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+            return $stmt->execute();
+            
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Cập nhật mật khẩu user
+     */
+    public function updatePassword($id, $newPassword)
+    {
+        $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $query = "UPDATE " . $this->table . " 
+                  SET password = :password 
+                  WHERE id = :id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':password', $hashed);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Xóa người dùng
+     */
+    public function deleteUser($id)
+    {
+        $query = "DELETE FROM " . $this->table . " WHERE id = :id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Cập nhật trạng thái user (active = 1, inactive = 0)
+     */
+    public function setStatus($id, $status)
+    {
+        $query = "UPDATE " . $this->table . " 
+                  SET status = :status 
+                  WHERE id = :id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':status', $status, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Tìm kiếm user theo tên, username hoặc email
+     */
+    public function searchUsers($keyword)
+    {
+        $query = "SELECT id, username, email, fullname, role, status, created_at
+                  FROM " . $this->table . "
+                  WHERE username LIKE :kw 
+                     OR fullname LIKE :kw 
+                     OR email LIKE :kw
+                  ORDER BY created_at DESC";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+
+            $keyword = "%" . $keyword . "%";
+            $stmt->bindParam(':kw', $keyword);
+
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
+        /**
+     * Wrapper cho Admin: cập nhật fullname, email và role
+     * (Tương thích với AdminController.updateUser($id, $fullname, $email, $role))
+     */
+    public function updateUserAdmin($id, $fullname, $email, $role)
+    {
+        $query = "UPDATE " . $this->table . " 
+                  SET fullname = :fullname, email = :email, role = :role
+                  WHERE id = :id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+
+            $fullname = htmlspecialchars(strip_tags($fullname));
+            $email    = htmlspecialchars(strip_tags($email));
+            $role     = (int)$role;
+
+            $stmt->bindParam(':fullname', $fullname);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':role', $role, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Toggle lock / unlock user bằng cột `status`
+     * Nếu status = 1 (active) -> set 0 (locked/inactive) và ngược lại
+     */
+    public function toggleLockUser($id)
+    {
+        try {
+            // Lấy trạng thái hiện tại
+            $user = $this->getById($id);
+            if (!$user) return false;
+
+            $newStatus = ($user['status'] == 1) ? 0 : 1;
+
+            $query = "UPDATE " . $this->table . " SET status = :status WHERE id = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':status', $newStatus, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Reset mật khẩu (hash rồi lưu)
+     */
+    public function resetPassword($id, $newPassword)
+    {
+        $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $query = "UPDATE " . $this->table . " SET password = :password WHERE id = :id";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':password', $hashed);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    
 }
 ?>

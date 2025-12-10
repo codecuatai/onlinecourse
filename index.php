@@ -33,6 +33,12 @@ $action = $_GET['action'] ?? null;
 $view = $_GET['views'] ?? _VIEW;
 $instructor = $_GET['instructor'] ?? null;
 
+if (empty($controllers) && $view === 'admin') {
+    // Nếu không có tham số 'controllers=...' NHƯNG có 'views=admin', 
+    // ta gán tên Controller chính xác để khối IF dưới xử lý.
+    $controllers = 'AdminController'; 
+}
+
 if (!empty($controllers)) {
     // ------------------------------------------------------------
     // XỬ LÝ CONTROLLER (E.g., AuthController)

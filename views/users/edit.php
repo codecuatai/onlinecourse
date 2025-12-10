@@ -2,15 +2,8 @@
 require_once __DIR__ . '/../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
-
+$user = $_SESSION['user'];
 // --- Giả sử dữ liệu lấy từ database ---
-$user = [
-    'id' => 1,
-    'username' => 'john_doe',
-    'fullname' => 'John Doe',
-    'email' => 'john@example.com',
-    'role' => 1
-];
 ?>
 
 <div class="container mt-4">
@@ -31,7 +24,7 @@ $user = [
 
         <div class="card-body">
 
-            <form method="POST" action="update_user.php">
+            <form method="POST" action="?controllers=AdminController&action=updateUser">
 
                 <input type="hidden" name="id" value="<?= $user['id'] ?>">
 

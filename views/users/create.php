@@ -21,7 +21,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
         <div class="card-body">
 
-            <form method="POST" action="store_user.php">
+            <form method="POST" action="?controllers=AdminController&action=createUser">
 
                 <!-- Username -->
                 <div class="mb-3">

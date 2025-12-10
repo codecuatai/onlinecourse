@@ -83,12 +83,6 @@ class AuthController
             exit;
                 }
 
-        // Nếu có lỗi, lưu lỗi vào session và chuyển hướng lại trang đăng nhập
-        $_SESSION['login_errors'] = $errors;
-        $_SESSION['old_input'] = ['username' => $username];
-        header('Location: ?views=auth&action=login');
-        exit;
-
     }
 
     /**
@@ -134,7 +128,7 @@ class AuthController
 
         // 2. Kiểm tra trùng lặp trong CSDL
         if (empty($errors) && $this->userModel->isExist($data['username'], $data['email'])) {
-            $errors[] = "Tên tài khoản hoặc Email đã tồn tại.";
+            $errors['exist'] = "Tên tài khoản hoặc Email đã tồn tại.";
         }
 
         if (empty($errors)) {
@@ -146,7 +140,7 @@ class AuthController
                 exit;
             } else {
                 // Lỗi CSDL (Hiếm khi xảy ra nếu validation tốt)
-                $errors[] = "Đăng ký thất bại. Vui lòng thử lại sau.";
+                $errors['db_error'] = "Đăng ký thất bại. Vui lòng thử lại sau.";
             }
         }
 
@@ -210,6 +204,115 @@ class AuthController
         header('Location: ?views=home&action=index');
         exit;
     }
+
+        /**
+     * Hiển thị trang thông tin cá nhân
+     */
+    public function profile()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ?views=auth&action=login");
+            exit;
+        }
+
+        $user = $this->userModel->getById($_SESSION['user_id']);
+
+        include_once __DIR__ . '/../views/auth/profile.php';
+    }
+
+
+    /**
+     * Xử lý cập nhật thông tin cá nhân
+     */
+    public function updateProfile()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ?views=auth&action=login");
+            exit;
+        }
+
+        $data = [
+            "fullname" => trim($_POST['fullname'] ?? ''),
+            "email"    => trim($_POST['email'] ?? '')
+        ];
+
+        $errors = [];
+
+        if (empty($data['fullname'])) $errors['fullname'] = "Họ tên không được để trống";
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) $errors['email'] = "Email không hợp lệ";
+
+        if (!empty($errors)) {
+            $_SESSION['profile_errors'] = $errors;
+            header("Location: ?views=auth&action=profile");
+            exit;
+        }
+
+        $this->userModel->updateUser($_SESSION['user_id'], $data);
+
+        $_SESSION['success_message'] = "Cập nhật thông tin thành công!";
+        header("Location: ?views=auth&action=profile");
+        exit;
+    }
+
+
+    /**
+     * Hiển thị trang đổi mật khẩu
+     */
+    public function changePassword()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ?views=auth&action=login");
+            exit;
+        }
+
+        include_once __DIR__ . '/../views/auth/change_password.php';
+    }
+
+
+    /**
+     * Xử lý đổi mật khẩu
+     */
+    public function processChangePassword()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: ?views=auth&action=login");
+            exit;
+        }
+
+        $oldPass = $_POST['old_password'] ?? '';
+        $newPass = $_POST['new_password'] ?? '';
+        $confirm = $_POST['confirm_password'] ?? '';
+
+        $errors = [];
+
+        $user = $this->userModel->getById($_SESSION['user_id']);
+
+        if (!User::verifyPassword($oldPass, $user['password'])) {
+            $errors['old_password'] = "Mật khẩu cũ không đúng!";
+        }
+
+        if (strlen($newPass) < 6) {
+            $errors['new_password'] = "Mật khẩu mới phải >= 6 ký tự.";
+        }
+
+        if ($newPass !== $confirm) {
+            $errors['confirm'] = "Xác nhận mật khẩu không khớp.";
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['change_pass_errors'] = $errors;
+            header("Location: ?views=auth&action=changePassword");
+            exit;
+        }
+
+        // Cập nhật mật khẩu mới
+        $this->userModel->updatePassword($_SESSION['user_id'], $newPass);
+
+        $_SESSION['success_message'] = "Đổi mật khẩu thành công!";
+        header("Location: ?views=auth&action=changePassword");
+        exit;
+    }
+
 }
 
 $auth = new AuthController();
