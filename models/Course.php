@@ -226,5 +226,29 @@ class Course
         return $stmt->fetch(PDO::FETCH_ASSOC); // trả về false nếu không tìm thấy
     }
 
+    // Lấy danh sách khóa học đang chờ duyệt
+    public function getPendingCourses()
+    {
+        $sql = "SELECT c.*, u.fullname AS instructor_name
+                FROM courses c
+                JOIN users u ON c.instructor_id = u.id
+                WHERE c.status = 'pending'
+                ORDER BY c.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function updateStatus($id, $status)
+    {
+        $sql = "UPDATE courses SET status = :status WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":status", $status);
+        $stmt->bindParam(":id", $id);
+        return $stmt->execute();
+    }
+
     // Các phương thức khác (thêm/sửa/xóa) có thể thêm ở đây
 }

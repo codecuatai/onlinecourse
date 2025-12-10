@@ -51,22 +51,6 @@ unset($_SESSION['success_message']);
             <span>hoặc đăng ký bằng email</span>
         </div>
 
-        <?php if (!empty($success_message)): ?>
-            <div class="alert alert-success" style="color: #155724; border: 1px solid #c3e6cb; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
-                <span><?= htmlspecialchars($success_message) ?></span>
-            </div>
-        <?php endif; ?>
-
-        <?php if (isset($errors['db_error'])): ?>
-            <div class="error-message general-error" 
-                style="display: block; color: #dc3545; border: 1px solid #dc3545; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
-                <span><?= htmlspecialchars($errors['db_error']) ?></span>
-            </div>
-        <?php endif; ?>
-
-        <?php if (isset($errors['exist'])): ?>
-            <?php endif; ?>
-
             <form action="?controllers=AuthController&action=processRegister" method="post">
             <div class="form-group">
                 <label for="fullname">Tên Tài Khoản <span class="required">*</span></label>
@@ -157,7 +141,14 @@ unset($_SESSION['success_message']);
 
             <div class="form-group">
                 <label for="password">Mật khẩu <span class="required">*</span></label>
-                <?php if (isset($errors['password'])): ?>
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+
+                    <input type="password" id="password" name="password" placeholder="Ít nhất 6 ký tự">
+                    <?php if (isset($errors['password'])): ?>
                     <div class="error-message" style="display: block; color: red; margin-top: 5px;">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <circle cx="12" cy="12" r="10" />
@@ -166,13 +157,6 @@ unset($_SESSION['success_message']);
                         <span><?= htmlspecialchars($errors['password']) ?></span>
                     </div>
                 <?php endif; ?>
-                <div class="input-wrapper">
-                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-
-                    <input type="password" id="password" name="password" placeholder="Ít nhất 6 ký tự">
                     <button type="button" class="toggle-password" onclick="togglePassword('password')">
                         <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -234,12 +218,9 @@ unset($_SESSION['success_message']);
             Đã có tài khoản? <a href="?views=auth&action=login">Đăng nhập ngay</a>
         </div>
     </div>
-
 </body>
 
 <?php
-
-
 
 require_once './views/layouts/footer-auth.php';
 ?>

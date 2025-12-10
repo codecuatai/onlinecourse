@@ -72,18 +72,6 @@ unset($_SESSION['old_input']);
                     <p id="form-subtitle">Chào mừng bạn trở lại!</p>
                 </div>
 
-                <?php if (!empty($success_message)): ?>
-                    <div class="alert alert-success" style="display: block; color: #155724; border: 1px solid #c3e6cb; background-color: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
-                        <span><?= htmlspecialchars($success_message) ?></span>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (isset($errors['general'])): ?>
-                    <div class="error-message general-error" style="display: block; color: #dc3545; border: 1px solid #dc3545; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center;">
-                        <span><?= htmlspecialchars($errors['general']) ?></span>
-                    </div>
-                <?php endif; ?>
-
                 <form action="?controllers=AuthController&action=processLogin" method="post">
                     <!-- Email -->
                     <div class="form-group">
@@ -169,6 +157,11 @@ unset($_SESSION['old_input']);
             </div>
         </div>
     </div>
+</body> 
+<?php
+// require_once './views/layouts/footer-auth.php';
+?>
+
 </body>
 
 <?php
