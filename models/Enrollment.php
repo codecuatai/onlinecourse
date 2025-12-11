@@ -81,6 +81,64 @@ class Enrollment
         $stmt->bindParam(":course_id", $course_id);
         $stmt->execute();
 
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function createEnrollmentForStudent($course_id, $student_id, $status, $progress)
+    {
+        $sql = "INSERT INTO enrollments 
+            (course_id, student_id, enrolled_date, status, progress)
+            VALUES (:course_id, :student_id, NOW(), :status, :progress)";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindParam(":course_id", $course_id);
+        $stmt->bindParam(":student_id", $student_id);
+        $stmt->bindParam(":status", $status);
+        $stmt->bindParam(":progress", $progress);
+
+        return $stmt->execute();
+    }
+
+    public function deleteEnrollment($enrollment_id)
+    {
+        $sql = "DELETE FROM enrollments WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $enrollment_id, PDO::PARAM_INT);
+
+        return $stmt->execute();  // Trả về true/false
+    }
+
+
+    public function getEnrollmentById($id)
+    {
+        $sql = "SELECT e.*, u.fullname AS student_name, u.email AS student_email, u.username as username
+            FROM enrollments e
+            JOIN users u ON e.student_id = u.id
+            WHERE e.id = :id
+            LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    public function updateEnrollment($id, $status, $progress)
+    {
+        $sql = "UPDATE enrollments 
+            SET status = :status, progress = :progress
+            WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':progress', $progress, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
     }
 }

@@ -49,6 +49,9 @@ $courses = $_SESSION['instructor_courses'];
                                         <a href="?controllers=CourseController&action=deleteCourseOfInstructor&id=<?= $course['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa khóa học này?')">
                                             <i class="fas fa-trash"></i> Xóa
                                         </a>
+                                        <a href="?controllers=CourseController&action=viewStudentByCourse&course_id=<?= $course['id'] ?>" class="btn btn-sm btn-info">
+                                            <i class="fas fa-book"></i> Học Sinh
+                                        </a>
                                         <a href="?controllers=LessonController&action=viewLessonsByCourse&id=<?= $course['id'] ?>" class="btn btn-sm btn-info">
                                             <i class="fas fa-book"></i> Bài học
                                         </a>

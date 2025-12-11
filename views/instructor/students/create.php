@@ -13,18 +13,21 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
     <div class="card border-0 shadow-sm">
         <div class="card-body">
-            <form>
-
-                <!-- Tên sinh viên -->
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Tên sinh viên</label>
-                    <input type="text" class="form-control" placeholder="Nhập tên sinh viên" required>
+            <?php if (!empty($_SESSION['error'])): ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($_SESSION['error']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+            <form method="post" action="?controllers=EnrollmentController&action=createStudent">
+
+                <input type="hidden" name="course_id" value="<?= $_GET['course_id'] ?>">
                 <!-- Email -->
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Email</label>
-                    <input type="email" class="form-control" placeholder="Nhập email" required>
+                    <label class="form-label fw-bold">UserName</label>
+                    <input type="text" class="form-control" name="username" placeholder="Nhập username" required>
                 </div>
 
                 <!-- Ngày đăng ký -->
@@ -36,7 +39,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                 <!-- Trạng thái -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Trạng thái</label>
-                    <select class="form-select">
+                    <select class="form-select" name="status">
                         <option value="active">Active</option>
                         <option value="dropped">Dropped</option>
                         <option value="paused">Paused</option>
@@ -46,7 +49,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                 <!-- Tiến độ -->
                 <div class="mb-3">
                     <label class="form-label fw-bold">Tiến độ (%)</label>
-                    <input type="number" class="form-control" min="0" max="100" value="0" required>
+                    <input name="progress" type="number" class="form-control" min="0" max="100" value="0" required>
                 </div>
 
                 <!-- Button -->
@@ -55,7 +58,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         <i class="fas fa-save"></i> Lưu
                     </button>
 
-                    <a href="?views=instructor&instructor=students&action=manage" class="btn btn-danger">
+                    <a href="javascript:history.back()" class="btn btn-danger">
                         <i class="fas fa-times"></i> Hủy
                     </a>
                 </div>

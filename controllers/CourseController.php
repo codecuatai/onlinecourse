@@ -1,13 +1,14 @@
 <?php
 require_once __DIR__ . '/../models/Course.php';
 require_once __DIR__ . '/../models/Category.php';
-require_once __DIR__ . '/../config/Database.php';
+require_once __DIR__ . '/../models/Enrollment.php';
 
 class CourseController
 {
 
     private $courseModel;
     private $categoryModel;
+    private $enrollmentModel;
 
     public function __construct()
     {
@@ -15,6 +16,7 @@ class CourseController
 
         $this->courseModel = new Course();
         $this->categoryModel = new Category();
+        $this->enrollmentModel = new Enrollment();
     }
 
     // hiện thị danh sách khóa học ở trang khóa học
@@ -326,8 +328,6 @@ class CourseController
         header("Location: index.php?controller=course&action=manage");
     }
 
-
-
     // ✅ TÌM KIẾM KHÓA HỌC
     public function search()
     {
@@ -342,22 +342,38 @@ class CourseController
     }
 
 
+    // ✅ XEM DANH SÁCH HỌC VIÊN THEO KHÓA HỌC
+    public function viewStudentByCourse()
+    {
+        // Lấy course_id từ URL
+        $course_id = isset($_GET['course_id']) ? intval($_GET['course_id']) : 0;
+        if ($course_id <= 0) {
+            echo "❌ Không tìm thấy khóa học!";
+            return;
+        }
+        // Lấy thông tin khóa học
+        $course = $this->courseModel->getById($course_id);
+
+        if (!$course) {
+            echo "❌ Khóa học không tồn tại!";
+            return;
+        }
+
+        // Lấy danh sách học viên đã đăng ký
+        $students = $this->enrollmentModel->getEnrollmentByCourseId($course_id);
+        $_SESSION['students'] = $students;
+
+        header("Location: ?views=instructor&act&instructor=students&action=manage&course_id=$course_id");
+    }
+
+
+
+
     // ✅ HIỂN THỊ DANH SÁCH KHÓA HỌC
     public function index()
     {
         $stmt = $this->courseModel->getAll();
         $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
         require_once __DIR__ . '/../views/courses/index.php';
-    }
-
-
-
-
-    // ✅ XEM CHI TIẾT KHÓA HỌC
-    public function detail()
-    {
-        $id = $_GET['id'];
-        $course = $this->courseModel->getById($id);
-        require_once __DIR__ . '/../views/courses/detail.php';
     }
 }

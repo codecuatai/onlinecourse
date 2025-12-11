@@ -36,7 +36,7 @@ $instructor = $_GET['instructor'] ?? null;
 if (empty($controllers) && $view === 'admin') {
     // Nếu không có tham số 'controllers=...' NHƯNG có 'views=admin', 
     // ta gán tên Controller chính xác để khối IF dưới xử lý.
-    $controllers = 'AdminController'; 
+    $controllers = 'AdminController';
 }
 
 if (!empty($controllers)) {
@@ -74,6 +74,8 @@ if (!empty($controllers)) {
     } else {
         die("Lỗi: Không tìm thấy Class '{$controllerClassName}'.");
     }
+} elseif ($view === 'home' & $action = null) {
+    header('Location: ?controllers=CourseController&action=viewCourseHome');
 } else {
     // ------------------------------------------------------------
     // XỬ LÝ VIEW (Logic cũ cho View tĩnh)

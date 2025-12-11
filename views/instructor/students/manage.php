@@ -4,25 +4,8 @@ require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
 // Mảng danh sách sinh viên của khóa học
-$students = [
-    [
-        "name" => "Nguyễn Văn A",
-        "email" => "nguyenvana@example.com",
-        "registered_at" => "01/12/2025",
-        "status" => "Active",
-        "progress" => 75,
-        "edit_link" => "./edit.php"
-    ],
-    [
-        "name" => "Trần Thị B",
-        "email" => "tranthib@example.com",
-        "registered_at" => "02/12/2025",
-        "status" => "Dropped",
-        "progress" => 40,
-        "edit_link" => "./edit.php"
-    ],
-    // Thêm sinh viên khác nếu cần
-];
+
+$students = $_SESSION['students'];
 ?>
 
 <div class="container-fluid mt-4">
@@ -38,7 +21,7 @@ $students = [
 
     <!-- Nút thêm sinh viên mới -->
     <div class="mb-3">
-        <a href="?views=instructor&instructor=students&action=create" class="btn btn-success">
+        <a href="?controllers=EnrollmentController&action=viewCreateEnrollment&course_id=<?= $_GET['course_id'] ?>" class="btn btn-success">
             <i class="fas fa-plus"></i> Thêm sinh viên mới
         </a>
     </div>
@@ -69,11 +52,13 @@ $students = [
                             <?php foreach ($students as $index => $student): ?>
                                 <tr class="text-center">
                                     <td><?= $index + 1 ?></td>
-                                    <td class="text-start"><?= $student['name'] ?></td>
-                                    <td><?= $student['email'] ?></td>
-                                    <td><?= $student['registered_at'] ?></td>
+                                    <td class="text-start">
+                                        <?= $student['student_name'] ?>
+                                    </td>
+                                    <td> <?= $student['student_email'] ?> </td>
+                                    <td><?= $student['enrolled_date'] ?></td>
                                     <td>
-                                        <?php if ($student['status'] === "Active"): ?>
+                                        <?php if ($student['status'] === "active"): ?>
                                             <span class="badge bg-success">Active</span>
                                         <?php else: ?>
                                             <span class="badge bg-warning text-dark"><?= $student['status'] ?></span>
@@ -82,12 +67,12 @@ $students = [
                                     <td><?= $student['progress'] ?>%</td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a href="?views=instructor&instructor=students&action=edit" class="btn btn-sm btn-warning">
+                                            <a href="?controllers=EnrollmentController&action=viewEditEnrollment&course_id=<?= $_GET['course_id'] ?>&enrollment_id=<?= $student['id'] ?>" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i> Sửa
                                             </a>
-                                            <button class="btn btn-sm btn-danger">
+                                            <a href="?controllers=EnrollmentController&action=deleteEnrollment&enrollment_id=<?= $student['id'] ?>&course_id=<?= $_GET['course_id'] ?>" class="btn btn-sm btn-danger">
                                                 <i class="fas fa-trash"></i> Xóa
-                                            </button>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>

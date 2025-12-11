@@ -1,6 +1,10 @@
 <?php require_once __DIR__ . '/../../../config/config.php';
 require_once _PATH_URL . '/../views/layouts/header.php';
 require_once _PATH_URL . '/../views/layouts/sidebar.php';
+
+
+$enrollment = $_SESSION['edit_enrollment'];
+
 ?>
 
 <div class="container-fluid mt-4">
@@ -12,10 +16,10 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
 
     <div class="card border-0 shadow-sm">
         <div class="card-body">
-            <form method="POST" action="update.php">
+            <form method="POST" action="?controllers=EnrollmentController&action=updateEnrollment">
 
                 <!-- hidden id -->
-                <input type="hidden" name="id" value="1">
+                <input type="hidden" name="id" value="<?= $enrollment['id'] ?>">
 
                 <!-- Tên sinh viên -->
                 <div class="mb-3">
@@ -24,7 +28,8 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         type="text"
                         name="name"
                         class="form-control"
-                        value="Nguyễn Văn A"
+                        value="<?= $enrollment['student_name'] ?>"
+                        readonly
                         required>
                 </div>
 
@@ -35,7 +40,20 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         type="email"
                         name="email"
                         class="form-control"
-                        value="nguyenvana@example.com"
+                        value="<?= $enrollment['student_email'] ?>"
+                        readonly
+                        required>
+                </div>
+
+                <!-- Tên sinh viên -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tên người dùng</label>
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        value="<?= $enrollment['username'] ?>"
+                        readonly
                         required>
                 </div>
 
@@ -46,8 +64,10 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         type="date"
                         name="created_at"
                         class="form-control"
-                        value="2025-12-01"
+                        value="<?= substr($enrollment['enrolled_date'], 0, 10) ?>"
+                        readonly
                         required>
+
                 </div>
 
                 <!-- Trạng thái -->
@@ -69,7 +89,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         class="form-control"
                         min="0"
                         max="100"
-                        value="75"
+                        value="<?= $enrollment['progress'] ?>"
                         required>
                 </div>
 
@@ -79,7 +99,7 @@ require_once _PATH_URL . '/../views/layouts/sidebar.php';
                         <i class="fas fa-save"></i> Cập nhật
                     </button>
 
-                    <a href="?views=instructor&instructor=students&action=manage" class="btn btn-danger">
+                    <a href="javascript:history.back()" class="btn btn-danger">
                         <i class="fas fa-times"></i> Hủy
                     </a>
                 </div>

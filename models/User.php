@@ -168,6 +168,17 @@ class User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // get user by name
+    public function getUserByUsername($username)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE username = :username LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":username", $username, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC); // trả về 1 dòng
+    }
+
     // Cập nhật user (có avatar hoặc không)
     public function updateProfile($id, $fullname, $email, $avatar = null)
     {
