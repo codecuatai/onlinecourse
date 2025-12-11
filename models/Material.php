@@ -80,4 +80,20 @@ class Material
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute($data);
     }
+
+
+    public function getMaterialsAndLessonsByCourse($course_id)
+    {
+        $sql = "SELECT m.* ,l.*
+            FROM materials AS m
+            INNER JOIN lessons AS l ON m.lesson_id = l.id
+            WHERE l.course_id = :course_id
+            ORDER BY m.uploaded_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":course_id", $course_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

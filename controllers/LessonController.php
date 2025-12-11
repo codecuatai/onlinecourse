@@ -205,4 +205,36 @@ class LessonController
         header("Location: ?controllers=LessonController&action=viewLessonsByCourse&id=" . $course_id);
         exit;
     }
+
+
+
+    //LESSON CỦA HỌC VIÊN
+    public function viewLessonOfStudent()
+    {
+        // Lấy course_id từ GET
+        $course_id = $_GET['course_id'] ?? null;
+
+        if (!$course_id) {
+            $_SESSION['error'] = "Không tìm thấy khóa học!";
+            header("Location: ?views=student&action=my_courses");
+            exit();
+        }
+
+        // Lấy thông tin khóa học
+        $course = $this->courseModel->getById($course_id);
+
+        if (!$course) {
+            $_SESSION['error'] = "Khóa học không tồn tại!";
+            header("Location: ?views=student&action=my_courses");
+            exit();
+        }
+
+        // Lấy danh sách bài học
+        $lessons = $this->lessonModel->getLessonsByCourse($course_id)->fetchAll(PDO::FETCH_ASSOC);;
+        $_SESSION['lessons'] = $lessons;
+        $_SESSION['course'] = $course;
+
+        // Gửi tới view
+        header("Location: ?views=student&action=course_of_lession");
+    }
 }

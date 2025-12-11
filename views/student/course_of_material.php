@@ -19,6 +19,7 @@ $course_documents = [
     ["id" => 2, "title" => "Bài tập cơ bản Python", "file_type" => "DOCX", "size" => "1.5MB", "uploaded_at" => "2024-06-02"],
     ["id" => 3, "title" => "Project mẫu", "file_type" => "ZIP", "size" => "5MB", "uploaded_at" => "2024-06-05"],
 ];
+
 ?>
 
 <main class="main-content p-4">

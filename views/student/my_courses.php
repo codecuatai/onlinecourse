@@ -51,8 +51,8 @@ $courses = $_SESSION['enroll_courses'];
                                 <span><?= $course['instructor_name'] ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                <a href="?views=student&action=course_of_lession" class="btn btn-primary btn-sm">Vào khóa học</a>
-                                <a href="?views=student&action=course_of_material" class="btn btn-secondary btn-sm">Tải tài liệu</a>
+                                <a href="<?php echo '?controllers=LessonController&action=viewLessonOfStudent&course_id=' . $course['id']; ?>" class="btn btn-primary btn-sm">Vào khóa học</a>
+                                <a href="<?php echo '?controllers=MaterialController&action=viewMaterialOfStudent&course_id=' . $course['id']; ?>" class="btn btn-secondary btn-sm">Tải tài liệu</a>
                             </div>
                         </div>
                     </div>

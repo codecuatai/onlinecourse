@@ -259,4 +259,31 @@ class MaterialController
 
         require_once _PATH_URL . '/../views/instructor/materials/edit.php';
     }
+
+
+    public function viewMaterialOfStudent()
+    {
+        // Lấy course_id từ GET
+        $course_id = $_GET['course_id'] ?? null;
+
+        if (!$course_id) {
+            $_SESSION['error'] = "Không tìm thấy khóa học!";
+            header("Location: ?controllers=CourseController&action=viewCoursesOfInstructor");
+            exit();
+        }
+
+        // Lấy thông tin khóa học
+        $course = $this->courseModel->getById($course_id);
+
+        if (!$course) {
+            $_SESSION['error'] = "Khóa học không tồn tại!";
+            header("Location: ?controllers=CourseController&action=viewCoursesOfInstructor");
+            exit();
+        }
+        // Lấy danh sách tài liệu của khóa học
+        $materials = $this->materialModel->getMaterialsAndLessonsByCourse($course_id);
+        $_SESSION['materials'] = $materials;
+        // Load view
+        header("Location: ?views=student&action=course_of_material");
+    }
 }
