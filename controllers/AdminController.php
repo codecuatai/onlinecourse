@@ -95,4 +95,117 @@ class AdminController
             exit;
         }
     }
+
+public function browseCourses()
+    {
+        // 1. Kiểm tra quyền (Authorization)
+        // Đảm bảo chỉ có Quản trị viên (role=2) mới truy cập được.
+        // if ($_SESSION['role'] != 2) { 
+        //     header('Location: unauthorized.php'); 
+        //     exit;
+        // }
+        require_once __DIR__ . '/../config/Database.php';
+        require_once __DIR__ . '/../models/Course.php';
+
+        $database = new Database();
+        $db = $database->getConnection();
+        $courseModel = new Course($db);
+
+        // Gọi hàm vừa thêm
+        $courses = $courseModel->getPendingCourses();
+
+        include_once __DIR__ . '/../views/admin/browseCourses.php';
+    }
+
+/**
+     * Xử lý duyệt khóa học (Chuyển status sang 'published')
+     */
+    public function approveCourse()
+    {
+        // 1. Nhúng Model và Database
+        require_once __DIR__ . '/../models/Course.php';
+        require_once __DIR__ . '/../config/Database.php'; 
+
+        // 2. Lấy ID và thiết lập trạng thái
+        $id = $_GET['id'] ?? 0;
+        $status = 'published'; // Trạng thái: Đã duyệt
+
+        if ($id > 0) {
+            $database = new Database();
+            $db = $database->getConnection();
+            $courseModel = new Course($db);
+
+            // 3. Gọi Model để cập nhật trạng thái
+            if ($courseModel->updateStatus($id, $status)) {
+                $_SESSION['success_message'] = "Khóa học đã được duyệt thành công!";
+            } else {
+                $_SESSION['error_message'] = "Lỗi CSDL khi duyệt khóa học.";
+            }
+        }
+        
+        // 4. Chuyển hướng về trang duyệt khóa học
+        header('Location: ?views=admin&action=browseCourses');
+        exit;
+    }
+
+    /**
+     * Xử lý từ chối khóa học (Chuyển status sang 'rejected')
+     */
+    public function rejectCourse()
+    {
+        // 1. Nhúng Model và Database
+        require_once __DIR__ . '/../models/Course.php';
+        require_once __DIR__ . '/../config/Database.php';
+
+        // 2. Lấy ID và thiết lập trạng thái
+        $id = $_GET['id'] ?? 0;
+        $status = 'rejected'; // Trạng thái: Bị từ chối
+
+        if ($id > 0) {
+            $database = new Database();
+            $db = $database->getConnection();
+            $courseModel = new Course($db);
+
+            // 3. Gọi Model để cập nhật trạng thái
+            if ($courseModel->updateStatus($id, $status)) {
+                $_SESSION['success_message'] = "Khóa học đã bị từ chối.";
+            } else {
+                $_SESSION['error_message'] = "Lỗi CSDL khi từ chối khóa học.";
+            }
+        }
+        
+        // 4. Chuyển hướng về trang duyệt khóa học
+        header('Location: ?views=admin&action=browseCourses');
+        exit;
+    }
+
+    public function manageCourses()
+    {
+        // Yêu cầu Model và Database (như đã làm trong browseCourses)
+        require_once __DIR__ . '/../models/Course.php';
+        require_once __DIR__ . '/../config/Database.php'; 
+
+        $database = new Database();
+        $db = $database->getConnection();
+        $courseModel = new Course($db);
+
+        // 2. Gọi Model để lấy dữ liệu (Fetch Data)
+        // $courses = $this->courseModel->getAllCourses(); 
+        // Lấy TẤT CẢ khóa học (hoặc tất cả trừ pending)
+        // Tùy thuộc vào hàm bạn có, ví dụ: getAll()
+        $courses = $courseModel->getAll(); 
+        
+        $courses = $courses ?? [];
+
+        // 3. Hiển thị View (Render View)
+        include_once ROOT . '/views/admin/browseCourses.php';
+        // ✅ SỬA ĐƯỜNG DẪN VIEW VÀO THƯ MỤC USER/GIẢNG VIÊN
+        // Giả định file manage.php nằm ở views/user/manage.php
+        include_once __DIR__ . '/../views/user/manage.php'; 
+    }
+
+    // ... Các Action khác (ví dụ: addCourse, editCourse, v.v.)
 }
+
+$admin = new AdminController();
+    

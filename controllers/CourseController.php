@@ -40,7 +40,7 @@ class CourseController
     {
         if (!isset($_SESSION['user_id'])) {
             $_SESSION['error'] = "Vui lòng đăng nhập để đăng ký!";
-            header("Location: views=auth&action=login");
+            header("Location: ?views=auth&action=login");
             exit();
         }
         if (!isset($_GET['id']) || empty($_GET['id'])) {
@@ -277,16 +277,11 @@ class CourseController
 
 
 
-
-
-
     // Hiển thị form tạo khóa học
     public function create()
     {
         include "views/instructor/course/create.php";
     }
-
-
 
 
 
@@ -333,7 +328,18 @@ class CourseController
 
 
 
+    // ✅ TÌM KIẾM KHÓA HỌC
+    public function search()
+    {
+        $keyword  = $_POST['keyword']  ?? '';
+        $category = $_POST['category'] ?? '';
+        $sort     = $_POST['sort'] ?? '';
 
+        $stmt = $this->courseModel->search($keyword, $category, $sort);
+        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $_SESSION['courses'] = $courses;
+        header('Location: ?views=courses&action=index');
+    }
 
 
     // ✅ HIỂN THỊ DANH SÁCH KHÓA HỌC
@@ -345,18 +351,7 @@ class CourseController
     }
 
 
-    // ✅ TÌM KIẾM KHÓA HỌC
-    public function search()
-    {
-        $keyword  = $_GET['keyword']  ?? '';
-        $category = $_GET['category'] ?? '';
-        $sort     = $_GET['sort'] ?? '';
 
-        $stmt = $this->courseModel->search($keyword, $category, $sort);
-        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        require_once __DIR__ . '/../views/courses/index.php';
-    }
 
     // ✅ XEM CHI TIẾT KHÓA HỌC
     public function detail()

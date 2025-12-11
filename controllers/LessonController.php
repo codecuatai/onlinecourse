@@ -2,19 +2,23 @@
 require_once __DIR__ . '/../models/Lesson.php';
 require_once __DIR__ . '/../models/Course.php';
 require_once __DIR__ . '/../models/Material.php';
+require_once __DIR__ . '/../models/Enrollment.php';
+require_once __DIR__ . '/../models/User.php';
 
 class LessonController
 {
     private $lessonModel;
     private $courseModel;
-    private $materialModel;
+    private $enrollmentModel;
+    private $userModel;
 
     public function __construct()
     {
         // Khởi tạo Lesson Model để tương tác với CSDL
         $this->lessonModel = new Lesson();
         $this->courseModel = new Course();
-        $this->materialModel = new Material();
+        $this->enrollmentModel = new Enrollment();
+        $this->userModel = new User();
     }
 
     public function viewLessonsByCourse()
@@ -228,11 +232,20 @@ class LessonController
             header("Location: ?views=student&action=my_courses");
             exit();
         }
-
         // Lấy danh sách bài học
-        $lessons = $this->lessonModel->getLessonsByCourse($course_id)->fetchAll(PDO::FETCH_ASSOC);;
+        $lessons = $this->lessonModel->getLessonsByCourse($course_id)->fetchAll(PDO::FETCH_ASSOC);
+
+        // lấy enrolment để lấy tiến độ khóa học
+        $enrollment = $this->enrollmentModel->getEnrollmentByCourseId($course_id);
+
+        // lấy giảng viên
+        $instructor = $this->userModel->getUserById($course['instructor_id']);
+
+        $_SESSION['enrollment'] = $enrollment;
         $_SESSION['lessons'] = $lessons;
         $_SESSION['course'] = $course;
+        $_SESSION['instructor'] = $instructor;
+
 
         // Gửi tới view
         header("Location: ?views=student&action=course_of_lession");

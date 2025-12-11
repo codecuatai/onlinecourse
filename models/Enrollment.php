@@ -64,4 +64,23 @@ class Enrollment
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);;
     }
+
+
+    // ✅ LẤY DANH SÁCH HỌC VIÊN ĐĂNG KÝ THEO course_id
+    public function getEnrollmentByCourseId($course_id)
+    {
+        $sql = "SELECT 
+                enrollments.*, 
+                users.fullname AS student_name,
+                users.email AS student_email
+            FROM enrollments
+            JOIN users ON enrollments.student_id = users.id
+            WHERE enrollments.course_id = :course_id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":course_id", $course_id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

@@ -2,18 +2,21 @@
 require_once __DIR__ . '/../models/Material.php';
 require_once __DIR__ . '/../models/Lesson.php';
 require_once __DIR__ . '/../models/Course.php';
+require_once __DIR__ . '/../models/User.php';
 
 class MaterialController
 {
     private $materialModel;
     private $lessonModel;
     private $courseModel;
+    private $userModel;
 
     public function __construct()
     {
         $this->materialModel = new Material();
         $this->lessonModel = new Lesson();
         $this->courseModel = new Course();
+        $this->userModel = new User();
     }
 
     // Hiển thị tất cả tài liệu theo bài học
@@ -274,14 +277,21 @@ class MaterialController
 
         // Lấy thông tin khóa học
         $course = $this->courseModel->getById($course_id);
-
         if (!$course) {
             $_SESSION['error'] = "Khóa học không tồn tại!";
             header("Location: ?controllers=CourseController&action=viewCoursesOfInstructor");
             exit();
         }
+
+        // Lấy thông tin giảng viên
+        $instructor = $this->userModel->getUserById($course['instructor_id']);
+
         // Lấy danh sách tài liệu của khóa học
         $materials = $this->materialModel->getMaterialsAndLessonsByCourse($course_id);
+
+        // lưu vào sesson
+        $_SESSION['course'] = $course;
+        $_SESSION['instructor'] = $instructor;
         $_SESSION['materials'] = $materials;
         // Load view
         header("Location: ?views=student&action=course_of_material");

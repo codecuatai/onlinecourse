@@ -27,13 +27,13 @@ $courses = $_SESSION['courses'];
 <div class="container my-4">
 
     <!-- Search + Filter -->
-    <form class="row g-2 mb-4" method="GET" action="index.php" id="searchForm">
+    <form class="row g-3 mb-4" method="POST" action="?controllers=CourseController&action=search" id="searchForm">
 
         <input type="hidden" name="controller" value="course">
         <input type="hidden" name="action" value="search">
 
         <!-- Ô tìm kiếm -->
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-4">
             <div class="input-group shadow-sm">
                 <span class="input-group-text bg-white border-end-0">
                     <i class="bi bi-search"></i>
@@ -70,7 +70,15 @@ $courses = $_SESSION['courses'];
             </select>
         </div>
 
+        <!-- Nút submit -->
+        <div class="col-6 col-md-2 text-end">
+            <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                <i class="bi bi-filter"></i> Tìm kiếm
+            </button>
+        </div>
+
     </form>
+
 
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">

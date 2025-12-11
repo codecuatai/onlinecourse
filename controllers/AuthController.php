@@ -134,7 +134,7 @@ class AuthController
 
         // 2. Kiểm tra trùng lặp trong CSDL
         if (empty($errors) && $this->userModel->isExist($data['username'], $data['email'])) {
-            $errors[] = "Tên tài khoản hoặc Email đã tồn tại.";
+            $errors['exist'] = "Tên tài khoản hoặc Email đã tồn tại.";
         }
 
         if (empty($errors)) {
@@ -146,7 +146,7 @@ class AuthController
                 exit;
             } else {
                 // Lỗi CSDL (Hiếm khi xảy ra nếu validation tốt)
-                $errors[] = "Đăng ký thất bại. Vui lòng thử lại sau.";
+                $errors['db_error'] = "Đăng ký thất bại. Vui lòng thử lại sau.";
             }
         }
 
@@ -393,4 +393,5 @@ class AuthController
             echo "<script>alert('Có lỗi xảy ra, vui lòng thử lại'); window.history.back();</script>";
         }
     }
+    
 }
