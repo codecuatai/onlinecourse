@@ -74,7 +74,7 @@ if (!empty($controllers)) {
     } else {
         die("Lỗi: Không tìm thấy Class '{$controllerClassName}'.");
     }
-} elseif ($view === 'home' & $action = null) {
+} elseif (!$action) {
     header('Location: ?controllers=CourseController&action=viewCourseHome');
 } else {
     // ------------------------------------------------------------
