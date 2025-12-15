@@ -11,8 +11,7 @@ $instructor = $_SESSION['instructor'];
 
 // Tính % hoàn thành
 $totalLessons = count($lessons);
-$progressPercent = $enrollment['progress'];
-
+$progressPercent = $enrollment[0]['progress'];
 ?>
 
 <main class="main-content p-4">

@@ -104,7 +104,7 @@ $courses = $_SESSION['courses'];
                             <div class="d-flex align-items-center mb-2 small text-muted">
                                 <i class="fa fa-user me-1"></i>100 học viên
                                 <span class="mx-2">•</span>
-                                <i class="fa fa-clock me-1"></i><?= $course['duration_weeks'] ?>
+                                <i class="fa fa-clock me-1"></i><?= $course['duration_weeks'] ?> Tuần
                             </div>
 
                             <div class="d-flex align-items-center text-muted small mb-3">
